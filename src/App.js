@@ -7,12 +7,31 @@ import UsefulLinksComponent from './usefulLinksComponent';
 import UserSettingsComponent from './userSettingsComponent';
 import { GrUserSettings, GrFormClose } from "react-icons/gr"; // Import GrFormClose for the Back icon
 import commonStyles from './styles/commonStyles';
+import { PushNotifications } from '@capacitor/push-notifications';
 
 function App({ windowDimensions }) {
   const [subscriberId, setSubscriberId] = useState(null);
   const [subscriberName, setSubscriberName] = useState(null);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  useEffect(() => {
+    // Register listeners on mount
+    PushNotifications.addListener('pushNotificationReceived', (notification) => {
+      console.log('Notification received: ', notification);
+    });
+
+    PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+      console.log('Notification action performed', notification);
+      const data = notification.notification.data;
+      // Handle data, e.g., open a specific page
+    });
+
+    return () => {
+      // Clean up listeners on unmount
+      PushNotifications.removeAllListeners();
+    };
+  }, []);
 
   useEffect(() => {
     let isCancelled = false;
@@ -57,8 +76,8 @@ function App({ windowDimensions }) {
           <Text style={commonStyles.app.bannerText}>Welcome Back, {subscriberName.firstName} {subscriberName.lastName} </Text>
         ) : (
           <Text style={commonStyles.app.bannerText}>Loading...</Text>
-        )}      
-        </View>
+        )}
+      </View>
       <View style={commonStyles.app.iconButtonContainer}>
         <Pressable onPress={toggleMenu} style={commonStyles.app.settingIcon}>
           <GrUserSettings />
@@ -75,9 +94,9 @@ function App({ windowDimensions }) {
       )}
       <View style={commonStyles.app.content}>
         <div>
-            <NotificationProvider applicationIdentifier="o-7dmY_XxQs5" subscriberId={subscriberId}>
-              <NotificationModal windowDimensions={windowDimensions} />
-            </NotificationProvider>
+          <NotificationProvider applicationIdentifier="o-7dmY_XxQs5" subscriberId={subscriberId}>
+            <NotificationModal windowDimensions={windowDimensions} />
+          </NotificationProvider>
         </div>
       </View>
     </View>
