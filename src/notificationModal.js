@@ -11,6 +11,7 @@ import commonStyles from './styles/commonStyles';
 import { useSpring, animated } from 'react-spring';
 import { useDrag } from '@use-gesture/react';
 import CalendarComponent from './calendarComponent';
+import { PushNotifications } from '@capacitor/push-notifications';
 
 const getStorageKey = (userId) => `notifications_${userId}`;
 
@@ -99,6 +100,25 @@ const NotificationModal = ({ windowDimensions }) => {
         }
     };
     
+    useEffect(() => {
+        // Register listeners on mount
+        PushNotifications.addListener('pushNotificationReceived', (notification) => {
+          console.log('Notification received: ', notification);
+        });
+    
+        PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+          console.log('Notification action performed', notification);
+          const data = notification.notification.data;
+          setFetchNeeded(true);
+          // Handle data, e.g., open a specific page
+        });
+    
+        return () => {
+          // Clean up listeners on unmount
+          PushNotifications.removeAllListeners();
+        };
+      }, []);  
+
     useEffect(() => {
         if (isPulledDown) {
             // Trigger the refresh logic

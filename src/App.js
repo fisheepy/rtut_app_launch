@@ -8,6 +8,7 @@ import UserSettingsComponent from './userSettingsComponent';
 import { GrUserSettings, GrFormClose } from "react-icons/gr"; // Import GrFormClose for the Back icon
 import commonStyles from './styles/commonStyles';
 import { PushNotifications } from '@capacitor/push-notifications';
+import { Capacitor } from '@capacitor/core';
 
 function App({ windowDimensions }) {
   const [subscriberId, setSubscriberId] = useState(null);
@@ -15,20 +16,58 @@ function App({ windowDimensions }) {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-  useEffect(() => {
-    // Register listeners on mount
-    PushNotifications.addListener('pushNotificationReceived', (notification) => {
-      console.log('Notification received: ', notification);
-    });
+  const sendTokenToServer = (token, userData) => {
+    // const url = 'https://yourserver.com/api/register_token';
 
-    PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-      console.log('Notification action performed', notification);
-      const data = notification.notification.data;
-      // Handle data, e.g., open a specific page
-    });
+    // fetch(url, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     token: token,
+    //     user: userData
+    //   })
+    // })
+    //   .then(response => response.json())
+    //   .then(data => {
+    //     console.log('Token registered:', data);
+    //   })
+    //   .catch(error => {
+    //     console.error('Error registering token:', error);
+    //   });
+  };
+
+  useEffect(() => {
+    if (Capacitor.getPlatform() !== 'web') {
+      // Request permission for push notifications
+      PushNotifications.requestPermissions().then(result => {
+        if (result.receive === 'granted') {
+          // Register with the push notification service
+          PushNotifications.register();
+        } else {
+          console.log('User denied permissions to push notifications.');
+        }
+      });
+
+      // Listen for registration of the push notifications
+      PushNotifications.addListener('registration',
+        (token) => {
+          console.log('Push registration success, token: ' + token.value);
+          // Send token and user data to server
+          sendTokenToServer(token.value);
+        }
+      );
+
+      // Handle errors
+      PushNotifications.addListener('registrationError',
+        (error) => {
+          console.error('Error on push registration:', error);
+        }
+      );
+    }
 
     return () => {
-      // Clean up listeners on unmount
       PushNotifications.removeAllListeners();
     };
   }, []);
