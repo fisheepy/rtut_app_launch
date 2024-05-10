@@ -55,6 +55,7 @@ const NotificationModal = ({ windowDimensions }) => {
     const [isPulledDown, setIsPulledDown] = useState(false);
     const [style, api] = useSpring(() => ({ y: 0 }));
     const [schedulerData, setSchedulerData] = useState([]);
+    const [pushNotification, setPushNotification] = useState(null);
 
     const bind = useDrag(({ down, movement: [mx, my] }) => {
         if (down) {
@@ -76,7 +77,7 @@ const NotificationModal = ({ windowDimensions }) => {
                 setSchedulerData(JSON.parse(cachedData));
                 return; // Return early if cached data is used
             }
-    
+
             // Fetch new data from the server if no cached data is available
             console.log('Fetching new data from server');
             const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/fetch-events', {
@@ -85,7 +86,7 @@ const NotificationModal = ({ windowDimensions }) => {
                     'Content-Type': 'application/json',
                 },
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
                 setSchedulerData(data);
@@ -99,25 +100,33 @@ const NotificationModal = ({ windowDimensions }) => {
             console.error('Failed to fetch scheduler data:', error);
         }
     };
-    
+
     useEffect(() => {
         // Register listeners on mount
         PushNotifications.addListener('pushNotificationReceived', (notification) => {
-          console.log('Notification received: ', notification);
+            console.log('Notification received: ', notification);
+            const data = notification;
+            console.log('Data: ', data);
+            setPushNotification(data);
+            console.log('Notifications fetched by push.');
+
+            fetchAllNotifications().then(() => {
+                console.log('Notifications fetched successfully.');
+            }).catch(error => {
+                console.error('Failed to fetch notifications:', error);
+            });
         });
-    
+
         PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-          console.log('Notification action performed', notification);
-          const data = notification.notification.data;
-          setFetchNeeded(true);
-          // Handle data, e.g., open a specific page
+            console.log('Notification action performed', notification);
+            // Handle data, e.g., open a specific page
         });
-    
+
         return () => {
-          // Clean up listeners on unmount
-          PushNotifications.removeAllListeners();
+            // Clean up listeners on unmount
+            PushNotifications.removeAllListeners();
         };
-      }, []);  
+    }, []);
 
     useEffect(() => {
         if (isPulledDown) {
@@ -335,7 +344,7 @@ const NotificationModal = ({ windowDimensions }) => {
                 <animated.div {...bind()} style={{ y: style.y.to(y => Math.min(y, 150)) }}>
                     {currentTab === 'calendar' ? (
                         <View style={styles.messagesContainer}>
-                            <CalendarComponent windowDimensions={windowDimensions} data={schedulerData}/>
+                            <CalendarComponent windowDimensions={windowDimensions} data={schedulerData} />
                         </View>
                     ) : (
                         <ScrollView
