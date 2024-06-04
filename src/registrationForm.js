@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { generateUniqueId } from './utils';
 import commonStyles from './styles/commonStyles';
 
 const backgroundImage = require('./assets/Dearborn-New-Sign-scaled-1.jpg');
 
 const RegistrationForm = ({ navigation, windowDimensions }) => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
 
   const styles = {
     container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height, },
@@ -20,19 +19,29 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
     backgroundImage: commonStyles.login.backgroundImage,
   };
 
-
   const handleConfirm = async () => {
-    // Generate UID using first and last name
-    const userId = generateUniqueId(
-      firstName.toUpperCase(),
-      lastName.toUpperCase()
-    );
-
     try {
-      await AsyncStorage.setItem('userId', userId);
-      const userName = firstName + '/' + lastName;
-      await AsyncStorage.setItem('userName', userName);
-      console.log(userName);
+      console.log('Fetching User Info from server');
+      const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/authentication', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userName, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('userInfo', JSON.stringify(data));
+        console.log('User Info fetched and cached');
+      } else {
+        console.error('Failed to fetch user info:', response.statusText);
+      }
+
+      // await AsyncStorage.setItem('userId', userId);
+      // const userName = firstName + '/' + lastName;
+      // await AsyncStorage.setItem('userName', userName);
+      // console.log(userName);
     } catch (error) {
       console.error('Error saving UID:', error);
     }
@@ -46,15 +55,15 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
       <View style={styles.container}>
         <View style={styles.form}>
           <TextInput
-            placeholder="First Name"
-            value={firstName}
-            onChangeText={setFirstName}
+            placeholder="User Name"
+            value={userName}
+            onChangeText={setUserName}
             style={styles.input}
           />
           <TextInput
-            placeholder="Last Name"
-            value={lastName}
-            onChangeText={setLastName}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
             style={styles.input}
           />
           <View style={styles.buttonContainer}>
