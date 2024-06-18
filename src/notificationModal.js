@@ -70,14 +70,6 @@ const NotificationModal = ({ windowDimensions }) => {
 
     const fetchSchedulerData = async () => {
         try {
-            // Check for cached data in local storage
-            const cachedData = localStorage.getItem('eventsData');
-            if (cachedData) {
-                console.log('Using cached data');
-                setSchedulerData(JSON.parse(cachedData));
-                return; // Return early if cached data is used
-            }
-
             // Fetch new data from the server if no cached data is available
             console.log('Fetching new data from server');
             const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/fetch-events', {
@@ -86,7 +78,6 @@ const NotificationModal = ({ windowDimensions }) => {
                     'Content-Type': 'application/json',
                 },
             });
-
             if (response.ok) {
                 const data = await response.json();
                 setSchedulerData(data);
@@ -114,6 +105,11 @@ const NotificationModal = ({ windowDimensions }) => {
                 console.log('Notifications fetched successfully.');
             }).catch(error => {
                 console.error('Failed to fetch notifications:', error);
+            });
+            fetchSchedulerData().then(() => {
+                console.log('Events fetched successfully.');
+            }).catch(error => {
+                console.error('Failed to fetch events:', error);
             });
         });
 
@@ -203,6 +199,11 @@ const NotificationModal = ({ windowDimensions }) => {
                 // Assuming fetchAllNotifications updates the notifications context,
                 // the useEffect hook below will trigger and updateQualifiedNotifications.
             }).catch(error => console.error('Failed to fetch notifications:', error));
+            fetchSchedulerData().then(() => {
+                console.log('Events fetched successfully.');
+            }).catch(error => {
+                console.error('Failed to fetch events:', error);
+            });
             setFetchNeeded(false);
             const now = Date.now();
             setLastFetchTime(now);

@@ -94,7 +94,6 @@ const NotificationProvider = ({ children, applicationIdentifier, subscriberId })
                 },
                 onSuccess: (session) => {
                     headlessServiceRef.current = headlessService;
-                    console.log(headlessServiceRef, ' initialization success.');
                     setIsInitialized(true);
                     fetchAllNotifications();
                 },

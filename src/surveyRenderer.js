@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Pressable } from 'react-native';
-import { Slider } from '@miblanchard/react-native-slider';
+// import { Slider } from '@miblanchard/react-native-slider';
 import { GiConfirmed } from "react-icons/gi";
 import { GiCancel } from "react-icons/gi";
 import commonStyles from './styles/commonStyles';
@@ -172,14 +172,14 @@ const SurveyRenderer = ({ surveyJson, onSurveyComplete, onCancel, windowDimensio
         return (
           <>
             <Text style={commonStyles.SurveyRenderer.title}>{question.title}:</Text>
-            <Slider
+            {/* <Slider
               containerStyle={commonStyles.SurveyRenderer.sliderContainer}
               minimumValue={1}
               maximumValue={question.rateMax}
               step={1}
               onValueChange={(value) => handleInputChange(question.name, value)}
               value={answers[question.name] || question.rateMax / 2}
-            />
+            /> */}
             <Text style={commonStyles.SurveyRenderer.text}>{answers[question.name] || question.rateMax / 2}</Text>
           </>
         );

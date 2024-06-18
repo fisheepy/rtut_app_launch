@@ -65,11 +65,11 @@ function App({ windowDimensions }) {
           console.error('Error on push registration:', error);
         }
       );
-    }
 
-    return () => {
-      PushNotifications.removeAllListeners();
-    };
+      return () => {
+        PushNotifications.removeAllListeners();
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -78,12 +78,11 @@ function App({ windowDimensions }) {
     async function fetchUserDetails() {
       try {
         const userId = await AsyncStorage.getItem('userId');
-        const userName = await AsyncStorage.getItem('userName');
-        const [firstName, lastName] = userName.split('/');
-        if (!isCancelled && userId && userName) {
+        const userFirstName = await AsyncStorage.getItem('userFirstName');
+        const userLastName = await AsyncStorage.getItem('userLastName');
+        if (!isCancelled && userId && userFirstName && userLastName) {
           setSubscriberId(userId);
-          setSubscriberName({ firstName, lastName }); // Assuming userName is stored as a stringified JSON
-          console.log(userName);
+          setSubscriberName({ userFirstName, userLastName }); // Assuming userName is stored as a stringified JSON
           setIsDataLoaded(true); // Data is considered loaded when both states are set
         } else {
           setTimeout(fetchUserDetails, 5000); // Retry after 5 seconds if data is not yet available or complete
@@ -112,7 +111,7 @@ function App({ windowDimensions }) {
     <View style={commonStyles.app.container}>
       <View style={commonStyles.app.banner}>
         {isDataLoaded ? (
-          <Text style={commonStyles.app.bannerText}>Welcome Back, {subscriberName.firstName} {subscriberName.lastName} </Text>
+          <Text style={commonStyles.app.bannerText}>Welcome Back, {subscriberName.userFirstName} {subscriberName.userLastName} </Text>
         ) : (
           <Text style={commonStyles.app.bannerText}>Loading...</Text>
         )}

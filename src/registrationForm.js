@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import commonStyles from './styles/commonStyles';
+import { generateUniqueId } from './utils';
 
 const backgroundImage = require('./assets/Dearborn-New-Sign-scaled-1.jpg');
 
@@ -32,16 +33,21 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('userInfo', JSON.stringify(data));
+
+        const firstName = data[0]["First Name"];
+        const lastName = data[0]["Last Name"];
+        const userId = generateUniqueId(
+          firstName.toUpperCase(),
+          lastName.toUpperCase()
+        );
+
+        localStorage.setItem('userId', userId);
+        localStorage.setItem('userFirstName', firstName);
+        localStorage.setItem('userLastName', lastName);
         console.log('User Info fetched and cached');
       } else {
         console.error('Failed to fetch user info:', response.statusText);
       }
-
-      // await AsyncStorage.setItem('userId', userId);
-      // const userName = firstName + '/' + lastName;
-      // await AsyncStorage.setItem('userName', userName);
-      // console.log(userName);
     } catch (error) {
       console.error('Error saving UID:', error);
     }
