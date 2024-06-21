@@ -1,46 +1,56 @@
-import React, { useState } from 'react';
-import {
-  Scheduler,
-  WeekView,
-  MonthView,
-  DayView,
-  Appointments,
-  Toolbar,
-  DateNavigator,
-  ViewSwitcher,
-  AppointmentTooltip,
-} from '@devexpress/dx-react-scheduler-material-ui';
-import { ViewState } from '@devexpress/dx-react-scheduler';
+import React, { useState, useMemo } from 'react';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-function CalendarComponent({ data }) {
-  const [currentDate, setCurrentDate] = useState(new Date().toISOString().slice(0, 10));
+const localizer = momentLocalizer(moment);
 
-  const TooltipContent = ({ appointmentData, ...restProps }) => (
-    <AppointmentTooltip.Content {...restProps} appointmentData={appointmentData}>
-      <div style={{ marginTop: '10px' }}>
-        <div>
-          <strong>Location:</strong> {appointmentData.location || 'N/A'}
-        </div>
-        <div>
-          <strong>Created by:</strong> {appointmentData.creator || 'Unknown'}
-        </div>
+const CalendarComponent = ({ data }) => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState('month');
+
+  const formattedData = useMemo(() => {
+    return data.map(event => ({
+      ...event,
+      start: new Date(event.startDate),
+      end: new Date(event.endDate),
+      title: event.title,
+      location: event.location,
+      creator: event.creator
+    }));
+  }, [data]);
+
+  const EventTooltip = ({ event }) => (
+    <div style={{ marginTop: '10px' }}>
+      <div>
+        <strong>Location:</strong> {event.location || 'N/A'}
       </div>
-    </AppointmentTooltip.Content>
+      <div>
+        <strong>Created by:</strong> {event.creator || 'Unknown'}
+      </div>
+    </div>
   );
 
   return (
-    <Scheduler data={data} locale="en-US">
-      <ViewState currentDate={currentDate} onCurrentDateChange={setCurrentDate} />
-      <MonthView />
-      <WeekView startDayHour={8} endDayHour={20} />
-      <DayView startDayHour={8} endDayHour={20} />
-      <Toolbar />
-      <DateNavigator />
-      <ViewSwitcher />
-      <Appointments />
-      <AppointmentTooltip contentComponent={TooltipContent} showCloseButton />
-    </Scheduler>
+    <div style={{ height: '70vh', width: '700px', margin: '0 auto' }}>
+      <Calendar
+        localizer={localizer}
+        events={formattedData}
+        defaultView="month"
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: '70vh' }}
+        tooltipAccessor={null}
+        components={{
+          event: EventTooltip,
+        }}
+        onNavigate={date => setCurrentDate(date)}
+        onView={view => setView(view)}
+        view={view}
+        date={currentDate}
+      />
+    </div>
   );
-}
+};
 
 export default CalendarComponent;
