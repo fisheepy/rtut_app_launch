@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import './App.css'; // Import your CSS file
 
 const localizer = momentLocalizer(moment);
 
@@ -16,7 +17,8 @@ const CalendarComponent = ({ data }) => {
       end: new Date(event.endDate),
       title: event.title,
       location: event.location,
-      creator: event.creator
+      creator: event.creator,
+      allDay: event.allDay || false
     }));
   }, [data]);
 
@@ -32,14 +34,14 @@ const CalendarComponent = ({ data }) => {
   );
 
   return (
-    <div style={{ height: '70vh', width: '700px', margin: '0 auto' }}>
+    <div className="calendar-container">
       <Calendar
         localizer={localizer}
         events={formattedData}
         defaultView="month"
         startAccessor="start"
         endAccessor="end"
-        style={{ height: '70vh' }}
+        style={{ height: '90%', width: '100%' }}
         tooltipAccessor={null}
         components={{
           event: EventTooltip,
@@ -48,6 +50,8 @@ const CalendarComponent = ({ data }) => {
         onView={view => setView(view)}
         view={view}
         date={currentDate}
+        min={new Date(2024, 1, 1, 8, 0)} // 9:00 AM
+        max={new Date(2024, 1, 1, 18, 0)} // 5:00 PM
       />
     </div>
   );
