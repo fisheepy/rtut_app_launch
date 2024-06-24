@@ -3,6 +3,8 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './App.css'; // Import your CSS file
+import CustomEvent from './customEvent';
+import CustomAgendaEvent from './customAgendaEvent';
 
 const localizer = momentLocalizer(moment);
 
@@ -18,20 +20,10 @@ const CalendarComponent = ({ data }) => {
       title: event.title,
       location: event.location,
       creator: event.creator,
-      allDay: event.allDay || false
+      allDay: event.allDay || false,
+      detail: event.detail || '',
     }));
   }, [data]);
-
-  const EventTooltip = ({ event }) => (
-    <div style={{ marginTop: '10px' }}>
-      <div>
-        <strong>Location:</strong> {event.location || 'N/A'}
-      </div>
-      <div>
-        <strong>Created by:</strong> {event.creator || 'Unknown'}
-      </div>
-    </div>
-  );
 
   return (
     <div className="calendar-container">
@@ -41,17 +33,20 @@ const CalendarComponent = ({ data }) => {
         defaultView="month"
         startAccessor="start"
         endAccessor="end"
-        style={{ height: '90%', width: '100%' }}
+        style={{ height: '95%', width: '100%' }}
         tooltipAccessor={null}
         components={{
-          event: EventTooltip,
+          event: CustomEvent, // Use the custom event component
+          agenda: {
+            event: CustomAgendaEvent
+          },
         }}
         onNavigate={date => setCurrentDate(date)}
         onView={view => setView(view)}
         view={view}
         date={currentDate}
-        min={new Date(2024, 1, 1, 8, 0)} // 9:00 AM
-        max={new Date(2024, 1, 1, 18, 0)} // 5:00 PM
+        min={new Date(2024, 1, 1, 8, 0)} // 8:00 AM
+        max={new Date(2024, 1, 1, 18, 0)} // 6:00 PM
       />
     </div>
   );

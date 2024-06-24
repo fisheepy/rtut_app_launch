@@ -80,6 +80,7 @@ const NotificationModal = ({ windowDimensions }) => {
             });
             if (response.ok) {
                 const data = await response.json();
+                console.log(data);
                 setSchedulerData(data);
                 // Update local storage with new data
                 localStorage.setItem('eventsData', JSON.stringify(data));

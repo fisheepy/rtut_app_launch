@@ -70,6 +70,7 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
+            secureTextEntry={true}  // This masks the password input
             style={styles.input}
           />
           <View style={styles.buttonContainer}>
