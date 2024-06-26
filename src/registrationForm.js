@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, ImageBackground } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import commonStyles from './styles/commonStyles';
-import { generateUniqueId } from './utils';
 
 const backgroundImage = require('./assets/Dearborn-New-Sign-scaled-1.jpg');
 
@@ -34,26 +32,21 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
       if (response.ok) {
         const data = await response.json();
 
-        const firstName = data[0]["First Name"];
-        const lastName = data[0]["Last Name"];
-        const userId = generateUniqueId(
-          firstName.toUpperCase(),
-          lastName.toUpperCase()
-        );
-
-        localStorage.setItem('userId', userId);
-        localStorage.setItem('userFirstName', firstName);
-        localStorage.setItem('userLastName', lastName);
-        console.log('User Info fetched and cached');
+        if (data.passwordResetDate) {
+          navigation.navigate("Main", {
+            userId: data.userId,
+            firstName: data.firstName,
+            lastName: data.lastName
+          });
+        } else {
+          navigation.navigate("PasswordReset", { userId: data.userId });
+        }
       } else {
         console.error('Failed to fetch user info:', response.statusText);
       }
     } catch (error) {
       console.error('Error saving UID:', error);
     }
-
-    // Navigate back to the main view
-    navigation.navigate("Main");
   };
 
   return (
@@ -70,7 +63,7 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry={true}  // This masks the password input
+            secureTextEntry={true}  // Mask the password input
             style={styles.input}
           />
           <View style={styles.buttonContainer}>

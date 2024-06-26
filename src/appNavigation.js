@@ -5,6 +5,7 @@ import { View, StyleSheet, useWindowDimensions } from 'react-native';
 
 import App from './App';
 import RegistrationForm from './registrationForm';
+import PasswordResetForm from './passwordResetForm';
 
 const Stack = createStackNavigator();
 const AppNavigation = () => {
@@ -24,6 +25,9 @@ const AppNavigation = () => {
           </Stack.Screen>
           <Stack.Screen name="RegistrationForm">
             {props => <RegistrationForm {...props} windowDimensions={appDimensions} />}
+          </Stack.Screen>
+          <Stack.Screen name="PasswordReset">
+            {props => <PasswordResetForm {...props} windowDimensions={appDimensions} />}
           </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
