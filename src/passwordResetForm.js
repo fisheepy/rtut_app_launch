@@ -41,7 +41,8 @@ const PasswordResetForm = ({ route, navigation }) => {
                 },
                 body: JSON.stringify({ userId, newPassword }),
             });
-
+            console.log(JSON.stringify({ userId, newPassword }));
+            console.log(response);
             if (response.ok) {
                 setModalMessage('Password reset successful');
                 setModalVisible(true);

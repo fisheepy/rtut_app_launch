@@ -28,18 +28,20 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
         },
         body: JSON.stringify({ userName, password }),
       });
-
+      console.log(response);
       if (response.ok) {
         const data = await response.json();
-
-        if (data.passwordResetDate) {
+        const userInfo = data[0];
+        console.log(userInfo);
+        if (userInfo.passwordResetDate) {
           navigation.navigate("Main", {
-            userId: data.userId,
-            firstName: data.firstName,
-            lastName: data.lastName
+            userId: userInfo.username,
+            firstName: userInfo.firstName,
+            lastName: userInfo.lastName
           });
         } else {
-          navigation.navigate("PasswordReset", { userId: data.userId });
+          console.log(userInfo.username);
+          navigation.navigate("PasswordReset", { userId: userInfo.username });
         }
       } else {
         console.error('Failed to fetch user info:', response.statusText);
