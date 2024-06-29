@@ -1,10 +1,8 @@
-import { React, useState } from 'react';
-import { View, Text, Pressable, TextInput, Modal, Button, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Pressable, Modal, Alert, StyleSheet } from 'react-native';
 import { VscFeedback } from "react-icons/vsc";
-import { GiConfirmed } from "react-icons/gi";
-import { GiCancel } from "react-icons/gi";
+import { GiConfirmed, GiCancel } from "react-icons/gi";
 import commonStyles from './styles/commonStyles';
-
 import axios from 'axios';
 
 const UserSettingsComponent = () => {
@@ -12,21 +10,31 @@ const UserSettingsComponent = () => {
     const [name, setName] = useState('');
     const [feedback, setFeedback] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+    const [messageModalVisible, setMessageModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
 
     const handleFeedbackSubmit = () => {
-        // Replace with your backend endpoint
-        const feedbackEndpoint = 'https://yourbackend.endpoint/feedback';
+        if (!name.trim() || !feedback.trim()) {
+            setModalMessage('Please fill in all fields');
+            setMessageModalVisible(true);
+            return;
+        }
 
-        axios.post(feedbackEndpoint, { feedback })
+        const feedbackEndpoint = 'https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/submit-feedback';
+
+        axios.post(feedbackEndpoint, { name, feedback })
             .then((response) => {
-                Alert.alert('Feedback Submitted', 'Thank you for your feedback!', [{ text: 'OK' }]);
+                setModalMessage('Thank you for your feedback!');
                 setName('');
                 setFeedback('');
                 setModalVisible(false);
             })
             .catch((error) => {
-                Alert.alert('Error', 'Failed to submit feedback. Please try again.', [{ text: 'OK' }]);
+                setModalMessage('Failed to submit feedback. Please try again.');
                 console.error('Feedback submission error:', error);
+            })
+            .finally(() => {
+                setMessageModalVisible(true);
             });
     };
 
@@ -46,14 +54,12 @@ const UserSettingsComponent = () => {
                     onPress={() => setModalVisible(true)}
                 >
                     <VscFeedback />
-
                     <Text style={commonStyles.useSetting.linkText}>User Feedback</Text>
-
                 </Pressable>
             )}
             <Modal
                 animationType="slide"
-                transparent={false}
+                transparent={true}
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(!modalVisible)}
             >
@@ -96,8 +102,64 @@ const UserSettingsComponent = () => {
                     </View>
                 </View>
             </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={messageModalVisible}
+                onRequestClose={() => setMessageModalVisible(!messageModalVisible)}
+            >
+                <View style={commonStyles.useSetting.centeredView}>
+                    <View style={commonStyles.useSetting.modalView}>
+                        <Text style={commonStyles.useSetting.modalText}>{modalMessage}</Text>
+                        <Pressable
+                            style={[commonStyles.useSetting.Button, { backgroundColor: '#2196F3' }]}
+                            onPress={() => setMessageModalVisible(!messageModalVisible)}
+                        >
+                            <Text style={commonStyles.useSetting.textStyle}>Close</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
 };
+
+const modalStyles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
+});
 
 export default UserSettingsComponent;
