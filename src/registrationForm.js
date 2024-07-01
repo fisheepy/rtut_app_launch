@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, Modal, StyleSheet, ImageBackground } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import commonStyles from './styles/commonStyles';
-
+import { generateUniqueId } from './utils';
 const backgroundImage = require('./assets/Dearborn-New-Sign-scaled-1.jpg');
 
 const RegistrationForm = ({ navigation, windowDimensions }) => {
@@ -11,11 +12,11 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
   const [modalMessage, setModalMessage] = useState('');
 
   const styles = {
-    container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height, },
-    form: { ...commonStyles.login.form, width: windowDimensions.width * 0.75, },
+    container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height },
+    form: { ...commonStyles.login.form, width: windowDimensions.width * 0.75 },
     input: commonStyles.login.input,
-    buttonContainer: { ...commonStyles.login.buttonContainer, width: windowDimensions.width * 0.75, },
-    tabButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.25, },
+    buttonContainer: { ...commonStyles.login.buttonContainer, width: windowDimensions.width * 0.75 },
+    tabButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.25 },
     tabButtonText: commonStyles.login.tabButtonText,
     backgroundImage: commonStyles.login.backgroundImage,
     errorText: { color: 'red', textAlign: 'center', marginTop: 10 },
@@ -31,19 +32,23 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
         },
         body: JSON.stringify({ userName, password }),
       });
-      console.log(response);
       if (response.ok) {
         const data = await response.json();
         const userInfo = data[0];
-        console.log(userInfo);
         if (userInfo.passwordResetDate) {
+          await AsyncStorage.setItem('userFirstName', userInfo['First Name']);
+          await AsyncStorage.setItem('userLastName', userInfo['Last Name']);
+          const userId = generateUniqueId(
+            userInfo['First Name'].toUpperCase(),
+            userInfo['Last Name'].toUpperCase()
+          );
+          await AsyncStorage.setItem('userId', userId);
           navigation.navigate("Main", {
             userId: userInfo.username,
             firstName: userInfo.firstName,
             lastName: userInfo.lastName
           });
         } else {
-          console.log(userInfo.username);
           navigation.navigate("PasswordReset", { userId: userInfo.username });
         }
       } else if (response.status === 403 || response.status === 404) {

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, Modal, Alert, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, Modal, StyleSheet } from 'react-native';
 import { VscFeedback } from "react-icons/vsc";
 import { GiConfirmed, GiCancel } from "react-icons/gi";
 import commonStyles from './styles/commonStyles';
-import axios from 'axios';
 
 const UserSettingsComponent = () => {
     const [expanded, setExpanded] = useState(false);
@@ -13,33 +12,37 @@ const UserSettingsComponent = () => {
     const [messageModalVisible, setMessageModalVisible] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
 
-    const handleFeedbackSubmit = () => {
+    const handleFeedbackSubmit = async () => {
         if (!name.trim() || !feedback.trim()) {
             setModalMessage('Please fill in all fields');
             setMessageModalVisible(true);
             return;
         }
 
-        const feedbackEndpoint = 'https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/submit-feedback';
+        try {
+            const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/submit-feedback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, feedback }),
+            });
 
-        axios.post(feedbackEndpoint, { name, feedback })
-            .then((response) => {
+            if (response.ok) {
                 setModalMessage('Thank you for your feedback!');
                 setName('');
                 setFeedback('');
                 setModalVisible(false);
-            })
-            .catch((error) => {
+            } else {
                 setModalMessage('Failed to submit feedback. Please try again.');
-                console.error('Feedback submission error:', error);
-            })
-            .finally(() => {
-                setMessageModalVisible(true);
-            });
-    };
-
-    const handleCloseModal = () => {
-        setModalVisible(false);
+                console.error('Feedback submission error:', response.statusText);
+            }
+        } catch (error) {
+            setModalMessage('Failed to submit feedback. Please try again.');
+            console.error('Feedback submission error:', error);
+        } finally {
+            setMessageModalVisible(true);
+        }
     };
 
     return (
@@ -51,7 +54,10 @@ const UserSettingsComponent = () => {
             {expanded && (
                 <Pressable
                     style={commonStyles.useSetting.feedbackButton}
-                    onPress={() => setModalVisible(true)}
+                    onPress={() => {
+                        console.log("Feedback button pressed");
+                        setModalVisible(true);
+                    }}
                 >
                     <VscFeedback />
                     <Text style={commonStyles.useSetting.linkText}>User Feedback</Text>
@@ -63,8 +69,8 @@ const UserSettingsComponent = () => {
                 visible={modalVisible}
                 onRequestClose={() => setModalVisible(!modalVisible)}
             >
-                <View style={commonStyles.useSetting.centeredView}>
-                    <View style={commonStyles.useSetting.modalView}>
+                <View style={modalStyles.centeredView}>
+                    <View style={modalStyles.modalView}>
                         <TextInput
                             style={commonStyles.useSetting.nameInput}
                             onChangeText={setName}
@@ -81,7 +87,10 @@ const UserSettingsComponent = () => {
                         <View style={commonStyles.useSetting.buttonGroup}>
                             <Pressable
                                 style={commonStyles.useSetting.Button}
-                                onPress={handleFeedbackSubmit}
+                                onPress={() => {
+                                    console.log("Confirmed button pressed");
+                                    handleFeedbackSubmit();
+                                }}
                             >
                                 <GiConfirmed
                                     style={commonStyles.useSetting.button}
@@ -108,14 +117,14 @@ const UserSettingsComponent = () => {
                 visible={messageModalVisible}
                 onRequestClose={() => setMessageModalVisible(!messageModalVisible)}
             >
-                <View style={commonStyles.useSetting.centeredView}>
-                    <View style={commonStyles.useSetting.modalView}>
-                        <Text style={commonStyles.useSetting.modalText}>{modalMessage}</Text>
+                <View style={modalStyles.centeredView}>
+                    <View style={modalStyles.modalView}>
+                        <Text style={modalStyles.modalText}>{modalMessage}</Text>
                         <Pressable
-                            style={[commonStyles.useSetting.Button, { backgroundColor: '#2196F3' }]}
+                            style={[modalStyles.button, { backgroundColor: '#2196F3' }]}
                             onPress={() => setMessageModalVisible(!messageModalVisible)}
                         >
-                            <Text style={commonStyles.useSetting.textStyle}>Close</Text>
+                            <Text style={modalStyles.textStyle}>Close</Text>
                         </Pressable>
                     </View>
                 </View>
