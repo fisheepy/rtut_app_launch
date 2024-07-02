@@ -15,27 +15,28 @@ function App({ windowDimensions }) {
   const [subscriberName, setSubscriberName] = useState(null);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [pushToken, setPushToken] = useState(null);
 
   const sendTokenToServer = (token, userData) => {
-    // const url = 'https://yourserver.com/api/register_token';
+    const url = 'https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/register_token';
 
-    // fetch(url, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     token: token,
-    //     user: userData
-    //   })
-    // })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log('Token registered:', data);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error registering token:', error);
-    //   });
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        token: token,
+        user: userData
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Token registered:', data);
+      })
+      .catch(error => {
+        console.error('Error registering token:', error);
+      });
   };
 
   useEffect(() => {
@@ -54,8 +55,7 @@ function App({ windowDimensions }) {
       PushNotifications.addListener('registration',
         (token) => {
           console.log('Push registration success, token: ' + token.value);
-          // Send token and user data to server
-          sendTokenToServer(token.value);
+          setPushToken(token.value); // Save token to state
         }
       );
 
@@ -82,8 +82,11 @@ function App({ windowDimensions }) {
         const userLastName = await AsyncStorage.getItem('userLastName');
         if (!isCancelled && userId && userFirstName && userLastName) {
           setSubscriberId(userId);
-          setSubscriberName({ userFirstName, userLastName }); // Assuming userName is stored as a stringified JSON
-          setIsDataLoaded(true); // Data is considered loaded when both states are set
+          setSubscriberName({ userFirstName, userLastName });
+          setIsDataLoaded(true);
+          if (pushToken) {
+            sendTokenToServer(pushToken, { userFirstName, userLastName }); // Send token to server with user data
+          }
         } else {
           setTimeout(fetchUserDetails, 5000); // Retry after 5 seconds if data is not yet available or complete
         }
@@ -100,8 +103,7 @@ function App({ windowDimensions }) {
     return () => {
       isCancelled = true; // Prevent setting state after the component is unmounted
     };
-  }, []);
-
+  }, [pushToken]); // Add pushToken as a dependency
 
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
