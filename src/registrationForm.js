@@ -20,7 +20,7 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
     tabButtonText: commonStyles.login.tabButtonText,
     backgroundImage: commonStyles.login.backgroundImage,
     errorText: { color: 'red', textAlign: 'center', marginTop: 10 },
-  };
+      };
 
   const handleConfirm = async () => {
     try {

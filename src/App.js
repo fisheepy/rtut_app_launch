@@ -113,7 +113,7 @@ function App({ windowDimensions }) {
     <View style={commonStyles.app.container}>
       <View style={commonStyles.app.banner}>
         {isDataLoaded ? (
-          <Text style={commonStyles.app.bannerText}>Welcome Back, {subscriberName.userFirstName} {subscriberName.userLastName} </Text>
+          <Text style={commonStyles.app.bannerText}>Welcome Back, {subscriberName.userFirstName} </Text>
         ) : (
           <Text style={commonStyles.app.bannerText}>Loading...</Text>
         )}
