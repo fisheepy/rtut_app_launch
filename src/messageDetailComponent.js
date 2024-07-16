@@ -8,12 +8,12 @@ import { useDrag } from '@use-gesture/react';
 
 const MessageDetailComponent = ({ notification, onBack, windowDimensions }) => {
     const styles = {
-        container: { ...commonStyles.messageDetail.container },
+        container: { ...commonStyles.messageDetail.container, width: '100%', maxWidth: windowDimensions.width },
         content: commonStyles.messageDetail.content,
-        contentContainer: {...commonStyles.messageDetail.contentContainer },
+        contentContainer: { ...commonStyles.messageDetail.contentContainer, maxWidth: '100%' },
         subject: commonStyles.messageDetail.subject,
-        infoContainer: { ...commonStyles.messageDetail.infoContainer },
-        body: { ...commonStyles.messageDetail.body },
+        infoContainer: { ...commonStyles.messageDetail.infoContainer, maxWidth: '100%' },
+        body: { ...commonStyles.messageDetail.body, maxWidth: '100%' },
         buttonContainer: { ...commonStyles.messageDetail.buttonContainer, width: windowDimensions.width },
         time: commonStyles.messageDetail.time,
     };
@@ -33,7 +33,7 @@ const MessageDetailComponent = ({ notification, onBack, windowDimensions }) => {
 
     return (
         <View style={styles.container}>
-            <animated.div {...bind()} style={{ x: style.x, touchAction: 'none' }}>
+            <animated.div {...bind()} style={{ x: style.x, touchAction: 'none', width: '100%' }}>
                 <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer} nestedScrollEnabled={true}>
                     <Text style={styles.subject}>{notification.payload.messageType}</Text>
                     <View style={styles.infoContainer}>

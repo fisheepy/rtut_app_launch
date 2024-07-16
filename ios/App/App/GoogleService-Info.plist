@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>io.ionic.rtutapp</string>
+	<string>io.ionic.rtutmobileapp</string>
 	<key>PROJECT_ID</key>
 	<string>rtut-app</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:704887368351:ios:7620723c77af1ac8bc10aa</string>
+	<string>1:704887368351:ios:c14b5d4c89513df9bc10aa</string>
 </dict>
 </plist>

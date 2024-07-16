@@ -129,9 +129,11 @@ export default StyleSheet.create({
             justifyContent: 'space-between',
             alignItems: 'stretch',
             backgroundColor: baseColor,
+            maxWidth: '100%',
         },
         content: {
             minHeight: '30vw',
+            maxWidth: '100%',
         },
         subject: {
             fontSize: 18,
@@ -153,6 +155,7 @@ export default StyleSheet.create({
             flexGrow: 1, // Important for making sure the container can grow
             justifyContent: 'flex-start', // Centers content when less than screen height
             backgroundColor: baseColor,
+            maxWidth: '100%',
         },
         body: {
             fontSize: 16,
@@ -337,6 +340,7 @@ export default StyleSheet.create({
             position: 'static',
             alignItems: 'center',
             justifyContent: 'center',
+            maxWidth: '100%',
         },
         tabButtonContainer: {
             flexDirection: 'row',
@@ -362,9 +366,11 @@ export default StyleSheet.create({
         messagesContainer: {
             marginTop: 10,
             width: '90vw',
+            maxWidth: '100%',
         },
         notificationContainer: {
             width: '90vw',
+            maxWidth: '100%',
         },
         tabButtonText: {
             fontSize: 16,
@@ -392,6 +398,7 @@ export default StyleSheet.create({
             marginBottom: 20,
             paddingHorizontal: 30,
             width: '90vw',
+            maxWidth: '100%',
           },
           text:
           {
@@ -411,6 +418,7 @@ export default StyleSheet.create({
             alignItems: 'center',
             marginBottom: 10,
             width: '90vw',
+            maxWidth: '100%',
           },
           radioCircle: {
             width: 20,
@@ -453,6 +461,7 @@ export default StyleSheet.create({
           },
           sliderContainer: {
             width: '90vw',
+            maxWidth: '100%',
           },
           buttonContainer: {
             flexDirection: 'row',
