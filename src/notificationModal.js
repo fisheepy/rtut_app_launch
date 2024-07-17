@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useNotification } from './context/novuNotifications';
 import { View, Pressable, Text, ScrollView } from 'react-native';
 import MessageViewComponent from './messageViewComponent';
-import MessageDetailComponent from './messageDetailComponent'
+import MessageDetailComponent from './messageDetailComponent';
 import SurveyRenderer from './surveyRenderer';
 import { CiSquareQuestion, CiCirclePlus } from "react-icons/ci";
 import { TfiAnnouncement } from "react-icons/tfi";
@@ -15,7 +15,7 @@ import { PushNotifications } from '@capacitor/push-notifications';
 
 const getStorageKey = (userId) => `notifications_${userId}`;
 
-const NotificationModal = ({ windowDimensions }) => {
+const NotificationModal = ({ windowDimensions, notificationData }) => {
     const styles = {
         container: {
             ...commonStyles.notificationModal.container,
@@ -56,6 +56,7 @@ const NotificationModal = ({ windowDimensions }) => {
     const [style, api] = useSpring(() => ({ y: 0 }));
     const [schedulerData, setSchedulerData] = useState([]);
     const [pushNotification, setPushNotification] = useState(null);
+    const [pendingMessageId, setPendingMessageId] = useState(null);
 
     const bind = useDrag(({ down, movement: [mx, my] }) => {
         if (down) {
@@ -116,7 +117,7 @@ const NotificationModal = ({ windowDimensions }) => {
 
         PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
             console.log('Notification action performed', notification);
-            // Handle data, e.g., open a specific page
+            handlePushNotificationAction(notification.notification.data.messageId);
         });
 
         return () => {
@@ -124,6 +125,22 @@ const NotificationModal = ({ windowDimensions }) => {
             PushNotifications.removeAllListeners();
         };
     }, []);
+
+    const handlePushNotificationAction = async (messageId) => {
+        setPendingMessageId(messageId);
+        setFetchNeeded(true);
+    };
+
+    useEffect(() => {
+        if (pendingMessageId && !fetchNeeded) {
+            const matchedNotification = qualifiedNotifications.find(notification => notification.payload.messageId === pendingMessageId);
+            if (matchedNotification) {
+                setSelectedNotification(matchedNotification);
+                setDetailViewMode(true);
+                setPendingMessageId(null);
+            }
+        }
+    }, [pendingMessageId, qualifiedNotifications, fetchNeeded]);
 
     useEffect(() => {
         if (isPulledDown) {
@@ -219,6 +236,7 @@ const NotificationModal = ({ windowDimensions }) => {
             await AsyncStorage.setItem('qualifiedNotifications', JSON.stringify(notifications));
             setQualifiedNotifications(notifications); // Now this uses the updated notifications
             console.log('updateQualifiedNotifications!'); // This should now log the updated state
+            console.log(notifications);
         };
 
         if (notifications.length > 0) {
@@ -432,7 +450,6 @@ const NotificationModal = ({ windowDimensions }) => {
             )}
         </View>
     );
-
 }
 
 export default NotificationModal;

@@ -16,6 +16,7 @@ function App({ windowDimensions }) {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [pushToken, setPushToken] = useState(null);
+  const [notificationData, setNotificationData] = useState(null); // State to hold notification data
 
   const sendTokenToServer = (token, userData) => {
     const url = 'https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/register_token';
@@ -52,19 +53,27 @@ function App({ windowDimensions }) {
       });
 
       // Listen for registration of the push notifications
-      PushNotifications.addListener('registration',
-        (token) => {
-          console.log('Push registration success, token: ' + token.value);
-          setPushToken(token.value); // Save token to state
-        }
-      );
+      PushNotifications.addListener('registration', (token) => {
+        console.log('Push registration success, token: ' + token.value);
+        setPushToken(token.value); // Save token to state
+      });
 
       // Handle errors
-      PushNotifications.addListener('registrationError',
-        (error) => {
-          console.error('Error on push registration:', error);
-        }
-      );
+      PushNotifications.addListener('registrationError', (error) => {
+        console.error('Error on push registration:', error);
+      });
+
+      // Listen for when a push notification is received
+      PushNotifications.addListener('pushNotificationReceived', (notification) => {
+        console.log('Notification received: ', notification);
+      });
+
+      // Listen for when a push notification is clicked
+      PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+        console.log('Notification action performed', notification);
+        console.log('Notification Data:', notification.notification.data);
+        setNotificationData(notification.notification.data); // Save notification data to state
+      });
 
       return () => {
         PushNotifications.removeAllListeners();
@@ -135,7 +144,7 @@ function App({ windowDimensions }) {
       <View style={commonStyles.app.content}>
         <div>
           <NotificationProvider applicationIdentifier="o-7dmY_XxQs5" subscriberId={subscriberId}>
-            <NotificationModal windowDimensions={windowDimensions} />
+            <NotificationModal windowDimensions={windowDimensions} notificationData={notificationData} />
           </NotificationProvider>
         </div>
       </View>
