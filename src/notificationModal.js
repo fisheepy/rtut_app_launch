@@ -40,7 +40,7 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
         completedSurvey: commonStyles.notificationModal.completedSurvey,
     };
 
-    const { notifications, markNotificationsAsRead, markAllMessagesAsRead, deleteNotification, fetchAllNotifications } = useNotification();
+    const { notifications, markNotificationsAsRead, markAllMessagesAsRead, deleteNotification, fetchAllNotifications, isLoading } = useNotification();
     const [qualifiedNotifications, setQualifiedNotifications] = useState([]);
     const [detailViewMode, setDetailViewMode] = useState(false);
     const [selectedNotification, setSelectedNotification] = useState(null);
@@ -57,6 +57,7 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
     const [schedulerData, setSchedulerData] = useState([]);
     const [pushNotification, setPushNotification] = useState(null);
     const [pendingMessageId, setPendingMessageId] = useState(null);
+    const [notificationUpdated, setNotificationUpdated] = useState(false);
 
     const bind = useDrag(({ down, movement: [mx, my] }) => {
         if (down) {
@@ -81,11 +82,10 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
                 setSchedulerData(data);
                 // Update local storage with new data
                 localStorage.setItem('eventsData', JSON.stringify(data));
-                console.log('Data fetched and cached');
+                console.log('Event Data fetched and cached');
             } else {
                 console.error('Failed to fetch scheduler data:', response.statusText);
             }
@@ -95,11 +95,16 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
     };
 
     useEffect(() => {
+        const handlePushNotificationAction = async (messageId) => {
+            console.log('Setting pendingMessageId:', messageId);
+            setPendingMessageId(messageId);
+            setFetchNeeded(true);
+        };
+        
         // Register listeners on mount
         PushNotifications.addListener('pushNotificationReceived', (notification) => {
             console.log('Notification received: ', notification);
             const data = notification;
-            console.log('Data: ', data);
             setPushNotification(data);
             console.log('Notifications fetched by push.');
 
@@ -126,27 +131,47 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
         };
     }, []);
 
-    const handlePushNotificationAction = async (messageId) => {
-        setPendingMessageId(messageId);
-        setFetchNeeded(true);
-    };
+    useEffect(() => {
+        const loadCachedNotifications = async () => {
+            try {
+                const userId = await AsyncStorage.getItem('userId');
+                const cachedNotifications = await AsyncStorage.getItem(getStorageKey(userId));
+                if (cachedNotifications) {
+                    setQualifiedNotifications(JSON.parse(cachedNotifications));
+                    setFetchNeeded(false);
+                } else {
+                    setFetchNeeded(true);
+                }
+            } catch (error) {
+                setQualifiedNotifications([]);
+                setFetchNeeded(true);
+            }
+        };
+
+        fetchSchedulerData();
+        loadCachedNotifications();
+    }, []);
 
     useEffect(() => {
+        console.log('useEffect: qualifiedNotifications', pendingMessageId, fetchNeeded);
+        // Introduce a delay to ensure fetch is complete
         if (pendingMessageId && !fetchNeeded) {
+            console.log(qualifiedNotifications);
             const matchedNotification = qualifiedNotifications.find(notification => notification.payload.messageId === pendingMessageId);
             if (matchedNotification) {
-                setSelectedNotification(matchedNotification);
-                setDetailViewMode(true);
+                console.log("match:", matchedNotification.payload.messageId);
+                // setSelectedNotification(matchedNotification);
+                // setDetailViewMode(true);
                 setPendingMessageId(null);
             }
         }
-    }, [pendingMessageId, qualifiedNotifications, fetchNeeded]);
+    }, [qualifiedNotifications]);
 
     useEffect(() => {
         if (isPulledDown) {
             // Trigger the refresh logic
             fetchAllNotifications().then(() => {
-                console.log('Notifications fetched successfully.');
+                console.log('Fetch by pull down successfully.');
             }).catch(error => {
                 console.error('Failed to fetch notifications:', error);
             });
@@ -157,9 +182,10 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
             });
             setIsPulledDown(false); // Reset the flag after refresh
         }
-    }, [isPulledDown, fetchAllNotifications]);
+    }, [isPulledDown]);
 
     useEffect(() => {
+        console.log('useEffect: lastFetchTime', lastFetchTime);
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'visible') {
                 const now = Date.now();
@@ -187,33 +213,14 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             clearInterval(intervalId); // Clean up the interval when the component unmounts or dependencies change
         };
-    }, [lastFetchTime, fetchAllNotifications]);
+    }, [lastFetchTime]);
 
     useEffect(() => {
-        const loadCachedNotifications = async () => {
-            try {
-                const userId = await AsyncStorage.getItem('userId');
-                const cachedNotifications = await AsyncStorage.getItem(getStorageKey(userId));
-                if (cachedNotifications) {
-                    setQualifiedNotifications(JSON.parse(cachedNotifications));
-                    setFetchNeeded(false);
-                } else {
-                    setFetchNeeded(true);
-                }
-            } catch (error) {
-                setQualifiedNotifications([]);
-                setFetchNeeded(true);
-            }
-        };
-
-        fetchSchedulerData();
-        loadCachedNotifications();
-    }, []);
-
-    useEffect(() => {
+        console.log('useEffect: Fetch', fetchNeeded);
         if (fetchNeeded) {
             fetchAllNotifications().then(() => {
-                console.log('Notifications fetched successfully.');
+                console.log('Fetch by fetchNeeded successfully.');
+                console.log(notifications);
                 // Assuming fetchAllNotifications updates the notifications context,
                 // the useEffect hook below will trigger and updateQualifiedNotifications.
             }).catch(error => console.error('Failed to fetch notifications:', error));
@@ -227,34 +234,27 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
             setLastFetchTime(now);
             localStorage.setItem('lastFetchTime', now.toString());
         }
-    }, [fetchNeeded, fetchAllNotifications]);
+    }, [fetchNeeded]);
 
     // Respond to Changes in Notifications State
     useEffect(() => {
+        console.log('useEffect: notifications');
         // This will run after notifications state is updated in the context
         const updateQualifiedNotifications = async () => {
             await AsyncStorage.setItem('qualifiedNotifications', JSON.stringify(notifications));
             setQualifiedNotifications(notifications); // Now this uses the updated notifications
+            setNotificationUpdated(true);
             console.log('updateQualifiedNotifications!'); // This should now log the updated state
-            console.log(notifications);
         };
 
-        if (notifications.length > 0) {
+        if (!isLoading && notifications.length > 0) {
             updateQualifiedNotifications();
         }
-    }, [notifications]);
-
-    useEffect(() => {
-        if (isPulledDown) {
-            // Call your custom function here
-            console.log('Refetch due to pull down');
-            setFetchNeeded(true);
-        }
-    }, [isPulledDown]);
+    }, [notifications, isLoading]);
 
     useEffect(() => {
         // Update filteredNotifications when qualifiedNotifications or currentTab changes
-        console.log('Update filtered notifications!');
+        console.log('useEffect: qualifiedNotifications/currentTab',qualifiedNotifications,currentTab);
         const newFilteredNotifications = qualifiedNotifications.filter(notification => {
             if (currentTab === 'surveys') {
                 return notification.payload.messageType === 'SURVEY';
@@ -268,6 +268,7 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
     }, [qualifiedNotifications, currentTab]);
 
     useEffect(() => {
+        console.log('useEffect: detailViewMode',detailViewMode);
         // Logic that needs to run when detailViewMode changes
         if (detailViewMode) {
             // If detailViewMode is true, perform actions for detail view being active

@@ -171,6 +171,7 @@ const NotificationProvider = ({ children, applicationIdentifier, subscriberId })
                 fetchPageNotifications,
                 fetchAllNotifications,
                 isInitialized,
+                isLoading,
             }}>
             {children}
         </NotificationContext.Provider>

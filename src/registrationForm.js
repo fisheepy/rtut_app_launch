@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Pressable, Modal, StyleSheet, ImageBackground } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, Pressable, Modal, StyleSheet, ImageBackground, CheckBox } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import commonStyles from './styles/commonStyles';
 import { generateUniqueId } from './utils';
@@ -8,8 +8,27 @@ const backgroundImage = require('./assets/Dearborn-New-Sign-scaled-1.jpg');
 const RegistrationForm = ({ navigation, windowDimensions }) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+
+  useEffect(() => {
+    const loadCredentials = async () => {
+      try {
+        const savedUserName = await AsyncStorage.getItem('userName');
+        const savedPassword = await AsyncStorage.getItem('password');
+        if (savedUserName && savedPassword) {
+          setUserName(savedUserName);
+          setPassword(savedPassword);
+          setRememberMe(true);
+        }
+      } catch (error) {
+        console.error('Failed to load saved credentials:', error);
+      }
+    };
+
+    loadCredentials();
+  }, []);
 
   const styles = {
     container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height },
@@ -20,7 +39,15 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
     tabButtonText: commonStyles.login.tabButtonText,
     backgroundImage: commonStyles.login.backgroundImage,
     errorText: { color: 'red', textAlign: 'center', marginTop: 10 },
-      };
+    checkboxContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 10,
+    },
+    checkbox: {
+      marginRight: 10,
+    },
+  };
 
   const handleConfirm = async () => {
     try {
@@ -50,6 +77,13 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
           });
         } else {
           navigation.navigate("PasswordReset", { userId: userInfo.username });
+        }
+        if (rememberMe) {
+          await AsyncStorage.setItem('userName', userName);
+          await AsyncStorage.setItem('password', password);
+        } else {
+          await AsyncStorage.removeItem('userName');
+          await AsyncStorage.removeItem('password');
         }
       } else if (response.status === 403 || response.status === 404) {
         setModalMessage('User ID and password combination not found.');
@@ -83,6 +117,14 @@ const RegistrationForm = ({ navigation, windowDimensions }) => {
             secureTextEntry={true}  // Mask the password input
             style={styles.input}
           />
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              value={rememberMe}
+              onValueChange={setRememberMe}
+              style={styles.checkbox}
+            />
+            <Text>Remember Me</Text>
+          </View>
           <View style={styles.buttonContainer}>
             <Pressable
               style={styles.tabButton}
