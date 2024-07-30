@@ -67,9 +67,20 @@ const NotificationProvider = ({ children, applicationIdentifier, subscriberId })
                         nextPageToFetch = result;
                     }
                 }
+    
+                // Get today's date at midnight
+                const fixedDate = new Date('2024-07-28T00:00:00.000Z');
+    
                 // Once all pages have been fetched, deduplicate notifications
                 const uniqueNotifications = Array.from(new Map(allFetchedNotifications.map(notif => [notif.id, notif])).values());
-                const sortedNotifications = uniqueNotifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+                // Filter out notifications created before today
+                const filteredNotifications = uniqueNotifications.filter(notification => {
+                    const createdAtDate = new Date(notification.createdAt);
+                    return createdAtDate >= fixedDate;
+                });
+    
+                const sortedNotifications = filteredNotifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     
                 setNotifications(sortedNotifications);
                 console.log('fetchAllNotifications successful!');
@@ -81,6 +92,7 @@ const NotificationProvider = ({ children, applicationIdentifier, subscriberId })
             }
         }
     }, [fetchPageNotifications, allFetchedNotifications]);
+    
 
     useEffect(() => {
         if (subscriberId) {
