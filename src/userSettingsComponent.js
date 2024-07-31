@@ -72,13 +72,13 @@ const UserSettingsComponent = () => {
                 <View style={modalStyles.centeredView}>
                     <View style={modalStyles.modalView}>
                         <TextInput
-                            style={commonStyles.useSetting.nameInput}
+                            style={[commonStyles.useSetting.nameInput, modalStyles.input]}
                             onChangeText={setName}
                             value={name}
                             placeholder="Your Name"
                         />
                         <TextInput
-                            style={commonStyles.useSetting.feedbackInput}
+                            style={[commonStyles.useSetting.feedbackInput, modalStyles.input, modalStyles.textArea]}
                             onChangeText={setFeedback}
                             value={feedback}
                             placeholder="Type your feedback here..."
@@ -134,41 +134,51 @@ const UserSettingsComponent = () => {
 };
 
 const modalStyles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center"
-  }
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        width: '80%',
+        height: '80%',
+    },
+    input: {
+        width: '100%', // Ensure the input fields take the full width of the modal view
+        padding: 10, // Add padding for better spacing
+        marginVertical: 10, // Add vertical margin for spacing between fields
+    },
+    textArea: {
+        height: 500, // Increase the height for the feedback text area
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+    textStyle: {
+        color: "white",
+        fontWeight: "bold",
+        textAlign: "center"
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
+    }
 });
 
 export default UserSettingsComponent;

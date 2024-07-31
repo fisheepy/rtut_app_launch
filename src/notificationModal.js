@@ -156,7 +156,6 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
         console.log('useEffect: qualifiedNotifications', pendingMessageId, fetchNeeded);
         // Introduce a delay to ensure fetch is complete
         if (pendingMessageId && !fetchNeeded) {
-            console.log(qualifiedNotifications);
             const matchedNotification = qualifiedNotifications.find(notification => notification.payload.messageId === pendingMessageId);
             if (matchedNotification) {
                 console.log("match:", matchedNotification.payload.messageId);

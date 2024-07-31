@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { View, StyleSheet, useWindowDimensions } from 'react-native';
 
 import App from './App';
-import RegistrationForm from './registrationForm';
+import LoginForm from './loginForm';
 import PasswordResetForm from './passwordResetForm';
 import RegisterForm from './registerForm'; // Import the RegisterForm component
 
@@ -25,7 +25,7 @@ const AppNavigation = () => {
             {props => <App {...props} windowDimensions={appDimensions} />}
           </Stack.Screen>
           <Stack.Screen name="RegistrationForm">
-            {props => <RegistrationForm {...props} windowDimensions={appDimensions} />}
+            {props => <LoginForm {...props} windowDimensions={appDimensions} />}
           </Stack.Screen>
           <Stack.Screen name="PasswordReset">
             {props => <PasswordResetForm {...props} windowDimensions={appDimensions} />}

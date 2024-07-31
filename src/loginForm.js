@@ -5,7 +5,7 @@ import commonStyles from './styles/commonStyles';
 import { generateUniqueId } from './utils';
 const backgroundImage = require('./assets/Dearborn-New-Sign-scaled-1.jpg');
 
-const RegistrationForm = ({ navigation, windowDimensions }) => {
+const LoginForm = ({ navigation, windowDimensions }) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
@@ -200,4 +200,4 @@ const modalStyles = StyleSheet.create({
   }
 });
 
-export default RegistrationForm;
+export default LoginForm;
