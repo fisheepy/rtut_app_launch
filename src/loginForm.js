@@ -54,6 +54,10 @@ const LoginForm = ({ navigation, windowDimensions }) => {
 
   const handleConfirm = async () => {
     try {
+      // Clear saved credentials before attempting a new login
+      await AsyncStorage.removeItem('userName');
+      await AsyncStorage.removeItem('password');
+
       console.log('Fetching User Info from server');
       const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/authentication', {
         method: 'POST',
@@ -66,7 +70,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
         const data = await response.json();
         const userInfo = data[0];
         setUserInfo(userInfo); 
-        console.log(userInfo)
+
         if (userInfo.isActivated!=='true') {
           navigation.navigate("DisclaimerForm");  // Navigate to Disclaimer page if not activated
           return;
