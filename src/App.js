@@ -19,7 +19,7 @@ function App({ windowDimensions }) {
   const [notificationData, setNotificationData] = useState(null); // State to hold notification data
 
   const sendTokenToServer = (token, userData) => {
-    const url = 'https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/register_token';
+    const url = 'https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/register_token';
 
     fetch(url, {
       method: 'POST',

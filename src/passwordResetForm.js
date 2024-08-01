@@ -34,7 +34,7 @@ const PasswordResetForm = ({ route, navigation }) => {
         }
 
         try {
-            const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/reset-password', {
+            const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/reset-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

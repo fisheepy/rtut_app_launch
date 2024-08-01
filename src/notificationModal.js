@@ -74,7 +74,7 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
         try {
             // Fetch new data from the server if no cached data is available
             console.log('Fetching new data from server');
-            const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/fetch-events', {
+            const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/fetch-events', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -293,7 +293,7 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
             const timestamp = Date.now();
             const surveyId = selectedNotification.payload.uniqueId;
             // Send the survey result to the server
-            const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/submit-survey', {
+            const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/submit-survey', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

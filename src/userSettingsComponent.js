@@ -20,7 +20,7 @@ const UserSettingsComponent = () => {
         }
 
         try {
-            const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/submit-feedback', {
+            const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/submit-feedback', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

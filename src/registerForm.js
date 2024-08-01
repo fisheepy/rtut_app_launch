@@ -41,7 +41,7 @@ const RegisterForm = ({ navigation, windowDimensions }) => {
     }
 
     try {
-      const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/register_external', {
+      const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/register_external', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
