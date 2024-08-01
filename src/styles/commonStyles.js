@@ -207,10 +207,33 @@ export default StyleSheet.create({
             backgroundColor: 'transparent',
           },
           form: {
-            minHeight: '100vw',
-            justifyContent: 'center',
+            padding: 20,
+            borderRadius: 10,
+            backgroundColor: '#ffffff',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.8,
+            shadowRadius: 2,
+            elevation: 5,
+          },
+          header: {
+            fontSize: 24,
+            fontWeight: 'bold',
+            marginBottom: 20,
+            textAlign: 'center',
+          },
+          text: {
+            fontSize: 16,
+            marginBottom: 20,
+            textAlign: 'center',
+          },
+          checkboxContainer: {
+            flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: 'transparent',
+            marginBottom: 20,
+          },
+          checkbox: {
+            marginRight: 10,
           },
           input: {
             marginBottom: 10,

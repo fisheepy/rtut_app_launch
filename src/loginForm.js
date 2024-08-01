@@ -3,6 +3,8 @@ import { View, Text, TextInput, Pressable, Modal, StyleSheet, ImageBackground, C
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import commonStyles from './styles/commonStyles';
 import { generateUniqueId } from './utils';
+import { useUser } from './context/userContext';
+
 const backgroundImage = require('./assets/Dearborn-New-Sign-scaled-1.jpg');
 
 const LoginForm = ({ navigation, windowDimensions }) => {
@@ -11,6 +13,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
   const [rememberMe, setRememberMe] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const { setUserInfo } = useUser(); // Get the setUserInfo function from context
 
   useEffect(() => {
     const loadCredentials = async () => {
@@ -52,7 +55,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
   const handleConfirm = async () => {
     try {
       console.log('Fetching User Info from server');
-      const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/authentication', {
+      const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/authentication', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,6 +65,12 @@ const LoginForm = ({ navigation, windowDimensions }) => {
       if (response.ok) {
         const data = await response.json();
         const userInfo = data[0];
+        setUserInfo(userInfo); 
+        console.log(userInfo)
+        if (userInfo.isActivated!=='true') {
+          navigation.navigate("DisclaimerForm");  // Navigate to Disclaimer page if not activated
+          return;
+        }
         if (userInfo.passwordResetDate) {
           await AsyncStorage.setItem('userFirstName', userInfo['First Name']);
           await AsyncStorage.setItem('userLastName', userInfo['Last Name']);

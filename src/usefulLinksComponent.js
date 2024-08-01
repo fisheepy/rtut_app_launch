@@ -3,6 +3,8 @@ import { View, Text, Pressable, Linking } from 'react-native';
 import { SiAdp } from "react-icons/si";
 import { TbTargetArrow } from "react-icons/tb";
 import { FaHandsHelping } from "react-icons/fa";
+import { GrUpdate } from "react-icons/gr";
+
 import commonStyles from './styles/commonStyles';
 
 const UsefulLinksComponent = () => {
@@ -20,6 +22,12 @@ const UsefulLinksComponent = () => {
 
             {expanded && (
                 <>
+                    <View style={commonStyles.useSetting.iconLink}>
+                        <Pressable onPress={() => handleLinkPress('https://apps.apple.com/app/rtut/id6547833065/')}>
+                            <GrUpdate style={{ fontSize: 36, color: '#FF5733' }} />
+                        </Pressable>
+                        <Text style={commonStyles.useSetting.linkText}>Update App</Text>
+                    </View>
                     <View style={commonStyles.useSetting.iconLink}>
                         <Pressable onPress={() => handleLinkPress('https://workforcenow.adp.com/')}>
                             <SiAdp style={{ fontSize: 36, color: '#FF5733' }} />
