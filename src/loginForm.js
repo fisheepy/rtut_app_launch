@@ -71,7 +71,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
         const userInfo = data[0];
         setUserInfo(userInfo); 
 
-        if (userInfo.isActivated!=='true') {
+        if ( userInfo.isActivated!=='true') {
           navigation.navigate("DisclaimerForm");  // Navigate to Disclaimer page if not activated
           return;
         }
