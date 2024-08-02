@@ -11,17 +11,17 @@ const DisclaimerForm = ({ navigation, windowDimensions }) => {
 
   const styles = {
     container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height },
-    form: { ...commonStyles.login.form, width: windowDimensions.width * 0.75 },
-    header: commonStyles.login.header,
-    text: { ...commonStyles.login.text, textAlign: 'justify'},
+    form: { ...commonStyles.login.form, width: windowDimensions.width * 0.95 },
+    header: { ...commonStyles.login.header, marginTop: 50},
+    text: { ...commonStyles.login.text, fontSize: '12',textAlign: 'justify'},
     headline: { ...commonStyles.login.text, fontWeight: 'bold', textAlign: 'justify' },
     checkboxContainer: { ...commonStyles.login.checkboxContainer, flexDirection: 'row', alignItems: 'center', marginTop: 20 },
     checkbox: commonStyles.login.checkbox,
-    buttonContainer: { ...commonStyles.login.buttonContainer, width: windowDimensions.width * 0.75 },
-    tabButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.25, marginTop: 20 },
+    buttonContainer: { ...commonStyles.login.buttonContainer, flexDirection: 'column',alignItems: 'center',  },
+    tabButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.45 },
     tabButtonText: commonStyles.login.tabButtonText,
-    disabledButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.25, marginTop: 20, backgroundColor: '#cccccc' },
-    returnButton:{...commonStyles.login.tabButton, width: windowDimensions.width * 0.25, marginTop: 20,backgroundColor: '#be2528'}
+    disabledButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.45, backgroundColor: '#cccccc' },
+    returnButton:{...commonStyles.login.tabButton, width: windowDimensions.width * 0.45,backgroundColor: '#be2528'}
   };
 
   const handleContinue = async () => {
