@@ -5,7 +5,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './App.css'; // Import your CSS file
 import CustomEvent from './customEvent';
 import CustomAgendaEvent from './customAgendaEvent';
-import { Modal, StyleSheet, Text, View, Pressable } from 'react-native';
+import { Modal, StyleSheet, Text, View, ScrollView, TouchableWithoutFeedback } from 'react-native';
 
 const localizer = momentLocalizer(moment);
 
@@ -83,22 +83,22 @@ const CalendarComponent = ({ data }) => {
         visible={modalVisible}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View style={modalStyles.centeredView}>
-          <View style={modalStyles.modalView}>
-            <Text style={modalStyles.modalText}>Title: {selectedEvent?.title}</Text>
-            <Text style={modalStyles.modalText}>Location: {selectedEvent?.location}</Text>
-            <Text style={modalStyles.modalText}>Creator: {selectedEvent?.creator}</Text>
-            <Text style={modalStyles.modalText}>Details: {selectedEvent?.detail}</Text>
-            <Pressable
-              style={[modalStyles.button, modalStyles.buttonClose]}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={modalStyles.textStyle}>Close</Text>
-            </Pressable>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={modalStyles.centeredView}>
+            <TouchableWithoutFeedback>
+              <View style={modalStyles.modalView}>
+                <ScrollView contentContainerStyle={{ alignItems: "center", flexGrow: 1 }}> {/* ScrollView added */}
+                  <Text style={modalStyles.modalHeadline}>Title: {selectedEvent?.title}</Text>
+                  <Text style={modalStyles.modalHeadline}>Location: {selectedEvent?.location}</Text>
+                  <Text style={modalStyles.modalText}>Creator: {selectedEvent?.creator}</Text>
+                  <Text style={modalStyles.modalText}>Details: {selectedEvent?.detail}</Text>
+                </ScrollView> {/* Close ScrollView */}
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
-    </div>
+    </div >
   );
 };
 
@@ -107,13 +107,16 @@ const modalStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    width: '75%',
     marginTop: 22,
   },
   modalView: {
-    margin: 20,
+    width: '95%', // Set the width to 75% of the screen
+    minHeight: 200, // Set a minimum height for the modal
+    maxHeight: '80%', // Limit the maximum height to allow for scrolling
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -122,12 +125,12 @@ const modalStyles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
   button: {
     borderRadius: 20,
     padding: 10,
-    elevation: 2
+    elevation: 2,
   },
   buttonClose: {
     backgroundColor: "#2196F3",
@@ -135,11 +138,17 @@ const modalStyles = StyleSheet.create({
   textStyle: {
     color: "white",
     fontWeight: "bold",
-    textAlign: "center"
+    textAlign: "center",
+  },
+  modalHeadline: {
+    marginBottom: 15,
+    textAlign: "center",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center"
+    textAlign: "justify", // Set text alignment to justify for better width adjustment
+    lineHeight: 20, // Optional: increase line height for better readability
+    width: '100%', // Ensure text uses the full width of the modal
   }
 });
 
