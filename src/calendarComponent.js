@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './App.css'; // Import your CSS file
@@ -11,12 +11,24 @@ const localizer = momentLocalizer(moment);
 
 const CalendarComponent = ({ data }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState('month');
+  const [view, setView] = useState(Views.MONTH); // Use Views constant for consistency
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
+  // Filter events based on the current view
+  const filteredData = useMemo(() => {
+    if (view === Views.AGENDA) {
+      const startOfMonth = moment(currentDate).startOf('month').toDate();
+      const endOfMonth = moment(currentDate).endOf('month').toDate();
+      return data.filter(event =>
+        new Date(event.startDate) >= startOfMonth && new Date(event.startDate) <= endOfMonth
+      );
+    }
+    return data;
+  }, [data, view, currentDate]);
+
   const formattedData = useMemo(() => {
-    return data.map(event => ({
+    return filteredData.map(event => ({
       ...event,
       start: new Date(event.startDate),
       end: new Date(event.endDate),
@@ -26,19 +38,26 @@ const CalendarComponent = ({ data }) => {
       allDay: event.allDay || false,
       detail: event.detail || '',
     }));
-  }, [data]);
+  }, [filteredData]);
 
   const handleEventClick = (event) => {
     setSelectedEvent(event);
     setModalVisible(true);
   };
 
+  useEffect(() => {
+    // When the view changes to agenda, update the current date to the start of the month
+    if (view === Views.AGENDA) {
+      setCurrentDate(moment(currentDate).startOf('month').toDate());
+    }
+  }, [view]);
+
   return (
     <div className="calendar-container">
       <Calendar
         localizer={localizer}
         events={formattedData}
-        defaultView="month"
+        defaultView={Views.MONTH}
         startAccessor="start"
         endAccessor="end"
         style={{ height: '95%', width: '100%' }}
