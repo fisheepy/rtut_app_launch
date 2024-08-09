@@ -40,7 +40,7 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
         completedSurvey: commonStyles.notificationModal.completedSurvey,
     };
 
-    const { notifications, markNotificationsAsRead, markAllMessagesAsRead, deleteNotification, fetchAllNotifications, isLoading } = useNotification();
+    const { notifications, markNotificationsAsRead, fetchAllNotifications, isLoading } = useNotification();
     const [qualifiedNotifications, setQualifiedNotifications] = useState([]);
     const [detailViewMode, setDetailViewMode] = useState(false);
     const [selectedNotification, setSelectedNotification] = useState(null);
