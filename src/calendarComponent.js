@@ -84,34 +84,33 @@ const CalendarComponent = ({ data }) => {
         onRequestClose={() => setModalVisible(false)}
       >
         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={modalStyles.centeredView}>
+          <View style={modalStyles.overlay}> {/* Changed from centeredView to overlay */}
             <TouchableWithoutFeedback>
               <View style={modalStyles.modalView}>
-                <ScrollView contentContainerStyle={{ alignItems: "center", flexGrow: 1 }}> {/* ScrollView added */}
+                <ScrollView contentContainerStyle={{ alignItems: "center", flexGrow: 1 }}>
                   <Text style={modalStyles.modalHeadline}>Title: {selectedEvent?.title}</Text>
                   <Text style={modalStyles.modalHeadline}>Location: {selectedEvent?.location}</Text>
                   <Text style={modalStyles.modalText}>Creator: {selectedEvent?.creator}</Text>
                   <Text style={modalStyles.modalText}>Details: {selectedEvent?.detail}</Text>
-                </ScrollView> {/* Close ScrollView */}
+                </ScrollView>
               </View>
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-    </div >
+    </div>
   );
 };
 
 const modalStyles = StyleSheet.create({
-  centeredView: {
+  overlay: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    width: '75%',
-    marginTop: 22,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
   },
   modalView: {
-    width: '95%', // Set the width to 75% of the screen
+    width: '75%', // Set the width to 75% of the screen
     minHeight: 200, // Set a minimum height for the modal
     maxHeight: '80%', // Limit the maximum height to allow for scrolling
     backgroundColor: "white",
@@ -127,22 +126,11 @@ const modalStyles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
   modalHeadline: {
-    marginBottom: 15,
+    fontWeight: "bold",
+    marginBottom: 10,
     textAlign: "center",
+    width: "100%", // Ensures text uses full modal width
   },
   modalText: {
     marginBottom: 15,
