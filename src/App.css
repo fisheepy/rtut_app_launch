@@ -63,12 +63,15 @@
 
 /* App.css or a dedicated CSS file */
 .rbc-event-content {
-  white-space: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  word-break: break-word;
-  font-size: 0.8em; /* Slightly larger for better readability */
-  padding: 2px 4px; /* Ensure padding is consistent across elements */
+  white-space: normal; /* Allow text to wrap naturally */
+  overflow: hidden; /* Hide overflow content */
+  text-overflow: ellipsis; /* Add ellipsis if needed */
+  word-break: break-word; /* Break long words to fit */
+  display: block; /* Ensure block-level layout */
+  line-height: 1.2; /* Improve readability with line height */
+  font-size: 0.8em; /* Set a readable font size */
+  padding: 2px 4px; /* Add padding for spacing */
+  max-height: 3.6em; /* Limit height to show up to 3 lines */
 }
 
 .rbc-event {
@@ -118,11 +121,6 @@
 
 .rbc-time-slot {
   height: 2rem; /* Adjust this value to fit the content within the screen */
-}
-
-/* Style for the event title in week and day view */
-.rbc-event-content {
-  font-size: 15px; /* Adjust font size for event titles */
 }
 
 /* Adjust the width of the time column in week view */
