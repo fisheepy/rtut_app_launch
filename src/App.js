@@ -5,7 +5,7 @@ import NotificationModal from './notificationModal';
 import { NotificationProvider } from './context/novuNotifications';
 import UsefulLinksComponent from './usefulLinksComponent';
 import UserSettingsComponent from './userSettingsComponent';
-import { GrUserSettings, GrFormClose } from "react-icons/gr"; // Import GrFormClose for the Back icon
+import { GrUserSettings, GrFormClose } from "react-icons/gr";
 import commonStyles from './styles/commonStyles';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
@@ -16,7 +16,7 @@ function App({ windowDimensions }) {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [pushToken, setPushToken] = useState(null);
-  const [notificationData, setNotificationData] = useState(null); // State to hold notification data
+  const [notificationData, setNotificationData] = useState(null);
 
   const sendTokenToServer = (token, userData) => {
     const url = 'https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/register_token';
@@ -42,37 +42,31 @@ function App({ windowDimensions }) {
 
   useEffect(() => {
     if (Capacitor.getPlatform() !== 'web') {
-      // Request permission for push notifications
       PushNotifications.requestPermissions().then(result => {
         if (result.receive === 'granted') {
-          // Register with the push notification service
           PushNotifications.register();
         } else {
           console.log('User denied permissions to push notifications.');
         }
       });
 
-      // Listen for registration of the push notifications
       PushNotifications.addListener('registration', (token) => {
         console.log('Push registration success, token: ' + token.value);
-        setPushToken(token.value); // Save token to state
+        setPushToken(token.value);
       });
 
-      // Handle errors
       PushNotifications.addListener('registrationError', (error) => {
         console.error('Error on push registration:', error);
       });
 
-      // Listen for when a push notification is received
       PushNotifications.addListener('pushNotificationReceived', (notification) => {
         console.log('Notification received: ', notification);
       });
 
-      // Listen for when a push notification is clicked
       PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
         console.log('Notification action performed', notification);
         console.log('Notification Data:', notification.notification.data);
-        setNotificationData(notification.notification.data); // Save notification data to state
+        setNotificationData(notification.notification.data);
       });
 
       return () => {
@@ -94,15 +88,15 @@ function App({ windowDimensions }) {
           setSubscriberName({ userFirstName, userLastName });
           setIsDataLoaded(true);
           if (pushToken) {
-            sendTokenToServer(pushToken, { userFirstName, userLastName }); // Send token to server with user data
+            sendTokenToServer(pushToken, { userFirstName, userLastName });
           }
         } else {
-          setTimeout(fetchUserDetails, 5000); // Retry after 5 seconds if data is not yet available or complete
+          setTimeout(fetchUserDetails, 5000);
         }
       } catch (error) {
         console.error('Error fetching user details from AsyncStorage:', error);
         if (!isCancelled) {
-          setTimeout(fetchUserDetails, 5000); // Retry after error
+          setTimeout(fetchUserDetails, 5000);
         }
       }
     }
@@ -110,9 +104,9 @@ function App({ windowDimensions }) {
     fetchUserDetails();
 
     return () => {
-      isCancelled = true; // Prevent setting state after the component is unmounted
+      isCancelled = true;
     };
-  }, [pushToken]); // Add pushToken as a dependency
+  }, [pushToken]);
 
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
@@ -137,8 +131,11 @@ function App({ windowDimensions }) {
           <Pressable onPress={() => setIsMenuVisible(false)} style={commonStyles.app.backIcon}>
             <GrFormClose />
           </Pressable>
-          <UserSettingsComponent />
-          <UsefulLinksComponent />
+          {/* Display components side by side */}
+          <View style={commonStyles.app.menuRow}>
+            <UsefulLinksComponent />
+            <UserSettingsComponent />
+          </View>
         </View>
       )}
       <View style={commonStyles.app.content}>
