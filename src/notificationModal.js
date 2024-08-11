@@ -219,7 +219,6 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
         if (fetchNeeded) {
             fetchAllNotifications().then(() => {
                 console.log('Fetch by fetchNeeded successfully.');
-                console.log(notifications);
                 // Assuming fetchAllNotifications updates the notifications context,
                 // the useEffect hook below will trigger and updateQualifiedNotifications.
             }).catch(error => console.error('Failed to fetch notifications:', error));

@@ -1,8 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import './App.css'; // Import your CSS file
+import './App.css';
 import CustomEvent from './customEvent';
 import CustomAgendaEvent from './customAgendaEvent';
 import { Modal, StyleSheet, Text, View, ScrollView, TouchableWithoutFeedback } from 'react-native';
@@ -11,14 +11,21 @@ const localizer = momentLocalizer(moment);
 
 const CalendarComponent = ({ data }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState(Views.MONTH); // Default to month view
+  const [view, setView] = useState(Views.MONTH);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   // Filter events based on the current view
   const filteredData = useMemo(() => {
-    const start = moment(currentDate).startOf(view).toDate();
-    const end = moment(currentDate).endOf(view).toDate();
+    let start, end;
+
+    if (view === Views.AGENDA) {
+      start = moment(currentDate).startOf('month').toDate();
+      end = moment(currentDate).endOf('month').toDate();
+    } else {
+      start = moment(currentDate).startOf(view).toDate();
+      end = moment(currentDate).endOf(view).toDate();
+    }
 
     return data.filter(event => {
       const eventStart = new Date(event.startDate);
@@ -46,10 +53,25 @@ const CalendarComponent = ({ data }) => {
 
   const handleNavigate = (date) => {
     setCurrentDate(date);
+
+    // Adjust the date logic for agenda view to start from the next month if close to end
+    if (view === Views.AGENDA) {
+      const endOfMonth = moment(date).endOf('month');
+      const daysLeft = endOfMonth.diff(date, 'days');
+      
+      if (daysLeft < 7) {
+        setCurrentDate(moment(date).add(1, 'months').startOf('month').toDate());
+      } else {
+        setCurrentDate(date);
+      }
+    }
   };
 
   const handleViewChange = (newView) => {
     setView(newView);
+    if (newView === Views.AGENDA) {
+      setCurrentDate(moment(currentDate).startOf('month').toDate());
+    }
   };
 
   return (
@@ -57,8 +79,9 @@ const CalendarComponent = ({ data }) => {
       <Calendar
         localizer={localizer}
         events={formattedData}
-        defaultView={Views.MONTH}
-        views={[Views.MONTH, Views.WEEK, Views.DAY]} // Disable agenda view by not including it here
+        views={[Views.MONTH,  Views.WEEK, Views.DAY, Views.AGENDA,]}
+        view={view} // Explicitly manage the view
+        date={currentDate} // Explicitly manage the date
         startAccessor="start"
         endAccessor="end"
         style={{ height: '95%', width: '100%' }}
@@ -73,10 +96,10 @@ const CalendarComponent = ({ data }) => {
         }}
         onNavigate={handleNavigate}
         onView={handleViewChange}
-        view={view}
-        date={currentDate}
-        min={new Date(2024, 1, 1, 8, 0)} // 8:00 AM
-        max={new Date(2024, 1, 1, 18, 0)} // 6:00 PM
+        min={new Date(2024, 1, 1, 8, 0)}
+        max={new Date(2024, 1, 1, 18, 0)}
+        step={30} // Number of minutes each slot represents
+        timeslots={2} // Number of slots per hour
       />
       <Modal
         animationType="slide"
