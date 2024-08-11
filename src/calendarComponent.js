@@ -11,20 +11,19 @@ const localizer = momentLocalizer(moment);
 
 const CalendarComponent = ({ data }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState(Views.MONTH); // Use Views constant for consistency
+  const [view, setView] = useState(Views.MONTH); // Default to month view
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   // Filter events based on the current view
   const filteredData = useMemo(() => {
-    if (view === Views.AGENDA) {
-      const startOfMonth = moment(currentDate).startOf('month').toDate();
-      const endOfMonth = moment(currentDate).endOf('month').toDate();
-      return data.filter(event =>
-        new Date(event.startDate) >= startOfMonth && new Date(event.startDate) <= endOfMonth
-      );
-    }
-    return data;
+    const start = moment(currentDate).startOf(view).toDate();
+    const end = moment(currentDate).endOf(view).toDate();
+
+    return data.filter(event => {
+      const eventStart = new Date(event.startDate);
+      return eventStart >= start && eventStart <= end;
+    });
   }, [data, view, currentDate]);
 
   const formattedData = useMemo(() => {
@@ -45,12 +44,13 @@ const CalendarComponent = ({ data }) => {
     setModalVisible(true);
   };
 
-  useEffect(() => {
-    // When the view changes to agenda, update the current date to the start of the month
-    if (view === Views.AGENDA) {
-      setCurrentDate(moment(currentDate).startOf('month').toDate());
-    }
-  }, [view]);
+  const handleNavigate = (date) => {
+    setCurrentDate(date);
+  };
+
+  const handleViewChange = (newView) => {
+    setView(newView);
+  };
 
   return (
     <div className="calendar-container">
@@ -58,6 +58,7 @@ const CalendarComponent = ({ data }) => {
         localizer={localizer}
         events={formattedData}
         defaultView={Views.MONTH}
+        views={[Views.MONTH, Views.WEEK, Views.DAY]} // Disable agenda view by not including it here
         startAccessor="start"
         endAccessor="end"
         style={{ height: '95%', width: '100%' }}
@@ -70,8 +71,8 @@ const CalendarComponent = ({ data }) => {
             event: CustomAgendaEvent
           },
         }}
-        onNavigate={date => setCurrentDate(date)}
-        onView={view => setView(view)}
+        onNavigate={handleNavigate}
+        onView={handleViewChange}
         view={view}
         date={currentDate}
         min={new Date(2024, 1, 1, 8, 0)} // 8:00 AM
@@ -84,7 +85,7 @@ const CalendarComponent = ({ data }) => {
         onRequestClose={() => setModalVisible(false)}
       >
         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-          <View style={modalStyles.overlay}> {/* Changed from centeredView to overlay */}
+          <View style={modalStyles.overlay}>
             <TouchableWithoutFeedback>
               <View style={modalStyles.modalView}>
                 <ScrollView contentContainerStyle={{ alignItems: "center", flexGrow: 1 }}>
@@ -107,12 +108,12 @@ const modalStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {
-    width: '75%', // Set the width to 75% of the screen
-    minHeight: 200, // Set a minimum height for the modal
-    maxHeight: '80%', // Limit the maximum height to allow for scrolling
+    width: '75%',
+    minHeight: 200,
+    maxHeight: '80%',
     backgroundColor: "white",
     borderRadius: 20,
     padding: 20,
@@ -130,13 +131,13 @@ const modalStyles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     textAlign: "center",
-    width: "100%", // Ensures text uses full modal width
+    width: "100%",
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "justify", // Set text alignment to justify for better width adjustment
-    lineHeight: 20, // Optional: increase line height for better readability
-    width: '100%', // Ensure text uses the full width of the modal
+    textAlign: "justify",
+    lineHeight: 20,
+    width: '100%',
   }
 });
 
