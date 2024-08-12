@@ -47,6 +47,7 @@ const CalendarComponent = ({ data }) => {
   }, [filteredData]);
 
   const handleEventClick = (event) => {
+    console.log(event);
     setSelectedEvent(event);
     setModalVisible(true);
   };
@@ -79,7 +80,7 @@ const CalendarComponent = ({ data }) => {
       <Calendar
         localizer={localizer}
         events={formattedData}
-        views={[Views.MONTH,  Views.WEEK, Views.DAY, Views.AGENDA,]}
+        views={[Views.DAY, Views.MONTH, Views.AGENDA,]}
         view={view} // Explicitly manage the view
         date={currentDate} // Explicitly manage the date
         startAccessor="start"
