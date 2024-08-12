@@ -37,18 +37,16 @@
   }
 }
 
+/* General settings for calendar container */
 .calendar-container {
   width: 100%;
-  height: 100vh; /* Adjust the height to fit within the viewport */
+  height: 90vh; /* Adjust the height to fit within the viewport */
   max-width: 100vw;
   margin: 0 auto;
   overflow-x: hidden;
 }
 
-.rbc-calendar {
-  height: 100%;
-}
-
+.rbc-calendar,
 .rbc-month-view {
   height: 100%;
 }
@@ -61,27 +59,31 @@
   height: 100%;
 }
 
-/* App.css or a dedicated CSS file */
+/* Event content styling */
 .rbc-event-content {
-  white-space: normal !important; /* Allow text wrapping */
-  overflow: hidden; /* Hide overflow */
+  white-space: normal; /* Allow text to wrap naturally */
+  overflow: hidden; /* Hide overflow content */
   text-overflow: ellipsis; /* Show ellipsis if text is too long */
-  display: block;
+  display: block; /* Ensure block-level layout */
   word-break: break-word; /* Break long words */
-  font-size: 0.8em; /* Adjust the font size as needed */
+  font-size: 0.8em; /* Adjust the font size */
+  line-height: 1.2; /* Improve readability with line height */
+  padding: 2px 4px; /* Add padding for spacing */
 }
 
+/* Custom event styling */
 .rbc-event {
-  line-height: 1.2; /* Adjust line height for better readability */
-  padding: 2px; /* Adjust padding for event content */
+  line-height: 1.2; /* Ensure proper spacing */
+  padding: 2px; /* Adjust padding */
 }
 
+/* Hide event label in month view */
 .rbc-event-label {
-  font-size: 0rem; /* Adjust the font size of the event label */
+  font-size: 0rem; /* Hide the label */
 }
 
 .rbc-day-bg {
-  border: 1px solid #ddd; /* Optional: Add borders to cells for better visibility */
+  border: 1px solid #ddd; /* Add borders to cells */
 }
 
 .rbc-toolbar {
@@ -89,159 +91,100 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem;
-  font-size: 0.9rem; /* Adjust font size for the toolbar */
+  font-size: 0.9rem; /* Adjust toolbar font size */
 }
 
 .rbc-toolbar button {
-  font-size: 0.8rem; /* Adjust font size for the buttons */
-  padding: 0.25rem 0.5rem; /* Adjust padding for the buttons */
-}
-
-.rbc-toolbar button:focus {
-  outline: none;
+  font-size: 0.8rem; /* Adjust button font size */
+  padding: 0.25rem 0.5rem; /* Adjust button padding */
 }
 
 .rbc-btn-group {
   display: flex;
-  gap: 0.25rem; /* Adjust gap between buttons */
+  gap: 0.25rem; /* Adjust button gap */
 }
 
 .rbc-toolbar-label {
-  font-size: 1rem; /* Adjust font size for the label */
+  font-size: 1rem; /* Adjust toolbar label font size */
 }
 
 .rbc-time-content {
   flex: 1 0 0;
-  font-size: 12px; /* Adjust font size for time */
+  font-size: 12px; /* Adjust time font size */
 }
 
 .rbc-time-slot {
-  height: 2rem; /* Adjust this value to fit the content within the screen */
+  height: 2rem; /* Adjust slot height */
 }
 
-/* Adjust the width of the time column in week view */
+/* Adjust time gutter width */
 .rbc-time-gutter {
-  width: 60px; /* Adjust width as needed */
+  width: 60px; /* Adjust gutter width */
 }
 
 .custom-event {
-  cursor: pointer; /* Ensure the cursor changes to indicate a clickable element */
-  pointer-events: auto; /* Ensure clicks are allowed */
+  cursor: pointer; /* Make event clickable */
+  pointer-events: auto; /* Ensure events can be clicked */
 }
 
 .custom-event .event-title {
   white-space: normal; /* Allow text to wrap */
   overflow-wrap: break-word; /* Break long words */
-  word-wrap: break-word; /* Wrap words on boundaries */
-  max-height: 2.5em; /* Adjust to limit the height */
-  line-height: 1.2; /* Adjust line height for better wrapping */
+  word-wrap: break-word; /* Wrap words */
+  max-height: calc(1.2em * 5); /* Limit height to 5 lines */
+  line-height: 1.2; /* Adjust line height */
   overflow: hidden; /* Hide overflow text */
-  text-overflow: ellipsis; /* Add ellipsis for overflow */
-}
-
-.calendar-container .rbc-event-content {
-  padding: 2px 4px; /* Add some padding for readability */
-}
-
-/* Make agenda view fill the full viewport width */
-.rbc-agenda-view {
-  width: 100vw !important; /* Ensure it spans the full viewport width */
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-
-.rbc-agenda-table {
-  width: 100%; /* Ensure table fills the container */
-}
-
-.rbc-agenda-content {
-  width: 100%; /* Ensure content spans the full width */
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-
-/* Ensure these styles apply only in the month view */
-.rbc-month-view .custom-event .event-title {
-  white-space: normal; /* Allow text to wrap */
-  overflow-wrap: break-word; /* Break long words */
-  word-wrap: break-word; /* Wrap words on boundaries */
-  max-height: calc(1.2em * 5); /* Limit height to accommodate 5 lines */
-  line-height: 1.2; /* Adjust line height for better wrapping */
-  overflow: hidden; /* Hide overflow text */
-  text-overflow: ellipsis; /* Add ellipsis for overflow */
-  display: -webkit-box; /* Use flexbox model */
+  text-overflow: ellipsis; /* Add ellipsis */
+  display: -webkit-box; /* Use flexbox */
   -webkit-line-clamp: 5; /* Limit to 5 lines */
-  -webkit-box-orient: vertical; /* Display orientation for text */
-  font-size: 0.5em; /* Smaller font size for month view */
+  -webkit-box-orient: vertical; /* Display orientation */
+  font-size: 0.5em; /* Font size for month view */
 }
 
-/* Keep default font size for day view */
-.rbc-day-view .rbc-event-content {
-  font-size: inherit; /* Maintain default size */
+/* Agenda view adjustments */
+.rbc-agenda-view {
+  width: 100vw; /* Full viewport width */
+  overflow-x: hidden; /* Prevent scrolling */
 }
 
-/* Limit width and adjust font size for Date and Time columns in the agenda view */
-.rbc-agenda-view .rbc-agenda-date-cell {
-  max-width: 120px; /* Default width */
-  width: 120px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 0.9em;
-  padding: 5px;
-  text-align: center;
+.rbc-agenda-table,
+.rbc-agenda-content {
+  width: 100%; /* Fill container */
+  overflow-x: hidden; /* Prevent scrolling */
 }
 
+/* Agenda columns styling */
+.rbc-agenda-view .rbc-agenda-date-cell,
 .rbc-agenda-view .rbc-agenda-time-cell {
-  max-width: 80px; /* Default width */
-  width: 80px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 0.9em;
-  padding: 5px;
-  text-align: center;
+  max-width: 120px; /* Limit width */
+  width: 120px;
+  white-space: normal; /* Wrap text */
+  font-size: 0.9em; /* Font size */
+  padding: 5px; /* Padding */
+  text-align: center; /* Center text */
 }
 
-/* Responsive adjustments for smaller screens */
-@media (max-width: 600px) {
-  .rbc-agenda-view .rbc-agenda-date-cell,
-  .rbc-agenda-view .rbc-agenda-time-cell {
-    font-size: 0.8em; /* Smaller font for smaller screens */
-    max-width: 100px; /* Reduced width for smaller screens */
-    width: 100px;
-    padding: 4px; /* Slightly reduced padding */
-  }
-}
-
-@media (max-width: 400px) {
-  .rbc-agenda-view .rbc-agenda-date-cell,
-  .rbc-agenda-view .rbc-agenda-time-cell {
-    font-size: 0.75em; /* Even smaller font for very small screens */
-    max-width: 80px; /* Further reduced width */
-    width: 80px;
-    padding: 3px; /* Further reduced padding */
-  }
-}
-/* Default styles for the event column in the agenda view */
 .rbc-agenda-view .rbc-agenda-event-cell {
   font-size: 0.9em; /* Default font size */
-  padding: 5px; /* Padding for spacing */
-  overflow: hidden; /* Hide overflow */
-  text-overflow: ellipsis; /* Add ellipsis for overflow */
-  white-space: nowrap; /* Prevent text wrap */
-  max-width: calc(100vw - 220px); /* Adjust to prevent horizontal scroll */
+  padding: 5px; /* Padding */
+  white-space: normal; /* Wrap text */
 }
 
-/* Responsive adjustments for smaller screens */
+/* Responsive adjustments */
 @media (max-width: 600px) {
+  .rbc-agenda-view .rbc-agenda-date-cell,
+  .rbc-agenda-view .rbc-agenda-time-cell,
   .rbc-agenda-view .rbc-agenda-event-cell {
-    font-size: 0.8em; /* Slightly smaller font size */
-    padding: 4px; /* Slightly reduced padding */
+    font-size: 0.8em; /* Smaller font size */
+    padding: 4px; /* Reduced padding */
   }
 }
 
 @media (max-width: 400px) {
+  .rbc-agenda-view .rbc-agenda-date-cell,
+  .rbc-agenda-view .rbc-agenda-time-cell,
   .rbc-agenda-view .rbc-agenda-event-cell {
-    font-size: 0.75em; /* Even smaller font size for very small screens */
-    padding: 3px; /* Further reduced padding */
+    font-size: 0.75em; /* Smaller font size */
+    padding: 3px; /* Reduced padding */
   }
 }
