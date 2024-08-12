@@ -133,8 +133,8 @@ function App({ windowDimensions }) {
           </Pressable>
           {/* Display components side by side */}
           <View style={commonStyles.app.menuRow}>
-            <UsefulLinksComponent />
             <UserSettingsComponent />
+            <UsefulLinksComponent />
           </View>
         </View>
       )}
