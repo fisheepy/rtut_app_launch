@@ -85,7 +85,7 @@ const CalendarComponent = ({ data }) => {
         date={currentDate} // Explicitly manage the date
         startAccessor="start"
         endAccessor="end"
-        style={{ height: '95%', width: '100%' }}
+        style={{ height: '95%', width: '95%' }}
         tooltipAccessor={null}
         components={{
           event: (props) => (
