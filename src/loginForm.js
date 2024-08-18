@@ -19,6 +19,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
   const [loading, setLoading] = useState(false);
   const [resetModalVisible, setResetModalVisible] = useState(false);
   const [phone, setPhone] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // New state for toggling password visibility
   const { setUserInfo } = useUser();
 
   useEffect(() => {
@@ -83,6 +84,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
         },
         body: JSON.stringify({ userName, password }),
       });
+      console.log('test');
       if (response.ok) {
         const data = await response.json();
         const userInfo = data[0];
@@ -178,7 +180,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry={true}
+            secureTextEntry={!showPassword} // Toggle password visibility
             style={styles.input}
           />
           <View style={styles.checkboxContainer}>
@@ -188,6 +190,14 @@ const LoginForm = ({ navigation, windowDimensions }) => {
               style={styles.checkbox}
             />
             <Text>Remember Me</Text>
+          </View>
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              value={showPassword}
+              onValueChange={setShowPassword}
+              style={styles.checkbox}
+            />
+            <Text>Show Password</Text>
           </View>
           <Pressable style={styles.pressableLink} onPress={handlePasswordReset}>
             <Text style={styles.linkText}>Forgot Username/Password?</Text>
