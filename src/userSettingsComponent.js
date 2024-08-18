@@ -53,7 +53,7 @@ const UserSettingsComponent = () => {
                 <Pressable onPress={() => window.open('https://apps.apple.com/app/rtut/id6547833065/', '_blank')}>
                     <GrUpdate style={{ fontSize: 36, color: '#FF5733' }} />
                 </Pressable>
-                <Text style={commonStyles.useSetting.linkText}>Update App</Text>
+                <Text style={commonStyles.useSetting.linkText}>UPDATE APP</Text>
             </View>
 
             {/* User Feedback Button */}
@@ -65,7 +65,7 @@ const UserSettingsComponent = () => {
                 }}
             >
                 <VscFeedback />
-                <Text style={commonStyles.useSetting.linkText}>User Feedback</Text>
+                <Text style={commonStyles.useSetting.linkText}>USER FEEDBACK</Text>
             </Pressable>
             <Modal
                 animationType="slide"
