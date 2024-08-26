@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "704887368351",
+    "project_id": "rtut-app",
+    "storage_bucket": "rtut-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704887368351:android:791764735fb928a1bc10aa",
+        "android_client_info": {
+          "package_name": "io.ionic.rtutapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0QO72GzEa4Slkr9L2gzNvuo1axjjWBig"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
