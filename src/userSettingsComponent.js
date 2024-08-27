@@ -4,7 +4,12 @@ import { VscFeedback } from "react-icons/vsc";
 import { GiConfirmed, GiCancel } from "react-icons/gi";
 import { GrUpdate } from "react-icons/gr";
 import commonStyles from './styles/commonStyles';
-import UsefulLinksComponent from './usefulLinksComponent';
+import { Capacitor } from '@capacitor/core';
+
+// Define the update link based on the platform
+const updateLink = Capacitor.getPlatform() === 'ios'
+    ? 'https://apps.apple.com/app/rtut/id6547833065/'
+    : 'https://play.google.com/store/apps/details?id=your-android-app-id';
 
 const UserSettingsComponent = () => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -50,7 +55,7 @@ const UserSettingsComponent = () => {
         <View style={commonStyles.useSetting.container}>
             {/* Update App Button */}
             <View style={commonStyles.useSetting.iconLink}>
-                <Pressable onPress={() => window.open('https://apps.apple.com/app/rtut/id6547833065/', '_blank')}>
+                <Pressable onPress={() => window.open(updateLink, '_blank')}>
                     <GrUpdate style={{ fontSize: 36, color: '#FF5733' }} />
                 </Pressable>
                 <Text style={commonStyles.useSetting.linkText}>UPDATE APP</Text>

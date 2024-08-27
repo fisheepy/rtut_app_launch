@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { View, StyleSheet, useWindowDimensions } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { UserProvider } from './context/userContext';
 
 import App from './App';
@@ -12,11 +12,13 @@ import DisclaimerForm from './disclaimerForm';
 
 const Stack = createStackNavigator();
 const AppNavigation = () => {
-  const windowDimensions = useWindowDimensions();
   const [appDimensions, setAppDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    setAppDimensions(windowDimensions);
+    const screenHeight = window.innerHeight; 
+    const screenWidth = window.innerWidth;
+    setAppDimensions({ width: screenWidth, height: screenHeight });
+    console.log(`Screen height: ${screenHeight}, Width: ${screenWidth}`);
   }, []); // Run only once on mount
 
   return (
