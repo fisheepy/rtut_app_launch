@@ -45,11 +45,11 @@ export default StyleSheet.create({
             marginTop: 50,
             marginBottom: 20, // Space below the back icon
             padding: 20,
-            color: toggleColor, 
+            color: toggleColor,
         },
         settingIcon: {
-            fontSize: 32, 
-            color: settingColor, 
+            fontSize: 32,
+            color: settingColor,
         },
         content: {
             flex: 1,
@@ -71,6 +71,13 @@ export default StyleSheet.create({
             fontSize: 20, // Adjust the font size as needed
             fontWeight: 'Bold',
             fontFamily: 'Open Sans',
+        },
+        logoutButton: {
+            padding: 10,
+            backgroundColor: '#ff4d4d', // A red background to make it stand out
+            alignItems: 'center',
+            borderRadius: 5,
+            marginTop: 20,
         },
     },
     messageView: {
@@ -124,7 +131,7 @@ export default StyleSheet.create({
     },
     messageDetail: {
         container: {
-            flex: 1, 
+            flex: 1,
             flexGrow: 1,
             justifyContent: 'space-between',
             alignItems: 'stretch',
@@ -166,14 +173,14 @@ export default StyleSheet.create({
             paddingHorizontal: 32,
             fontFamily: 'Open Sans',
             backgroundColor: baseColor,
-            paddingBottom: 30, 
+            paddingBottom: 30,
         },
         buttonContainer: {
             flexDirection: 'row',
             justifyContent: 'center',
             backgroundColor: baseColor,
-            paddingBottom: 30, 
-          },
+            paddingBottom: 30,
+        },
         buttonText: {
             fontWeight: 'bold',
             letterSpacing: 0.25,
@@ -205,8 +212,8 @@ export default StyleSheet.create({
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'transparent',
-          },
-          form: {
+        },
+        form: {
             padding: 20,
             borderRadius: 10,
             backgroundColor: '#ffffff',
@@ -215,27 +222,27 @@ export default StyleSheet.create({
             shadowOpacity: 0.8,
             shadowRadius: 2,
             elevation: 5,
-          },
-          header: {
+        },
+        header: {
             fontSize: 24,
             fontWeight: 'bold',
             marginBottom: 20,
             textAlign: 'center',
-          },
-          text: {
+        },
+        text: {
             fontSize: 16,
             marginBottom: 20,
             textAlign: 'center',
-          },
-          checkboxContainer: {
+        },
+        checkboxContainer: {
             flexDirection: 'row',
             alignItems: 'center',
             marginBottom: 20,
-          },
-          checkbox: {
+        },
+        checkbox: {
             marginRight: 10,
-          },
-          input: {
+        },
+        input: {
             marginBottom: 10,
             padding: 10,
             borderWidth: 1,
@@ -244,25 +251,25 @@ export default StyleSheet.create({
             textAlign: 'center',
             width: '100%',
             backgroundColor: 'gray',
-          },
-          buttonContainer: {
+        },
+        buttonContainer: {
             flexDirection: 'row',
             justifyContent: 'space-around',
             marginTop: 20,
-          },
-          tabButton: {
+        },
+        tabButton: {
             alignItems: 'center',
             justifyContent: 'center',
             height: 40,
             backgroundColor: '#839c83'
-          },
-          tabButtonText: {
-          },
-          backgroundImage: {
+        },
+        tabButtonText: {
+        },
+        backgroundImage: {
             flex: 1,
             width: '100%',
             height: '100%',
-          },
+        },
     },
     useSetting: {
         container: {
@@ -384,7 +391,7 @@ export default StyleSheet.create({
             color: activeColor,
         },
         inactiveTab: {
-            color:baseColor,
+            color: baseColor,
         },
         messagesContainer: {
             marginTop: 10,
@@ -416,34 +423,34 @@ export default StyleSheet.create({
         container: {
             width: '100vw',
             backgroundColor: baseColor,
-          },
-          questionContainer: {
+        },
+        questionContainer: {
             marginBottom: 20,
             paddingHorizontal: 30,
             width: '90vw',
             maxWidth: '100%',
-          },
-          text:
-          {
+        },
+        text:
+        {
             textAlign: 'justify',
             fontFamily: 'Open Sans',
             fontSize: 12,
-          },
-          title: {
+        },
+        title: {
             textAlign: 'center',
             marginBottom: 10,
             fontFamily: 'Open Sans',
             fontWeight: 'bold',
             fontSize: 12,
-          },
-          choiceContainer: {
+        },
+        choiceContainer: {
             flexDirection: 'row',
             alignItems: 'center',
             marginBottom: 10,
             width: '90vw',
             maxWidth: '100%',
-          },
-          radioCircle: {
+        },
+        radioCircle: {
             width: 20,
             height: 20,
             borderRadius: 10,
@@ -452,22 +459,22 @@ export default StyleSheet.create({
             marginHorizontal: 10,
             justifyContent: 'center',
             alignItems: 'center',
-          },
-          selectedRadio: {
+        },
+        selectedRadio: {
             width: 12,
             height: 12,
             borderRadius: 6,
             backgroundColor: '#000',
-          },
-          input: {
+        },
+        input: {
             borderWidth: 1,
             borderColor: '#ccc',
             padding: 10,
             borderRadius: 5,
             fontFamily: 'Open Sans',
             fontSize: 12,
-          },
-          checkbox: {
+        },
+        checkbox: {
             width: 20,
             height: 20,
             borderWidth: 1,
@@ -475,22 +482,22 @@ export default StyleSheet.create({
             marginHorizontal: 10,
             justifyContent: 'center',
             alignItems: 'center',
-          },
-          checkedBox: {
+        },
+        checkedBox: {
             width: 12,
             height: 12,
             backgroundColor: '#000',
             fontFamily: 'Open Sans',
-          },
-          sliderContainer: {
+        },
+        sliderContainer: {
             width: '90vw',
             maxWidth: '100%',
-          },
-          buttonContainer: {
+        },
+        buttonContainer: {
             flexDirection: 'row',
             justifyContent: 'center',
             width: '100vw',
             marginBottom: 20,
-          },
+        },
     },
 });

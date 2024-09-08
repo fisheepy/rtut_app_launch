@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NotificationModal from './notificationModal';
 import { NotificationProvider } from './context/novuNotifications';
@@ -10,13 +10,14 @@ import commonStyles from './styles/commonStyles';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
 
-function App({ windowDimensions }) {
+function App({ windowDimensions, navigation }) {
   const [subscriberId, setSubscriberId] = useState(null);
   const [subscriberName, setSubscriberName] = useState(null);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [pushToken, setPushToken] = useState(null);
   const [notificationData, setNotificationData] = useState(null);
+  const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
 
   const sendTokenToServer = (token, userData) => {
     const url = 'https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/register_token';
@@ -112,13 +113,23 @@ function App({ windowDimensions }) {
     setIsMenuVisible(!isMenuVisible);
   };
 
+  const logout = async () => {
+    // Clear user data from AsyncStorage
+    await AsyncStorage.removeItem('userId');
+    await AsyncStorage.removeItem('userFirstName');
+    await AsyncStorage.removeItem('userLastName');
+
+    // Navigate to login screen
+    navigation.replace('RegistrationForm');
+  };
+
   return (
     <View style={commonStyles.app.container}>
       <View style={commonStyles.app.banner}>
         {isDataLoaded ? (
           <Text style={commonStyles.app.bannerText}>Welcome Back, {subscriberName.userFirstName} </Text>
         ) : (
-          <Text style={commonStyles.app.bannerText}>Loading...</Text>
+          <Text style={commonStyles.app.bannerText}>Welcome Back </Text>
         )}
       </View>
       <View style={commonStyles.app.iconButtonContainer}>
@@ -136,6 +147,9 @@ function App({ windowDimensions }) {
             <UserSettingsComponent />
             <UsefulLinksComponent />
           </View>
+          <Pressable onPress={() => setIsLogoutModalVisible(true)} style={commonStyles.app.logoutButton}>
+            <Text style={commonStyles.app.logoutButtonText}>Logout</Text>
+          </Pressable>
         </View>
       )}
       <View style={commonStyles.app.content}>
@@ -145,6 +159,23 @@ function App({ windowDimensions }) {
           </NotificationProvider>
         </div>
       </View>
+      <Modal
+        transparent={true}
+        visible={isLogoutModalVisible}
+        onRequestClose={() => setIsLogoutModalVisible(false)}
+      >
+        <View style={commonStyles.app.modalContainer}>
+          <View style={commonStyles.app.modalContent}>
+            <Text>Are you sure you want to logout?</Text>
+            <Pressable onPress={logout} style={commonStyles.app.confirmButton}>
+              <Text>Yes</Text>
+            </Pressable>
+            <Pressable onPress={() => setIsLogoutModalVisible(false)} style={commonStyles.app.cancelButton}>
+              <Text>No</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
