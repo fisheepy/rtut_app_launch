@@ -9,6 +9,7 @@ import { GrUserSettings, GrFormClose } from "react-icons/gr";
 import commonStyles from './styles/commonStyles';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
+import AppVersionComponent from './appVersionComponent'; // Import your version component
 
 function App({ windowDimensions, navigation }) {
   const [subscriberId, setSubscriberId] = useState(null);
@@ -146,6 +147,7 @@ function App({ windowDimensions, navigation }) {
           <View style={commonStyles.app.menuRow}>
             <UserSettingsComponent />
             <UsefulLinksComponent />
+            <AppVersionComponent />
           </View>
           <Pressable onPress={() => setIsLogoutModalVisible(true)} style={commonStyles.app.logoutButton}>
             <Text style={commonStyles.app.logoutButtonText}>Logout</Text>
