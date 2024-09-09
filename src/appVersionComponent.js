@@ -1,33 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
+import React from 'react';
+import packageJson from '../package.json'; // Adjust path to your package.json
 
 const AppVersionComponent = () => {
-  const [version, setVersion] = useState('');
+  const appVersion = packageJson.version;
 
-  useEffect(() => {
-    // Get the version number from DeviceInfo
-    const appVersion = DeviceInfo.getVersion();
-    setVersion(appVersion);
-  }, []);
+  const styles = {
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    versionText: {
+      fontSize: '20px',
+      color: '#000000',
+      textAlign: 'center'
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.versionText}>App Version: {version}</Text>
-    </View>
+    <div style={styles.container}>
+      <p style={styles.versionText}>App Version: {appVersion}</p>
+    </div>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  versionText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-});
 
 export default AppVersionComponent;
