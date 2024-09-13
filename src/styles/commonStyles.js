@@ -79,6 +79,53 @@ export default StyleSheet.create({
             borderRadius: 5,
             marginTop: 20,
         },
+        bottomContainer: {
+            marginTop: 'auto', // Push the bottom container to the bottom
+            alignItems: 'center', // Center the version and logout
+            paddingBottom: 20, // Add padding for space at the bottom
+        },
+        centeredModalContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Make the background darker
+          },
+          enlargedModalContent: {
+            width: '90%', // Wider modal for emphasis
+            maxWidth: 400,
+            backgroundColor: baseColor,
+            padding: 30,
+            borderRadius: 15,
+            alignItems: 'center', // Center the text and buttons
+          },
+          confirmationText: {
+            fontSize: 24, // Larger font size for the confirmation text
+            fontWeight: 'bold',
+            marginBottom: 20, // Add space between text and buttons
+            textAlign: 'center',
+          },
+          confirmButton: {
+            marginTop: 10,
+            paddingVertical: 15, // Larger button for touch-friendly design
+            paddingHorizontal: 40,
+            backgroundColor: '#4CAF50',
+            borderRadius: 5,
+          },
+          confirmButtonText: {
+            fontSize: 18,
+            color: '#fff',
+          },
+          cancelButton: {
+            marginTop: 10,
+            paddingVertical: 15,
+            paddingHorizontal: 40,
+            backgroundColor: '#d9534f',
+            borderRadius: 5,
+          },
+          cancelButtonText: {
+            fontSize: 18,
+            color: '#fff',
+          },
     },
     messageView: {
         container: {

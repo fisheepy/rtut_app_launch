@@ -11,7 +11,7 @@ const AppVersionComponent = () => {
       alignItems: 'center',
     },
     versionText: {
-      fontSize: '20px',
+      fontSize: '12px',
       color: '#000000',
       textAlign: 'center'
     }

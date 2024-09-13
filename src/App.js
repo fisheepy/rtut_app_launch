@@ -147,11 +147,14 @@ function App({ windowDimensions, navigation }) {
           <View style={commonStyles.app.menuRow}>
             <UserSettingsComponent />
             <UsefulLinksComponent />
-            <AppVersionComponent />
           </View>
-          <Pressable onPress={() => setIsLogoutModalVisible(true)} style={commonStyles.app.logoutButton}>
-            <Text style={commonStyles.app.logoutButtonText}>Logout</Text>
-          </Pressable>
+          {/* Version number and Logout button aligned to bottom */}
+          <View style={commonStyles.app.bottomContainer}>
+            <AppVersionComponent />
+            <Pressable onPress={() => setIsLogoutModalVisible(true)} style={commonStyles.app.logoutButton}>
+              <Text style={commonStyles.app.logoutButtonText}>Logout</Text>
+            </Pressable>
+          </View>
         </View>
       )}
       <View style={commonStyles.app.content}>
@@ -166,18 +169,19 @@ function App({ windowDimensions, navigation }) {
         visible={isLogoutModalVisible}
         onRequestClose={() => setIsLogoutModalVisible(false)}
       >
-        <View style={commonStyles.app.modalContainer}>
-          <View style={commonStyles.app.modalContent}>
-            <Text>Are you sure you want to logout?</Text>
+        <View style={commonStyles.app.centeredModalContainer}>
+          <View style={commonStyles.app.enlargedModalContent}>
+            <Text style={commonStyles.app.confirmationText}>Are you sure you want to logout?</Text>
             <Pressable onPress={logout} style={commonStyles.app.confirmButton}>
-              <Text>Yes</Text>
+              <Text style={commonStyles.app.confirmButtonText}>Yes</Text>
             </Pressable>
             <Pressable onPress={() => setIsLogoutModalVisible(false)} style={commonStyles.app.cancelButton}>
-              <Text>No</Text>
+              <Text style={commonStyles.app.cancelButtonText}>No</Text>
             </Pressable>
           </View>
         </View>
       </Modal>
+
     </View>
   );
 }
