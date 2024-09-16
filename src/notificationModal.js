@@ -15,7 +15,7 @@ import { PushNotifications } from '@capacitor/push-notifications';
 
 const getStorageKey = (userId) => `notifications_${userId}`;
 
-const NotificationModal = ({ windowDimensions, notificationData }) => {
+const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRefreshing }) => {
     const styles = {
         container: {
             ...commonStyles.notificationModal.container,
@@ -156,9 +156,9 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
         console.log('useEffect: qualifiedNotifications', pendingMessageId, fetchNeeded);
         // Introduce a delay to ensure fetch is complete
         if (pendingMessageId && !fetchNeeded) {
-            const matchedNotification = qualifiedNotifications.find(notification => notification.payload.messageId === pendingMessageId);
+            const matchedNotification = qualifiedNotifications.find(notification => notification.payload?.messageId === pendingMessageId);
             if (matchedNotification) {
-                console.log("match:", matchedNotification.payload.messageId);
+                console.log("match:", matchedNotification.payload?.messageId);
                 // setSelectedNotification(matchedNotification);
                 // setDetailViewMode(true);
                 setPendingMessageId(null);
@@ -182,6 +182,21 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
             setIsPulledDown(false); // Reset the flag after refresh
         }
     }, [isPulledDown]);
+
+    useEffect(() => {
+        console.log('notificationModal onRefresh');
+        // Fetch notifications on component mount or refresh
+        fetchAllNotifications().then(() => {
+            console.log('Fetch by Refresh successfully.');
+        }).catch(error => {
+            console.error('Failed to fetch notifications:', error);
+        });
+        fetchSchedulerData().then(() => {
+            console.log('Events fetched successfully.');
+        }).catch(error => {
+            console.error('Failed to fetch events:', error);
+        });
+    }, [onRefresh]);
 
     useEffect(() => {
         console.log('useEffect: lastFetchTime', lastFetchTime);
@@ -255,11 +270,11 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
         console.log('useEffect: qualifiedNotifications/currentTab',qualifiedNotifications,currentTab);
         const newFilteredNotifications = qualifiedNotifications.filter(notification => {
             if (currentTab === 'surveys') {
-                return notification.payload.messageType === 'SURVEY';
+                return notification.payload?.messageType === 'SURVEY';
             }
             else if (currentTab === 'notifications') {
-                return notification.payload.messageType === 'NOTIFICATION' ||
-                    !['NOTIFICATION', 'SURVEY'].includes(notification.payload.messageType);
+                return notification.payload?.messageType === 'NOTIFICATION' ||
+                    !['NOTIFICATION', 'SURVEY'].includes(notification.payload?.messageType);
             }
         });
         setFilteredNotifications(newFilteredNotifications);
@@ -290,7 +305,7 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
     const handleSurveyComplete = async (answers) => {
         try {
             const timestamp = Date.now();
-            const surveyId = selectedNotification.payload.uniqueId;
+            const surveyId = selectedNotification.payload?.uniqueId;
             // Send the survey result to the server
             const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/submit-survey', {
                 method: 'POST',
@@ -334,8 +349,8 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
     let surveyJson;
 
     try {
-        if (selectedNotification.payload.messageType === 'SURVEY') {
-            surveyJson = JSON.parse(selectedNotification.payload.messageContent);
+        if (selectedNotification?.payload?.messageType === 'SURVEY') {
+            surveyJson = JSON.parse(selectedNotification?.payload?.messageContent);
         }
     } catch (error) {
         console.error('Failed to parse survey JSON:', error);
@@ -379,11 +394,11 @@ const NotificationModal = ({ windowDimensions, notificationData }) => {
                                     <MessageViewComponent
                                         notification={notification}
                                         onPress={() => {
-                                            if (currentTab !== 'surveys' || !completedSurveys.includes(notification.payload.uniqueId)) {
+                                            if (currentTab !== 'surveys' || !completedSurveys.includes(notification.payload?.uniqueId)) {
                                                 handleNotificationPress(notification);
                                             }
                                         }}
-                                        isSurveyCompleted={completedSurveys.includes(notification.payload.uniqueId)}
+                                        isSurveyCompleted={completedSurveys.includes(notification.payload?.uniqueId)}
                                         windowDimensions={windowDimensions}
                                     />
                                 </View>

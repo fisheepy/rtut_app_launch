@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, Modal } from 'react-native';
+import { View, Text, Pressable, ScrollView, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NotificationModal from './notificationModal';
 import { NotificationProvider } from './context/novuNotifications';
 import UsefulLinksComponent from './usefulLinksComponent';
 import UserSettingsComponent from './userSettingsComponent';
 import { GrUserSettings, GrFormClose } from "react-icons/gr";
+import { BiRefresh } from "react-icons/bi";  // Using react-icons for refresh
 import commonStyles from './styles/commonStyles';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
@@ -19,6 +20,7 @@ function App({ windowDimensions, navigation }) {
   const [pushToken, setPushToken] = useState(null);
   const [notificationData, setNotificationData] = useState(null);
   const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false); // Track refreshing state
 
   const sendTokenToServer = (token, userData) => {
     const url = 'https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/register_token';
@@ -110,6 +112,17 @@ function App({ windowDimensions, navigation }) {
     };
   }, [pushToken]);
 
+  // Handle the refresh logic
+  const onRefresh = () => {
+    console.log('onRefresh');
+    setIsRefreshing(true);
+    // Simulate data fetch or whatever refresh action
+    setTimeout(() => {
+      setIsRefreshing(false);
+      // Add your refresh logic here
+    }, 2000);
+  };
+
   const toggleMenu = () => {
     setIsMenuVisible(!isMenuVisible);
   };
@@ -137,6 +150,15 @@ function App({ windowDimensions, navigation }) {
         <Pressable onPress={toggleMenu} style={commonStyles.app.settingIcon}>
           <GrUserSettings />
         </Pressable>
+        <Pressable
+          onPress={onRefresh}
+          style={[
+            commonStyles.app.refreshIcon,
+            isRefreshing ? { backgroundColor: 'gray' } : { backgroundColor: 'transparent' } // Change color based on refreshing state
+          ]}
+        >
+          <BiRefresh size={32} style={commonStyles.app.refreshIcon} />
+        </Pressable>
       </View>
       {isMenuVisible && (
         <View style={commonStyles.app.menu}>
@@ -160,7 +182,13 @@ function App({ windowDimensions, navigation }) {
       <View style={commonStyles.app.content}>
         <div>
           <NotificationProvider applicationIdentifier="o-7dmY_XxQs5" subscriberId={subscriberId}>
-            <NotificationModal windowDimensions={windowDimensions} notificationData={notificationData} />
+            {/* Pass isRefreshing and onRefresh as props to NotificationModal */}
+            <NotificationModal
+              windowDimensions={windowDimensions}
+              notificationData={notificationData}
+              isRefreshing={isRefreshing}
+              onRefresh={onRefresh}
+            />
           </NotificationProvider>
         </div>
       </View>
@@ -181,7 +209,6 @@ function App({ windowDimensions, navigation }) {
           </View>
         </View>
       </Modal>
-
     </View>
   );
 }

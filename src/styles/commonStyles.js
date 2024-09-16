@@ -24,8 +24,13 @@ export default StyleSheet.create({
         iconButtonContainer: {
             position: 'absolute',
             top: 50,
-            left: 10,
-            zIndex: 1, // Ensure the icon is above other content
+            left: 0,  // Reset left to 0
+            right: 0, // Ensure it stretches across the full width
+            flexDirection: 'row',
+            justifyContent: 'space-between', // Distributes space evenly
+            alignItems: 'center', // Centers items vertically
+            paddingHorizontal: 10, // Add padding if needed
+            zIndex: 1,
         },
         menu: {
             position: 'absolute',
@@ -48,6 +53,10 @@ export default StyleSheet.create({
             color: toggleColor,
         },
         settingIcon: {
+            fontSize: 32,
+            color: settingColor,
+        },
+        refreshIcon: {
             fontSize: 32,
             color: settingColor,
         },
