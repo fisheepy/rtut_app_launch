@@ -140,7 +140,13 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                     setQualifiedNotifications(JSON.parse(cachedNotifications));
                     setFetchNeeded(false);
                 } else {
-                    setFetchNeeded(true);
+                    const timer = setTimeout(() => {
+                        console.log('Auto-triggering refresh after initialization');
+                        onRefresh();  // Trigger the refresh
+                    }, 3000);  // Set your desired delay, e.g., 3 seconds
+                
+                    // Cleanup the timer when the component unmounts
+                    return () => clearTimeout(timer);
                 }
             } catch (error) {
                 setQualifiedNotifications([]);
