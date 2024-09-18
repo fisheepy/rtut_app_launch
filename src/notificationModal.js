@@ -64,6 +64,19 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
         await onRefresh();  // Call the passed refresh function
     };
 
+    const fetchFromServer = () => {
+        fetchAllNotifications().then(() => {
+            console.log('Notifications fetched successfully.');
+        }).catch(error => {
+            console.error('Failed to fetch notifications:', error);
+        });
+        fetchSchedulerData().then(() => {
+            console.log('Events fetched successfully.');
+        }).catch(error => {
+            console.error('Failed to fetch events:', error);
+        });
+    }
+
     useEffect(() => {
         if (notificationData) {
             console.log('Notification Data received in NotificationModal:', notificationData);
@@ -121,16 +134,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
             setPushNotification(data);
             console.log('Notifications fetched by push.');
 
-            fetchAllNotifications().then(() => {
-                console.log('Notifications fetched successfully.');
-            }).catch(error => {
-                console.error('Failed to fetch notifications:', error);
-            });
-            fetchSchedulerData().then(() => {
-                console.log('Events fetched successfully.');
-            }).catch(error => {
-                console.error('Failed to fetch events:', error);
-            });
+            fetchFromServer();
         });
 
         PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
@@ -192,16 +196,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
     useEffect(() => {
         if (isPulledDown) {
             // Trigger the refresh logic
-            fetchAllNotifications().then(() => {
-                console.log('Fetch by pull down successfully.');
-            }).catch(error => {
-                console.error('Failed to fetch notifications:', error);
-            });
-            fetchSchedulerData().then(() => {
-                console.log('Events fetched successfully.');
-            }).catch(error => {
-                console.error('Failed to fetch events:', error);
-            });
+            fetchFromServer();
             setIsPulledDown(false); // Reset the flag after refresh
         }
     }, [isPulledDown]);
@@ -209,16 +204,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
     useEffect(() => {
         console.log('notificationModal onRefresh');
         // Fetch notifications on component mount or refresh
-        fetchAllNotifications().then(() => {
-            console.log('Fetch by Refresh successfully.');
-        }).catch(error => {
-            console.error('Failed to fetch notifications:', error);
-        });
-        fetchSchedulerData().then(() => {
-            console.log('Events fetched successfully.');
-        }).catch(error => {
-            console.error('Failed to fetch events:', error);
-        });
+        fetchFromServer();
     }, [onRefresh]);
 
     useEffect(() => {
@@ -255,16 +241,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
     useEffect(() => {
         console.log('useEffect: Fetch', fetchNeeded);
         if (fetchNeeded) {
-            fetchAllNotifications().then(() => {
-                console.log('Fetch by fetchNeeded successfully.');
-                // Assuming fetchAllNotifications updates the notifications context,
-                // the useEffect hook below will trigger and updateQualifiedNotifications.
-            }).catch(error => console.error('Failed to fetch notifications:', error));
-            fetchSchedulerData().then(() => {
-                console.log('Events fetched successfully.');
-            }).catch(error => {
-                console.error('Failed to fetch events:', error);
-            });
+            fetchFromServer();
             setFetchNeeded(false);
             const now = Date.now();
             setLastFetchTime(now);
