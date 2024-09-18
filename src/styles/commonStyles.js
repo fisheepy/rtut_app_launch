@@ -77,8 +77,7 @@ export default StyleSheet.create({
         bannerText: {
             marginBottom: 15,
             color: bannerTextColor, // Text color for the banner
-            fontSize: 20, // Adjust the font size as needed
-            fontWeight: 'Bold',
+            fontSize: 16, // Adjust the font size as needed
             fontFamily: 'Open Sans',
         },
         logoutButton: {

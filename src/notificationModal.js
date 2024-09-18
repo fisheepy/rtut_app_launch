@@ -59,6 +59,19 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
     const [pendingMessageId, setPendingMessageId] = useState(null);
     const [notificationUpdated, setNotificationUpdated] = useState(false);
 
+    // Function to handle notification refresh
+    const handleRefresh = async () => {
+        await onRefresh();  // Call the passed refresh function
+    };
+
+    useEffect(() => {
+        if (notificationData) {
+            console.log('Notification Data received in NotificationModal:', notificationData);
+            handleRefresh(); // Trigger refresh when notificationData is received
+            console.log(notifications);
+        }
+    }, [notificationData]);
+
     const bind = useDrag(({ down, movement: [mx, my] }) => {
         if (down) {
             api.start({ y: my });
@@ -165,8 +178,12 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
             const matchedNotification = qualifiedNotifications.find(notification => notification.payload?.messageId === pendingMessageId);
             if (matchedNotification) {
                 console.log("match:", matchedNotification.payload?.messageId);
-                // setSelectedNotification(matchedNotification);
-                // setDetailViewMode(true);
+                if (matchedNotification.payload.messageType === 'SURVEY')
+                {
+                    setCurrentTab('surveys');
+                }
+                setSelectedNotification(matchedNotification);
+                setDetailViewMode(true);
                 setPendingMessageId(null);
             }
         }
@@ -269,7 +286,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
         if (!isLoading && notifications.length > 0) {
             updateQualifiedNotifications();
         }
-    }, [notifications, isLoading]);
+    }, [isLoading]);
 
     useEffect(() => {
         // Update filteredNotifications when qualifiedNotifications or currentTab changes
