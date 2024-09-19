@@ -153,15 +153,15 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
             try {
                 const userId = await AsyncStorage.getItem('userId');
                 const cachedNotifications = await AsyncStorage.getItem(getStorageKey(userId));
-                if (cachedNotifications) {
+                if (false && cachedNotifications) {
                     setQualifiedNotifications(JSON.parse(cachedNotifications));
                     setFetchNeeded(false);
                 } else {
                     const timer = setTimeout(() => {
                         console.log('Auto-triggering refresh after initialization');
                         onRefresh();  // Trigger the refresh
-                    }, 3000);  // Set your desired delay, e.g., 3 seconds
-                
+                    }, 2000);  // Set your desired delay, e.g., 3 seconds
+
                     // Cleanup the timer when the component unmounts
                     return () => clearTimeout(timer);
                 }
