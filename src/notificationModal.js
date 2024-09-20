@@ -160,7 +160,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                     const timer = setTimeout(() => {
                         console.log('Auto-triggering refresh after initialization');
                         onRefresh();  // Trigger the refresh
-                    }, 2000);  // Set your desired delay, e.g., 3 seconds
+                    }, 3000);  // Set your desired delay, e.g., 3 seconds
 
                     // Cleanup the timer when the component unmounts
                     return () => clearTimeout(timer);
