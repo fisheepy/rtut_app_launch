@@ -4,6 +4,7 @@ import commonStyles from './styles/commonStyles';
 import { useUser } from './context/userContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { generateUniqueId } from './utils';
+import packageJson from '../package.json'; // Adjust path to your package.json
 
 const DisclaimerForm = ({ navigation, windowDimensions }) => {
   const [isChecked, setIsChecked] = useState(false);
@@ -23,16 +24,34 @@ const DisclaimerForm = ({ navigation, windowDimensions }) => {
     disabledButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.45, backgroundColor: '#cccccc' },
     returnButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.45, backgroundColor: '#be2528' }
   };
+  
+  const getDeviceInfo = () => {
+    return {
+      userAgent: navigator.userAgent,
+      platform: navigator.platform,
+      language: navigator.language,
+      hardwareConcurrency: navigator.hardwareConcurrency,
+      deviceMemory: navigator.deviceMemory || 'unknown',
+    };
+  };
 
   const handleContinue = async () => {
+    const deviceInfo = getDeviceInfo();  // Get device information
+
     try {
       const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/accept-disclaimer', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ accepted: true, username: userInfo.username }),
+        body: JSON.stringify({
+          accepted: true,
+          username: userInfo.username,
+          appVersion: packageJson.version,
+          deviceInfo,  // Include device information here
+        }),
       });
+
       console.log(response);
       if (response.ok) {
         if (userInfo.passwordResetDate) {
