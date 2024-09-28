@@ -9,7 +9,7 @@ import { Capacitor } from '@capacitor/core';
 // Define the update link based on the platform
 const updateLink = Capacitor.getPlatform() === 'ios'
     ? 'https://apps.apple.com/app/rtut/id6547833065/'
-    : 'https://royaltruck-my.sharepoint.com/:u:/g/personal/sdallis_royaltrailersales_com/EXptDnnZ71lGgiB5MN6KD1oB8HGEfx3caRAWS8abni36EA?e=liqk6t';
+    : 'https://github.com/1gemsoftware/rtut_app/releases/download/release/RTUT-release.apk';
 
 const UserSettingsComponent = () => {
     const [modalVisible, setModalVisible] = useState(false);
