@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNotification } from './context/novuNotifications';
-import { View, Pressable, Text, ScrollView } from 'react-native';
+import { View, Pressable, Text, ScrollView, ActivityIndicator } from 'react-native';
 import MessageViewComponent from './messageViewComponent';
 import MessageDetailComponent from './messageDetailComponent';
 import SurveyRenderer from './surveyRenderer';
@@ -38,6 +38,8 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
         refreshButtonContainer: commonStyles.notificationModal.refreshButtonContainer,
         refreshButton: commonStyles.notificationModal.refreshButton,
         completedSurvey: commonStyles.notificationModal.completedSurvey,
+        loadingContainer: commonStyles.notificationModal.loadingContainer,
+        loadingText: commonStyles.notificationModal.loadingText,
     };
 
     const { notifications, markNotificationsAsRead, fetchAllNotifications, isLoading } = useNotification();
@@ -126,7 +128,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
             setPendingMessageId(messageId);
             setFetchNeeded(true);
         };
-        
+
         // Register listeners on mount
         PushNotifications.addListener('pushNotificationReceived', (notification) => {
             console.log('Notification received: ', notification);
@@ -182,8 +184,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
             const matchedNotification = qualifiedNotifications.find(notification => notification.payload?.messageId === pendingMessageId);
             if (matchedNotification) {
                 console.log("match:", matchedNotification.payload?.messageId);
-                if (matchedNotification.payload.messageType === 'SURVEY')
-                {
+                if (matchedNotification.payload.messageType === 'SURVEY') {
                     setCurrentTab('surveys');
                 }
                 setSelectedNotification(matchedNotification);
@@ -267,7 +268,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
 
     useEffect(() => {
         // Update filteredNotifications when qualifiedNotifications or currentTab changes
-        console.log('useEffect: qualifiedNotifications/currentTab',qualifiedNotifications,currentTab);
+        console.log('useEffect: qualifiedNotifications/currentTab', qualifiedNotifications, currentTab);
         const newFilteredNotifications = qualifiedNotifications.filter(notification => {
             if (currentTab === 'surveys') {
                 return notification.payload?.messageType === 'SURVEY';
@@ -281,7 +282,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
     }, [qualifiedNotifications, currentTab]);
 
     useEffect(() => {
-        console.log('useEffect: detailViewMode',detailViewMode);
+        console.log('useEffect: detailViewMode', detailViewMode);
         // Logic that needs to run when detailViewMode changes
         if (detailViewMode) {
             // If detailViewMode is true, perform actions for detail view being active
@@ -358,108 +359,117 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
     }
 
     return (
-        <View style={styles.container}>
-            {detailViewMode ? (
-                currentTab === 'surveys' ? (
-                    <SurveyRenderer
-                        surveyJson={surveyJson}
-                        onCancel={() => setDetailViewMode(false)}
-                        onSurveyComplete={handleSurveyComplete}
-                        windowDimensions={windowDimensions}
-                    />
-                ) : (
-                    <MessageDetailComponent
-                        notification={selectedNotification}
-                        onBack={handleReadNotification}
-                        windowDimensions={windowDimensions}
-                    />
-                )
+        <View>
+            {isRefreshing ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color="#0000ff" />
+                    <Text style={styles.loadingText}>Updating notifications...</Text>
+                </View>
             ) : (
-                <animated.div {...bind()} style={{ y: style.y.to(y => Math.min(y, 150)) }}>
-                    {currentTab === 'calendar' ? (
-                        <View style={styles.messagesContainer}>
-                            <CalendarComponent windowDimensions={windowDimensions} data={schedulerData} />
-                        </View>
+                <View style={styles.container}>
+                    {detailViewMode ? (
+                        currentTab === 'surveys' ? (
+                            <SurveyRenderer
+                                surveyJson={surveyJson}
+                                onCancel={() => setDetailViewMode(false)}
+                                onSurveyComplete={handleSurveyComplete}
+                                windowDimensions={windowDimensions}
+                            />
+                        ) : (
+                            <MessageDetailComponent
+                                notification={selectedNotification}
+                                onBack={handleReadNotification}
+                                windowDimensions={windowDimensions}
+                            />
+                        )
                     ) : (
-                        <ScrollView
-                            style={styles.messagesContainer}
-                            showsVerticalScrollIndicator={false}
-                            showsHorizontalScrollIndicator={false}
-                        >
-                            {filteredNotifications.map(notification => (
-                                <View
-                                    key={notification.id}
-                                    style={styles.notificationContainer}
-                                >
-                                    <MessageViewComponent
-                                        notification={notification}
-                                        onPress={() => {
-                                            if (currentTab !== 'surveys' || !completedSurveys.includes(notification.payload?.uniqueId)) {
-                                                handleNotificationPress(notification);
-                                            }
-                                        }}
-                                        isSurveyCompleted={completedSurveys.includes(notification.payload?.uniqueId)}
-                                        windowDimensions={windowDimensions}
-                                    />
+                        <animated.div {...bind()} style={{ y: style.y.to(y => Math.min(y, 150)) }}>
+                            {currentTab === 'calendar' ? (
+                                <View style={styles.messagesContainer}>
+                                    <CalendarComponent windowDimensions={windowDimensions} data={schedulerData} />
                                 </View>
-                            ))}
-                        </ScrollView>
+                            ) : (
+                                <ScrollView
+                                    style={styles.messagesContainer}
+                                    showsVerticalScrollIndicator={false}
+                                    showsHorizontalScrollIndicator={false}
+                                >
+                                    {filteredNotifications.map(notification => (
+                                        <View
+                                            key={notification.id}
+                                            style={styles.notificationContainer}
+                                        >
+                                            <MessageViewComponent
+                                                notification={notification}
+                                                onPress={() => {
+                                                    if (currentTab !== 'surveys' || !completedSurveys.includes(notification.payload?.uniqueId)) {
+                                                        handleNotificationPress(notification);
+                                                    }
+                                                }}
+                                                isSurveyCompleted={completedSurveys.includes(notification.payload?.uniqueId)}
+                                                windowDimensions={windowDimensions}
+                                            />
+                                        </View>
+                                    ))}
+                                </ScrollView>
+                            )}
+                        </animated.div>
                     )}
-                </animated.div>
-            )}
-            {!detailViewMode && (
-                <View style={styles.tabButtonContainer}>
-                    <Pressable
-                        style={[
-                            styles.tabButton,
-                            currentTab === 'notifications' && styles.activeTab,
-                            currentTab !== 'notifications' && styles.inactiveTab,
-                        ]}
-                        onPress={() => handleTabChange('notifications')}
-                    >
-                        <TfiAnnouncement style={styles.tabButton} />
-                        <Text style={[
-                            styles.tabButtonText,
-                            currentTab === 'notifications' && styles.activeTab,
-                            currentTab !== 'notifications' && styles.inactiveTab
-                        ]}>
-                            Notification
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        style={[
-                            styles.tabButton,
-                            currentTab === 'surveys' && styles.activeTab,
-                            currentTab !== 'surveys' && styles.inactiveTab,
-                        ]}
-                        onPress={() => handleTabChange('surveys')}
-                    >
-                        <CiSquareQuestion style={styles.tabButton} />
-                        <Text style={[
-                            styles.tabButtonText,
-                            currentTab === 'surveys' && styles.activeTab,
-                            currentTab !== 'surveys' && styles.inactiveTab
-                        ]}>
-                            Survey
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        style={[
-                            styles.tabButton,
-                            currentTab === 'calendar' && styles.activeTab,
-                            currentTab !== 'calendar' && styles.inactiveTab,
-                        ]}
-                        onPress={() => handleTabChange('calendar')}
-                    >
-                        <CiCirclePlus style={styles.tabButton} />
-                        <Text style={[
-                            styles.tabButtonText,
-                            currentTab === 'calendar' && styles.activeTab,
-                            currentTab !== 'calendar' && styles.inactiveTab
-                        ]}>
-                            Calendar
-                        </Text>
-                    </Pressable>
+                    {!detailViewMode && (
+                        <View style={styles.tabButtonContainer}>
+                            <Pressable
+                                style={[
+                                    styles.tabButton,
+                                    currentTab === 'notifications' && styles.activeTab,
+                                    currentTab !== 'notifications' && styles.inactiveTab,
+                                ]}
+                                onPress={() => handleTabChange('notifications')}
+                            >
+                                <TfiAnnouncement style={styles.tabButton} />
+                                <Text style={[
+                                    styles.tabButtonText,
+                                    currentTab === 'notifications' && styles.activeTab,
+                                    currentTab !== 'notifications' && styles.inactiveTab
+                                ]}>
+                                    Notification
+                                </Text>
+                            </Pressable>
+                            <Pressable
+                                style={[
+                                    styles.tabButton,
+                                    currentTab === 'surveys' && styles.activeTab,
+                                    currentTab !== 'surveys' && styles.inactiveTab,
+                                ]}
+                                onPress={() => handleTabChange('surveys')}
+                            >
+                                <CiSquareQuestion style={styles.tabButton} />
+                                <Text style={[
+                                    styles.tabButtonText,
+                                    currentTab === 'surveys' && styles.activeTab,
+                                    currentTab !== 'surveys' && styles.inactiveTab
+                                ]}>
+                                    Survey
+                                </Text>
+                            </Pressable>
+                            <Pressable
+                                style={[
+                                    styles.tabButton,
+                                    currentTab === 'calendar' && styles.activeTab,
+                                    currentTab !== 'calendar' && styles.inactiveTab,
+                                ]}
+                                onPress={() => handleTabChange('calendar')}
+                            >
+                                <CiCirclePlus style={styles.tabButton} />
+                                <Text style={[
+                                    styles.tabButtonText,
+                                    currentTab === 'calendar' && styles.activeTab,
+                                    currentTab !== 'calendar' && styles.inactiveTab
+                                ]}>
+                                    Calendar
+                                </Text>
+                            </Pressable>
+                        </View>
+                    )}
                 </View>
             )}
         </View>

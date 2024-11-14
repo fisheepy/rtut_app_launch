@@ -97,43 +97,43 @@ export default StyleSheet.create({
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'rgba(0, 0, 0, 0.5)', // Make the background darker
-          },
-          enlargedModalContent: {
+        },
+        enlargedModalContent: {
             width: '90%', // Wider modal for emphasis
             maxWidth: 400,
             backgroundColor: baseColor,
             padding: 30,
             borderRadius: 15,
             alignItems: 'center', // Center the text and buttons
-          },
-          confirmationText: {
+        },
+        confirmationText: {
             fontSize: 24, // Larger font size for the confirmation text
             fontWeight: 'bold',
             marginBottom: 20, // Add space between text and buttons
             textAlign: 'center',
-          },
-          confirmButton: {
+        },
+        confirmButton: {
             marginTop: 10,
             paddingVertical: 15, // Larger button for touch-friendly design
             paddingHorizontal: 40,
             backgroundColor: '#4CAF50',
             borderRadius: 5,
-          },
-          confirmButtonText: {
+        },
+        confirmButtonText: {
             fontSize: 18,
             color: '#fff',
-          },
-          cancelButton: {
+        },
+        cancelButton: {
             marginTop: 10,
             paddingVertical: 15,
             paddingHorizontal: 40,
             backgroundColor: '#d9534f',
             borderRadius: 5,
-          },
-          cancelButtonText: {
+        },
+        cancelButtonText: {
             fontSize: 18,
             color: '#fff',
-          },
+        },
     },
     messageView: {
         container: {
@@ -472,6 +472,16 @@ export default StyleSheet.create({
         },
         completedSurvey: {
             opacity: 0.5,
+        },
+        loadingContainer: {
+            marginTop: 80,
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        loadingText: {
+            marginTop: 10,
+            fontSize: 16,
+            color: '#555',
         },
     },
     SurveyRenderer: {
