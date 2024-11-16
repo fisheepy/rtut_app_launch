@@ -1,6 +1,6 @@
 {
   "name": "rtutapp",
-  "version": "1.09.5",
+  "version": "1.09.6",
   "private": true,
   "dependencies": {
     "@capacitor/android": "6.0.0",

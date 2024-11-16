@@ -24,7 +24,7 @@ const DisclaimerForm = ({ navigation, windowDimensions }) => {
     disabledButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.45, backgroundColor: '#cccccc' },
     returnButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.45, backgroundColor: '#be2528' }
   };
-  
+
   const getDeviceInfo = () => {
     return {
       userAgent: navigator.userAgent,
@@ -82,41 +82,37 @@ const DisclaimerForm = ({ navigation, windowDimensions }) => {
     <View style={styles.container}>
       <View style={styles.form}>
         <ScrollView>
-          <Text style={styles.header}>Disclaimer for App Testing Participation</Text>
+          <Text style={styles.header}>User Consent Agreement for Company App Usage</Text>
           <Text style={styles.text}>
-            Thank you for participating in the testing phase of our new company app. Please read the following information carefully:
+            Welcome to the official release of the Royal Truck and Utility Trailer Company App. Please carefully review the following terms:
           </Text>
-          <Text style={styles.headline}>1. Voluntary Participation:</Text>
+          <Text style={styles.headline}>Acknowledgment of Participation</Text>
           <Text style={styles.text}>
-            Participation in this app testing is voluntary.
+            By logging into and using this app, you agree to participate in the company’s digital platform as a user, understanding that its primary purpose is to streamline communication, enhance functionality, and improve workplace efficiency.
           </Text>
-          <Text style={styles.headline}>2. Communication Consent:</Text>
+          <Text style={styles.headline}>Consent to Communications</Text>
           <Text style={styles.text}>
-            By participating in this testing program, you agree to receive communications from the app, including but not limited to app notifications, text messages, and emails. These communications are necessary to ensure the effective testing and feedback process.
+            You acknowledge and agree to receive communications through this app, including notifications, text messages, and emails. These communications are integral to facilitating efficient company processes and ensuring timely updates.
           </Text>
-          <Text style={styles.headline}>3. Data Usage:</Text>
+          <Text style={styles.headline}>Data Collection and Usage</Text>
           <Text style={styles.text}>
-            Any data collected during this testing phase will be used solely for the purpose of improving the app's functionality and user experience. We are committed to ensuring that your data is handled securely and in compliance with all relevant privacy laws.
+            We are committed to respecting your privacy. All data collected through the app will be used solely to support internal communication, enhance system functionality, and improve the overall user experience. Your data will be managed securely in accordance with applicable privacy laws.
           </Text>
-          <Text style={styles.headline}>4. Feedback:</Text>
+          <Text style={styles.headline}>Performance Expectation</Text>
           <Text style={styles.text}>
-            Your feedback is invaluable in helping us refine the app. We encourage you to report any issues or suggestions you may have during the testing period.
+            This app is designed to perform as reliably as possible. However, users may encounter occasional technical issues as we work continuously to enhance its functionality. Please report any issues promptly to support our improvement efforts.
           </Text>
-          <Text style={styles.headline}>5. No Guarantee of Performance:</Text>
+          <Text style={styles.headline}>Working Hours and Notifications</Text>
           <Text style={styles.text}>
-            This app is in the testing phase and may not function as intended. There may be bugs or issues that we are actively working to resolve.
+            Notifications and communications will align with normal working hours, except in cases of urgent company matters or unforeseen technical delays. There is no expectation for you to engage with app content or respond outside regular working hours.
           </Text>
-          <Text style={styles.headline}>6. No Expectation of Taking Any Action Out of Working Hours:</Text>
+          <Text style={styles.headline}>Feedback and Support</Text>
           <Text style={styles.text}>
-            Notifications will not be sent outside normal working hours unless there is an urgent message or a technical delay. There is no expectation for you to view items or take action outside normal working hours.
+            We value your input in making this app a beneficial tool for all employees. For questions, support, or to provide feedback, please use the “User Settings – User Feedback” option in the app to reach our support team.
           </Text>
-          <Text style={styles.headline}>7. Termination of Participation:</Text>
+          <Text style={styles.headline}>Acceptance of Terms</Text>
           <Text style={styles.text}>
-            You can terminate your participation in this testing phase at any time by notifying the testing team.
-          </Text>
-          <Text style={styles.headline}>8. Contact Information:</Text>
-          <Text style={styles.text}>
-            If you have any questions or need assistance during the testing phase, please contact our support team by clicking "User Settings – User Feedback" in the app.
+            By logging into and using this app, you confirm that you have read, understood, and agree to the terms outlined in this agreement.
           </Text>
           <View style={styles.checkboxContainer}>
             <CheckBox
