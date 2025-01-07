@@ -3,6 +3,7 @@ import { View, Text, Pressable, Linking } from 'react-native';
 import { SiAdp } from "react-icons/si";
 import { TbTargetArrow } from "react-icons/tb";
 import { FaHandsHelping } from "react-icons/fa";
+import { MdSupportAgent } from "react-icons/md";
 import commonStyles from './styles/commonStyles';
 
 const UsefulLinksComponent = () => {
@@ -43,6 +44,19 @@ const UsefulLinksComponent = () => {
                             <FaHandsHelping style={{ fontSize: 36, color: "#32a867" }} />
                         </Pressable>
                         <Text style={commonStyles.useSetting.linkText}>Safety data sheet, training, policy and HR workflows</Text>
+                    </View>
+                    <View style={commonStyles.useSetting.iconLink}>
+                        <Pressable onPress={() => handleLinkPress('https://LifeAdvisor.com/')}>
+                            <MdSupportAgent style={{ fontSize: 36, color: "#f46f42" }} />
+                        </Pressable>
+                        <Text style={commonStyles.useSetting.linkText}>
+                            Ulliance: Employee Assistance Program
+                        </Text>
+                        <Pressable onPress={() => Linking.openURL('tel:+1234567890')}>
+                            <Text style={[commonStyles.useSetting.linkText, { color: '#f46f42' }]}>
+                                Call Support: 800-448-8326
+                            </Text>
+                        </Pressable>
                     </View>
                 </>
             )}
