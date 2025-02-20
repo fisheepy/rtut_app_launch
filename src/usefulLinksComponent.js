@@ -52,7 +52,7 @@ const UsefulLinksComponent = () => {
                         <Text style={commonStyles.useSetting.linkText}>
                             Ulliance: Employee Assistance Program
                         </Text>
-                        <Pressable onPress={() => Linking.openURL('tel:+1234567890')}>
+                        <Pressable onPress={() => Linking.openURL('tel:+18004488326')}>
                             <Text style={[commonStyles.useSetting.linkText, { color: '#f46f42' }]}>
                                 Call Support: 800-448-8326
                             </Text>

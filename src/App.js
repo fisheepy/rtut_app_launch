@@ -11,6 +11,7 @@ import commonStyles from './styles/commonStyles';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
 import AppVersionComponent from './appVersionComponent'; // Import your version component
+import ChatComponent from "./chatComponent";
 
 function App({ windowDimensions, navigation }) {
   const [subscriberId, setSubscriberId] = useState(null);
@@ -209,6 +210,7 @@ function App({ windowDimensions, navigation }) {
           </View>
         </View>
       </Modal>
+      <ChatComponent />
     </View>
   );
 }
