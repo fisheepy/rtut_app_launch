@@ -8,6 +8,10 @@ const ChatComponent = () => {
     const chatEndRef = useRef(null);
 
     useEffect(() => {
+        setMessages(prev => Array.isArray(prev) ? prev : []);
+    }, []);
+
+    useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
@@ -15,17 +19,41 @@ const ChatComponent = () => {
         if (!question.trim()) return;
 
         const userMessage = { sender: "user", text: question };
-        setMessages((prev) => [...prev, userMessage]);
+        setMessages((prev) => [...prev, userMessage]); // ✅ Ensure array format
 
         setQuestion("");
+        setMessages((prev) => [...prev, { sender: "bot", text: "⏳ Waking up AI..." }]); // ✅ Corrected
 
-        try {
-            const data = await chatWithAI(question);
-            const botMessage = { sender: "bot", text: data.answer || data.error };
-            setMessages((prev) => [...prev, botMessage]);
-        } catch (error) {
-            const errorMessage = { sender: "bot", text: "❌ Error fetching response." };
-            setMessages((prev) => [...prev, errorMessage]);
+        let attempts = 0;
+        let success = false;
+        let responseData;
+
+        while (attempts < 5 && !success) {
+            try {
+                // 🔄 First Wake-Up Request (No Query)
+                if (attempts === 0) await fetch(`${process.env.FAISS_SERVER_URL}/status`);
+
+                // 🟢 Now Send Actual Chat Query
+                responseData = await chatWithAI(question);
+
+                if (responseData.answer) {
+                    success = true;
+                    setMessages((prev) => [...prev, { sender: "bot", text: responseData.answer }]);
+                } else {
+                    throw new Error("No valid response");
+                }
+            } catch (error) {
+                console.warn(`Attempt ${attempts + 1} failed:`, error.message);
+                if (attempts < 4) {
+                    setMessages((prev) => [...prev, { sender: "bot", text: `⏳ AI is waking up... Retrying (${attempts + 1}/3)` }]);
+                    await new Promise((resolve) => setTimeout(resolve, 10000));  // 🔄 Wait before retrying
+                }
+            }
+            attempts++;
+        }
+
+        if (!success) {
+            setMessages((prev) => [...prev, { sender: "bot", text: "❌ AI is unreachable. Please try again later." }]);
         }
     };
 
