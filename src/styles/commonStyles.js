@@ -2,14 +2,14 @@ import { StyleSheet } from 'react-native';
 import 'typeface-open-sans';
 
 const bannerHeight = 100;
-const baseColor = '#f9f1db';
+const baseColor = '#f7f7f7ff';
 const menuColor = '#2e59a7';
-const bannerColor = '#314a43';
+const bannerColor = '#003462';
 const toggleColor = '#f3f3e7';
-const settingColor = '#eeebda';
+const settingColor = '#fa0014';
 const bannerTextColor = '#f9f1db';
-const tabColor = '#314a43';
-const activeColor = '#041014';
+const tabColor = '#003462';
+const activeColor = '#fa0014';
 
 export default StyleSheet.create({
     app: {
