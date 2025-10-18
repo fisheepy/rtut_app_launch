@@ -259,6 +259,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
             setQualifiedNotifications(notifications); // Now this uses the updated notifications
             setNotificationUpdated(true);
             console.log('updateQualifiedNotifications!'); // This should now log the updated state
+            console.log(notifications);
         };
 
         if (!isLoading && notifications.length > 0) {

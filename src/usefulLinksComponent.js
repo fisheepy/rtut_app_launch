@@ -31,29 +31,29 @@ const UsefulLinksComponent = () => {
                         <Pressable onPress={() => handleLinkPress('https://workforcenow.adp.com/')}>
                             <SiAdp style={{ fontSize: 36, color: '#FF5733' }} />
                         </Pressable>
-                        <Text style={commonStyles.useSetting.linkText}>Payroll, tax, health insurance and PTO</Text>
+                        <Text style={commonStyles.useSetting.linkText}>ADP - Payroll/Benefits</Text>
                     </View>
                     <View style={commonStyles.useSetting.iconLink}>
                         <Pressable onPress={() => handleLinkPress('https://kapnickstrive.com/')}>
                             <TbTargetArrow style={{ fontSize: 36, color: "#3273a8" }} />
                         </Pressable>
-                        <Text style={commonStyles.useSetting.linkText}>Wellness & Health activities</Text>
+                        <Text style={commonStyles.useSetting.linkText}>Kapnick-Wellness</Text>
                     </View>
                     <View style={commonStyles.useSetting.iconLink}>
                         <Pressable onPress={() => handleLinkPress('https://rtutglovebox.com/')}>
                             <FaHandsHelping style={{ fontSize: 36, color: "#32a867" }} />
                         </Pressable>
-                        <Text style={commonStyles.useSetting.linkText}>Safety data sheet, training, policy and HR workflows</Text>
+                        <Text style={commonStyles.useSetting.linkText}>Glovebox-SDS/Safety</Text>
                     </View>
                     <View style={commonStyles.useSetting.iconLink}>
-                        <Pressable onPress={() => handleLinkPress('https://LifeAdvisor.com/')}>
+                        <Pressable onPress={() => Linking.openURL('tel:+18004488326')}>
                             <MdSupportAgent style={{ fontSize: 36, color: "#f46f42" }} />
                         </Pressable>
                         <Text style={commonStyles.useSetting.linkText}>
-                            Ulliance: Employee Assistance Program
+                            Ulliance - EAP
                         </Text>
                         <Pressable onPress={() => Linking.openURL('tel:+18004488326')}>
-                            <Text style={[commonStyles.useSetting.linkText, { color: '#f46f42' }]}>
+                            <Text style={[commonStyles.useSetting.linkText]}>
                                 Call Support: 800-448-8326
                             </Text>
                         </Pressable>

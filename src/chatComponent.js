@@ -4,8 +4,14 @@ import { chatWithAI } from "./api";
 const ChatComponent = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [question, setQuestion] = useState("");
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState(() => {
+        return JSON.parse(localStorage.getItem("chatHistory")) || [];
+    });
     const chatEndRef = useRef(null);
+    const [questionsUsed, setQuestionsUsed] = useState(() => parseInt(localStorage.getItem("questionsUsed")) || 0);
+    const [tokensUsed, setTokensUsed] = useState(() => parseInt(localStorage.getItem("tokensUsed")) || 0);
+    const MAX_QUESTIONS_PER_MONTH = 50;  // Set your quota (e.g., 50 questions per user per month)
+    const MAX_TOKENS_PER_MONTH = 10000;  // Limit total token usage (e.g., 10,000 tokens)
 
     // Chat button position state (default bottom-right)
     const [position, setPosition] = useState({ x: window.innerWidth - 100, y: window.innerHeight - 100 });
@@ -13,7 +19,18 @@ const ChatComponent = () => {
     const isDragging = useRef(false);
 
     useEffect(() => {
+        // Check if the month has changed, reset usage if necessary
+        const lastResetMonth = localStorage.getItem("lastResetMonth");
+        const currentMonth = new Date().getMonth();
+        
         setMessages(prev => Array.isArray(prev) ? prev : []);
+        if (lastResetMonth !== String(currentMonth)) {
+            localStorage.setItem("questionsUsed", "0");
+            localStorage.setItem("tokensUsed", "0");
+            localStorage.setItem("lastResetMonth", String(currentMonth));
+            setQuestionsUsed(0);
+            setTokensUsed(0);
+        }
     }, []);
 
     useEffect(() => {
@@ -33,44 +50,89 @@ const ChatComponent = () => {
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
+    const estimateTokenUsage = (text) => {
+        return text.split(" ").length * 1.5; // Rough estimate: 1.5 tokens per word
+    };
+
     const handleSend = async () => {
         if (!question.trim()) return;
-
+    
+        // Check if the user exceeded quota
+        if (questionsUsed >= MAX_QUESTIONS_PER_MONTH) {
+            setMessages((prev) => [...prev, { sender: "bot", text: "🚨 Monthly question limit reached. Try again next month!" }]);
+            return;
+        }
+    
+        if (tokensUsed >= MAX_TOKENS_PER_MONTH) {
+            setMessages((prev) => [...prev, { sender: "bot", text: "🚨 Monthly token limit reached. Please wait until next month!" }]);
+            return;
+        }
+    
+        // Increment quota usage
+        const estimatedTokens = estimateTokenUsage(question);
+        const newQuestionsUsed = questionsUsed + 1;
+        const newTokensUsed = tokensUsed + estimatedTokens;
+    
+        setQuestionsUsed(newQuestionsUsed);
+        setTokensUsed(newTokensUsed);
+        localStorage.setItem("questionsUsed", newQuestionsUsed.toString());
+        localStorage.setItem("tokensUsed", newTokensUsed.toString());
+    
         const userMessage = { sender: "user", text: question };
-        setMessages((prev) => [...prev, userMessage]);
-
+        setMessages((prev) => {
+            const updatedMessages = [...prev, userMessage];
+            localStorage.setItem("chatHistory", JSON.stringify(updatedMessages));
+            return updatedMessages;
+        });
+            
         setQuestion("");
-        setMessages((prev) => [...prev, { sender: "bot", text: "⏳ Waking up AI..." }]);
-
+        setMessages((prev) => [...prev, { sender: "bot", text: "⏳ Roy Bot is waking up......" }]);
+    
         let attempts = 0;
         let success = false;
         let responseData;
-
+    
         while (attempts < 5 && !success) {
             try {
                 if (attempts === 0) await fetch(`${process.env.FAISS_SERVER_URL}/status`);
-
+    
                 responseData = await chatWithAI(question);
-
+    
                 if (responseData.answer) {
                     success = true;
-                    setMessages((prev) => [...prev, { sender: "bot", text: responseData.answer }]);
+                    setMessages((prev) => {
+                        const updatedMessages = [...prev, { sender: "bot", text: responseData.answer }];
+                        localStorage.setItem("chatHistory", JSON.stringify(updatedMessages));
+                        return updatedMessages;
+                    });
+    
+                    // Estimate tokens used in response
+                    const responseTokens = estimateTokenUsage(responseData.answer || "");
+                    const updatedTokensUsed = tokensUsed + responseTokens;
+    
+                    setTokensUsed(updatedTokensUsed);
+                    localStorage.setItem("tokensUsed", updatedTokensUsed.toString());
                 } else {
                     throw new Error("No valid response");
                 }
             } catch (error) {
                 console.warn(`Attempt ${attempts + 1} failed:`, error.message);
                 if (attempts < 4) {
-                    setMessages((prev) => [...prev, { sender: "bot", text: `⏳ AI is waking up... Retrying (${attempts + 1}/3)` }]);
+                    // setMessages((prev) => [...prev, { sender: "bot", text: `⏳ Roy Bot is waking up... Retrying (${attempts + 1}/3)` }]);
                     await new Promise((resolve) => setTimeout(resolve, 5000));
                 }
             }
             attempts++;
         }
-
+    
         if (!success) {
-            setMessages((prev) => [...prev, { sender: "bot", text: "❌ AI is unreachable. Please try again later." }]);
+            setMessages((prev) => [...prev, { sender: "bot", text: "❌ Sorry but Roy Bot is unreachable at this moment. Please try again later." }]);
         }
+    };
+
+    const clearChatHistory = () => {
+        localStorage.removeItem("chatHistory");
+        setMessages([]);
     };
 
     // Drag Handling Functions (Supports Both Mouse & Touch)
@@ -124,8 +186,9 @@ const ChatComponent = () => {
             {isOpen && (
                 <div className="chat-window">
                     <div className="chat-header">
-                        <span>AI Chat</span>
+                        <span>Chat with Roy Bot</span>
                         <button className="close-btn" onClick={() => setIsOpen(false)}>✖</button>
+                        <button className="clear-btn" onClick={clearChatHistory}>🗑 Clear</button>
                     </div>
 
                     <div className="chat-body">

@@ -77,6 +77,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
       await AsyncStorage.removeItem('userName');
       await AsyncStorage.removeItem('password');
       console.log('Fetching User Info from server');
+      console.log(JSON.stringify({ userName, password }));
       const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/authentication', {
         method: 'POST',
         headers: {
@@ -84,7 +85,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
         },
         body: JSON.stringify({ userName, password }),
       });
-      console.log('test');
+      
       if (response.ok) {
         const data = await response.json();
         const userInfo = data[0];
