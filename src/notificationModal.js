@@ -265,7 +265,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
         if (!isLoading && notifications.length > 0) {
             updateQualifiedNotifications();
         }
-    }, [isLoading]);
+    }, [notifications]);
 
     useEffect(() => {
         // Update filteredNotifications when qualifiedNotifications or currentTab changes
@@ -295,6 +295,9 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
     }, [detailViewMode]);
 
     const handleNotificationPress = useCallback((notification) => {
+        setQualifiedNotifications(prev =>
+           prev.map(n => n.id === notification.id ? { ...n, read: true } : n)
+        );
         markNotificationsAsRead(notification.id);
         setSelectedNotification(notification);
         setDetailViewMode(true);
