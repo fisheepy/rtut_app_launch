@@ -166,18 +166,21 @@ function App({ windowDimensions, navigation }) {
           <Pressable onPress={() => setIsMenuVisible(false)} style={commonStyles.app.backIcon}>
             <GrFormClose />
           </Pressable>
-          {/* Display components side by side */}
-          <View style={commonStyles.app.menuRow}>
-            <UserSettingsComponent />
-            <UsefulLinksComponent />
-          </View>
-          {/* Version number and Logout button aligned to bottom */}
-          <View style={commonStyles.app.bottomContainer}>
-            <AppVersionComponent />
-            <Pressable onPress={() => setIsLogoutModalVisible(true)} style={commonStyles.app.logoutButton}>
-              <Text style={commonStyles.app.logoutButtonText}>Logout</Text>
-            </Pressable>
-          </View>
+          {/* Make the menu content scrollable so long lists (useful links) are reachable on short screens */}
+          <ScrollView style={{ width: '100%' }} contentContainerStyle={{ paddingBottom: 24 }} keyboardShouldPersistTaps="handled">
+            {/* Display components side by side */}
+            <View style={commonStyles.app.menuRow}>
+              <UserSettingsComponent />
+              <UsefulLinksComponent />
+            </View>
+            {/* Version number and Logout button aligned to bottom (will be reachable via scroll) */}
+            <View style={commonStyles.app.bottomContainer}>
+              <AppVersionComponent />
+              <Pressable onPress={() => setIsLogoutModalVisible(true)} style={commonStyles.app.logoutButton}>
+                <Text style={commonStyles.app.logoutButtonText}>Logout</Text>
+              </Pressable>
+            </View>
+          </ScrollView>
         </View>
       )}
       <View style={commonStyles.app.content}>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable, Modal, TextInput, StyleSheet } from 'react-native';
+import { View, Text, Pressable, Modal, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { VscFeedback } from "react-icons/vsc";
 import { GiConfirmed, GiCancel } from "react-icons/gi";
 import { GrUpdate } from "react-icons/gr";
@@ -9,8 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Define the update link based on the platform
 const updateLink = Capacitor.getPlatform() === 'ios'
-    ? 'https://apps.apple.com/app/rtut/id6547833065/'
-    : 'https://github.com/1gemsoftware/rtut_app/releases/download/release/RTUT-release.apk';
+  ? 'https://apps.apple.com/app/rtut/id6547833065/'
+  : 'https://github.com/1gemsoftware/rtut_app/releases/download/release/RTUT-release.apk';
 
 const UserSettingsComponent = () => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -19,9 +19,9 @@ const UserSettingsComponent = () => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [modalMessage, setModalMessage] = useState('');
-  const [firstName, setFirstName]   = useState('');
-  const [lastName, setLastName]   = useState('');
-  
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+
   useEffect(() => {
     (async () => {
       try {
@@ -93,55 +93,63 @@ const UserSettingsComponent = () => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(!modalVisible)}
+        onRequestClose={() => setModalVisible(false)}
       >
         <View style={modalStyles.centeredView}>
           <View style={modalStyles.modalView}>
-            <TextInput
-              style={[commonStyles.useSetting.feedbackInput, modalStyles.input, modalStyles.textArea]}
-              onChangeText={setQuestion}
-              value={question}
-              placeholder="Type your question here..."
-              multiline
-            />
-            <TextInput
-              style={[commonStyles.useSetting.nameInput, modalStyles.input]}
-              onChangeText={setPhone}
-              value={phone}
-              placeholder="Phone number (optional)"
-              keyboardType="phone-pad"
-            />
-            <TextInput
-              style={[commonStyles.useSetting.nameInput, modalStyles.input]}
-              onChangeText={setEmail}
-              value={email}
-              placeholder="Email (optional)"
-              keyboardType="email-address"
-            />
-            <View style={commonStyles.useSetting.buttonGroup}>
-              <Pressable
-                style={commonStyles.useSetting.Button}
-                onPress={handleHrQuestionSubmit}
+            {/* 关键：避让 + 可滚动 */}
+            <View style={{ flex: 1, width: '100%' }}>
+              <View
+                // KeyboardAvoidingView 在 RNWeb/Capacitor 里可能不可用，用 View + padding 兼容
+                style={{ flex: 1, paddingBottom: 80 }} // 预留底部按钮高度
               >
-                <GiConfirmed
-                  style={commonStyles.useSetting.button}
-                  fontSize={40}
-                  color='green'
-                />
-              </Pressable>
-              <Pressable
-                style={commonStyles.useSetting.Button}
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <GiCancel
-                  style={{ ...commonStyles.useSetting.button, pointerEvents: "none" }}
-                  fontSize={40}
-                />
-              </Pressable>
+                <ScrollView
+                  keyboardShouldPersistTaps="handled"
+                  contentContainerStyle={{ paddingBottom: 16 }}
+                >
+                  <TextInput
+                    style={[commonStyles.useSetting.nameInput, modalStyles.input]}
+                    onChangeText={setPhone}
+                    value={phone}
+                    placeholder="Phone number (optional)"
+                    keyboardType="phone-pad"
+                    returnKeyType="next"
+                  />
+                  <TextInput
+                    style={[commonStyles.useSetting.nameInput, modalStyles.input]} // 再预留点空间
+                    onChangeText={setEmail}
+                    value={email}
+                    placeholder="Email (optional)"
+                    keyboardType="email-address"
+                    returnKeyType="done"
+                  />
+                  <TextInput
+                    style={[commonStyles.useSetting.feedbackInput, modalStyles.input, modalStyles.textArea]}
+                    onChangeText={setQuestion}
+                    value={question}
+                    placeholder="Type your question here..."
+                    multiline
+                    returnKeyType="next"
+                    blurOnSubmit={false}
+                    onSubmitEditing={() => {/* 可选：把焦点移到下一个输入 */ }}
+                  />
+                </ScrollView>
+              </View>
+
+              {/* 底部固定按钮区：始终可点 */}
+              <View style={modalStyles.fixedActions}>
+                <Pressable style={commonStyles.useSetting.Button} onPress={handleHrQuestionSubmit}>
+                  <GiConfirmed style={commonStyles.useSetting.button} fontSize={40} color="green" />
+                </Pressable>
+                <Pressable style={commonStyles.useSetting.Button} onPress={() => setModalVisible(false)}>
+                  <GiCancel style={{ ...commonStyles.useSetting.button, pointerEvents: 'none' }} fontSize={40} />
+                </Pressable>
+              </View>
             </View>
           </View>
         </View>
       </Modal>
+
 
       {/* Message Modal */}
       <Modal
@@ -171,29 +179,31 @@ const modalStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    marginTop: 0,
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "#7a8ca1ff",
     borderRadius: 20,
-    padding: 35,
+    padding: 25,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: '80%',
-    height: '80%',
+    width: '95%',
+    height: '100%',
+    maxHeight: '95%'
   },
   input: {
     width: '100%',
     padding: 10,
-    marginVertical: 10,
+    marginVertical: 0,
   },
   textArea: {
-    height: 200,
+    textAlignVertical: 'top',
+    height: '100%',
   },
   button: {
     borderRadius: 20,
@@ -208,7 +218,21 @@ const modalStyles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
-  }
+  },
+  fixedActions: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    backgroundColor: '#7a8ca1ff',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: '#fa0014',
+  },
 });
 
 export default UserSettingsComponent;

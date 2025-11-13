@@ -14,7 +14,7 @@ const ChatComponent = () => {
     const MAX_TOKENS_PER_MONTH = 10000;  // Limit total token usage (e.g., 10,000 tokens)
 
     // Chat button position state (default bottom-right)
-    const [position, setPosition] = useState({ x: window.innerWidth - 100, y: window.innerHeight - 100 });
+    const [position, setPosition] = useState({ x: window.innerWidth - 100, y: window.innerHeight - 200 });
     const buttonRef = useRef(null);
     const isDragging = useRef(false);
 
@@ -221,7 +221,7 @@ const ChatComponent = () => {
                     position: fixed;
                     width: 50px;
                     height: 50px;
-                    background:rgb(83, 20, 98);
+                    background:rgb(77, 144, 125);
                     color: #f9f1db;
                     border: none;
                     border-radius: 50%;
