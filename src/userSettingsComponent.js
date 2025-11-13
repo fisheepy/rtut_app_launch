@@ -6,6 +6,7 @@ import { GrUpdate } from "react-icons/gr";
 import commonStyles from './styles/commonStyles';
 import { Capacitor } from '@capacitor/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+const isIOS = Capacitor.getPlatform() === 'ios'; // 保留你已有的 @capacitor/core
 
 // Define the update link based on the platform
 const updateLink = Capacitor.getPlatform() === 'ios'
@@ -21,6 +22,7 @@ const UserSettingsComponent = () => {
   const [modalMessage, setModalMessage] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [kbHeight, setKbHeight] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -33,6 +35,26 @@ const UserSettingsComponent = () => {
       } catch (e) {
         console.warn('Unable to load userId from storage', e);
       }
+      if (!isIOS) return;
+
+      // iOS Safari/WebView 支持 visualViewport：键盘弹出时 height 会变小
+      const vv = typeof window !== 'undefined' ? window.visualViewport : null;
+      if (!vv) return; // 老设备或特殊 WebView 不支持时，自动忽略，保持现状
+
+      const updateInset = () => {
+        // 计算视口底部被遮住的高度（键盘高度近似值）
+        const bottomInset = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
+        setKbHeight(bottomInset);
+      };
+
+      vv.addEventListener('resize', updateInset);
+      vv.addEventListener('scroll', updateInset);
+      updateInset(); // 初始化一次
+
+      return () => {
+        vv.removeEventListener('resize', updateInset);
+        vv.removeEventListener('scroll', updateInset);
+      };
     })();
   }, []);
 
@@ -99,10 +121,7 @@ const UserSettingsComponent = () => {
           <View style={modalStyles.modalView}>
             {/* 关键：避让 + 可滚动 */}
             <View style={{ flex: 1, width: '100%' }}>
-              <View
-                // KeyboardAvoidingView 在 RNWeb/Capacitor 里可能不可用，用 View + padding 兼容
-                style={{ flex: 1, paddingBottom: 80 }} // 预留底部按钮高度
-              >
+              <View style={{ flex: 1, paddingBottom: isIOS ? (kbHeight ? kbHeight + 16 : 16) : 80 }}>
                 <ScrollView
                   keyboardShouldPersistTaps="handled"
                   contentContainerStyle={{ paddingBottom: 16 }}
@@ -116,7 +135,10 @@ const UserSettingsComponent = () => {
                     returnKeyType="next"
                   />
                   <TextInput
-                    style={[commonStyles.useSetting.nameInput, modalStyles.input]} // 再预留点空间
+                    style={[
+                      commonStyles.useSetting.nameInput,
+                      modalStyles.input,
+                    ]}
                     onChangeText={setEmail}
                     value={email}
                     placeholder="Email (optional)"
@@ -124,7 +146,11 @@ const UserSettingsComponent = () => {
                     returnKeyType="done"
                   />
                   <TextInput
-                    style={[commonStyles.useSetting.feedbackInput, modalStyles.input, modalStyles.textArea]}
+                    style={[
+                      commonStyles.useSetting.feedbackInput,
+                      modalStyles.input, modalStyles.textArea,
+                      { marginBottom: isIOS ? (kbHeight ? kbHeight + 74 : 16) : 90 }
+                    ]}
                     onChangeText={setQuestion}
                     value={question}
                     placeholder="Type your question here..."
@@ -137,7 +163,7 @@ const UserSettingsComponent = () => {
               </View>
 
               {/* 底部固定按钮区：始终可点 */}
-              <View style={modalStyles.fixedActions}>
+              <View style={[modalStyles.fixedActions, isIOS ? { bottom: kbHeight } : null]}>
                 <Pressable style={commonStyles.useSetting.Button} onPress={handleHrQuestionSubmit}>
                   <GiConfirmed style={commonStyles.useSetting.button} fontSize={40} color="green" />
                 </Pressable>
