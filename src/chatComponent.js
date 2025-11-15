@@ -221,7 +221,7 @@ const ChatComponent = () => {
                     position: fixed;
                     width: 50px;
                     height: 50px;
-                    background:rgb(77, 144, 125);
+                    background:#003462;
                     color: #f9f1db;
                     border: none;
                     border-radius: 50%;

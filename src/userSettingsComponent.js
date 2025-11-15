@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, Modal, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { VscFeedback } from "react-icons/vsc";
-import { GiConfirmed, GiCancel } from "react-icons/gi";
 import { GrUpdate } from "react-icons/gr";
 import commonStyles from './styles/commonStyles';
 import { Capacitor } from '@capacitor/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const isIOS = Capacitor.getPlatform() === 'ios'; // 保留你已有的 @capacitor/core
+
+const isIOS = Capacitor.getPlatform() === 'ios';
 
 // Define the update link based on the platform
-const updateLink = Capacitor.getPlatform() === 'ios'
+const updateLink = isIOS
   ? 'https://apps.apple.com/app/rtut/id6547833065/'
   : 'https://github.com/1gemsoftware/rtut_app/releases/download/release/RTUT-release.apk';
 
@@ -20,36 +20,34 @@ const UserSettingsComponent = () => {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [modalMessage, setModalMessage] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [firstName, setFirstName] = useState('');   // ← 纯 JS：去掉 <string | null>
+  const [lastName, setLastName] = useState('');     // ← 纯 JS：去掉 <string | null>
   const [kbHeight, setKbHeight] = useState(0);
+  const [step, setStep] = useState(1);              // ← 纯 JS：去掉 <1 | 2>
 
   useEffect(() => {
     (async () => {
       try {
         const userFirstName = await AsyncStorage.getItem('userFirstName');
         const userLastName = await AsyncStorage.getItem('userLastName');
-
-        setFirstName(userFirstName);
-        setLastName(userLastName);
+        setFirstName(userFirstName || '');
+        setLastName(userLastName || '');
       } catch (e) {
         console.warn('Unable to load userId from storage', e);
       }
-      if (!isIOS) return;
 
-      // iOS Safari/WebView 支持 visualViewport：键盘弹出时 height 会变小
-      const vv = typeof window !== 'undefined' ? window.visualViewport : null;
-      if (!vv) return; // 老设备或特殊 WebView 不支持时，自动忽略，保持现状
+      // iOS: use visualViewport to estimate keyboard height
+      if (!isIOS || typeof window === 'undefined' || !window.visualViewport) return;
 
+      const vv = window.visualViewport;
       const updateInset = () => {
-        // 计算视口底部被遮住的高度（键盘高度近似值）
         const bottomInset = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
         setKbHeight(bottomInset);
       };
 
       vv.addEventListener('resize', updateInset);
       vv.addEventListener('scroll', updateInset);
-      updateInset(); // 初始化一次
+      updateInset();
 
       return () => {
         vv.removeEventListener('resize', updateInset);
@@ -65,21 +63,21 @@ const UserSettingsComponent = () => {
       return;
     }
     try {
-      console.log(JSON.stringify({ question, phone, email, firstName, lastName }));
+      const payload = { question, phone, email, firstName, lastName };
+      console.log(JSON.stringify(payload));
       const response = await fetch(
         'https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/hr-question',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question, phone, email, firstName, lastName }),
+          body: JSON.stringify(payload),
         }
       );
       if (response.ok) {
         setModalMessage('Thank you, your question has been sent to HR.');
-        setQuestion('');
-        setPhone('');
-        setEmail('');
+        setQuestion(''); setPhone(''); setEmail('');
         setModalVisible(false);
+        setStep(1);
       } else {
         setModalMessage('Failed to submit your question. Please try again.');
       }
@@ -91,11 +89,16 @@ const UserSettingsComponent = () => {
     }
   };
 
+  const onOpenUpdateLink = () => {
+    // In Capacitor WebView this usually works; if needed, replace with Capacitor Browser.open
+    window.open(updateLink, '_blank');
+  };
+
   return (
     <View style={commonStyles.useSetting.container}>
       {/* Update App Button */}
       <View style={commonStyles.useSetting.iconLink}>
-        <Pressable onPress={() => window.open(updateLink, '_blank')}>
+        <Pressable onPress={onOpenUpdateLink}>
           <GrUpdate style={{ fontSize: 36, color: '#FF5733' }} />
         </Pressable>
         <Text style={commonStyles.useSetting.linkText}>UPDATE APP</Text>
@@ -104,13 +107,13 @@ const UserSettingsComponent = () => {
       {/* Questions to HR Button */}
       <Pressable
         style={commonStyles.useSetting.feedbackButton}
-        onPress={() => setModalVisible(true)}
+        onPress={() => { setStep(1); setModalVisible(true); }}
       >
         <VscFeedback />
         <Text style={commonStyles.useSetting.linkText}>QUESTIONS TO HR</Text>
       </Pressable>
 
-      {/* Submission Modal */}
+      {/* Submission Modal (Two-step) */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -118,14 +121,68 @@ const UserSettingsComponent = () => {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={modalStyles.centeredView}>
-          <View style={modalStyles.modalView}>
-            {/* 关键：避让 + 可滚动 */}
-            <View style={{ flex: 1, width: '100%' }}>
-              <View style={{ flex: 1, paddingBottom: isIOS ? (kbHeight ? kbHeight + 16 : 16) : 80 }}>
-                <ScrollView
-                  keyboardShouldPersistTaps="handled"
-                  contentContainerStyle={{ paddingBottom: 16 }}
-                >
+          <View style={[modalStyles.modalView, { maxHeight: '90%', height: undefined }]}>
+            <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 10 }}>
+              {step === 1 ? 'Ask HR a Question' : 'Optional Contact Info'}
+            </Text>
+
+            {/* Step 1: Only question */}
+            {step === 1 && (
+              <View style={{ flex: 1, width: '100%' }}>
+                <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 8 }}>
+                  <TextInput
+                    style={[
+                      commonStyles.useSetting.feedbackInput,
+                      modalStyles.input,
+                      modalStyles.textArea,
+                      { textAlignVertical: 'top' }
+                    ]}
+                    onChangeText={setQuestion}
+                    value={question}
+                    placeholder="Type your question here..."
+                    multiline
+                    returnKeyType="done"
+                  />
+                </ScrollView>
+
+                {/* Actions */}
+                <View style={[commonStyles.useSetting.buttonGroup, styles.actionRow]}>
+                  <Pressable
+                    style={[commonStyles.useSetting.Button, styles.actionFlex]}
+                    onPress={() => {
+                      if (!question.trim()) {
+                        setModalMessage('Please enter your question');
+                        setMessageModalVisible(true);
+                        return;
+                      }
+                      setStep(2);
+                    }}
+                    hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+                  >
+                    <Text style={styles.primaryActionText}>NEXT</Text>
+                  </Pressable>
+
+                  <View style={{ width: 16 }} />
+
+                  <Pressable
+                    style={[commonStyles.useSetting.Button, styles.actionFlex]}
+                    onPress={() => setModalVisible(false)}
+                    hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+                  >
+                    <Text style={styles.neutralActionText}>CANCEL</Text>
+                  </Pressable>
+                </View>
+              </View>
+            )}
+
+            {/* Step 2: Optional phone/email */}
+            {step === 2 && (
+              <View style={{ flex: 1, width: '100%' }}>
+                <Text style={{ color: '#fff', opacity: 0.85, marginBottom: 6 }}>
+                  Phone and email are optional. You can submit without them.
+                </Text>
+
+                <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingBottom: 8 }}>
                   <TextInput
                     style={[commonStyles.useSetting.nameInput, modalStyles.input]}
                     onChangeText={setPhone}
@@ -135,47 +192,44 @@ const UserSettingsComponent = () => {
                     returnKeyType="next"
                   />
                   <TextInput
-                    style={[
-                      commonStyles.useSetting.nameInput,
-                      modalStyles.input,
-                    ]}
+                    style={[commonStyles.useSetting.nameInput, modalStyles.input]}
                     onChangeText={setEmail}
                     value={email}
                     placeholder="Email (optional)"
                     keyboardType="email-address"
                     returnKeyType="done"
                   />
-                  <TextInput
-                    style={[
-                      commonStyles.useSetting.feedbackInput,
-                      modalStyles.input, modalStyles.textArea,
-                      { marginBottom: isIOS ? (kbHeight ? kbHeight + 74 : 16) : 90 }
-                    ]}
-                    onChangeText={setQuestion}
-                    value={question}
-                    placeholder="Type your question here..."
-                    multiline
-                    returnKeyType="next"
-                    blurOnSubmit={false}
-                    onSubmitEditing={() => {/* 可选：把焦点移到下一个输入 */ }}
-                  />
                 </ScrollView>
-              </View>
 
-              {/* 底部固定按钮区：始终可点 */}
-              <View style={[modalStyles.fixedActions, isIOS ? { bottom: kbHeight } : null]}>
-                <Pressable style={commonStyles.useSetting.Button} onPress={handleHrQuestionSubmit}>
-                  <GiConfirmed style={commonStyles.useSetting.button} fontSize={40} color="green" />
-                </Pressable>
-                <Pressable style={commonStyles.useSetting.Button} onPress={() => setModalVisible(false)}>
-                  <GiCancel style={{ ...commonStyles.useSetting.button, pointerEvents: 'none' }} fontSize={40} />
-                </Pressable>
+                {/* Actions */}
+                <View style={[
+                  commonStyles.useSetting.buttonGroup,
+                  styles.actionRow,
+                  isIOS ? { marginBottom: kbHeight ? kbHeight : 0 } : null
+                ]}>
+                  <Pressable
+                    style={[commonStyles.useSetting.Button, styles.actionFlex]}
+                    onPress={handleHrQuestionSubmit}
+                    hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+                  >
+                    <Text style={styles.primaryActionText}>SUBMIT</Text>
+                  </Pressable>
+
+                  <View style={{ width: 16 }} />
+
+                  <Pressable
+                    style={[commonStyles.useSetting.Button, styles.actionFlex]}
+                    onPress={() => { setModalVisible(false); setStep(1); }}
+                    hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+                  >
+                    <Text style={styles.neutralActionText}>CANCEL</Text>
+                  </Pressable>
+                </View>
               </View>
-            </View>
+            )}
           </View>
         </View>
       </Modal>
-
 
       {/* Message Modal */}
       <Modal
@@ -219,17 +273,17 @@ const modalStyles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: '95%',
-    height: '100%',
-    maxHeight: '95%'
+    maxHeight: '90%',
   },
   input: {
     width: '100%',
     padding: 10,
-    marginVertical: 0,
+    marginVertical: 8,
+    backgroundColor: 'white',
+    borderRadius: 8,
   },
   textArea: {
-    textAlignVertical: 'top',
-    height: '100%',
+    height: 200,
   },
   button: {
     borderRadius: 20,
@@ -244,20 +298,33 @@ const modalStyles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center",
+    color: 'white'
   },
-  fixedActions: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    backgroundColor: '#7a8ca1ff',
+});
+
+const styles = StyleSheet.create({
+  actionRow: {
+    width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
     alignItems: 'center',
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: '#fa0014',
+    marginTop: 8,
+  },
+  actionFlex: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  primaryActionText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#2e7d32',
+  },
+  neutralActionText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#111',
   },
 });
 
