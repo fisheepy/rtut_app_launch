@@ -123,7 +123,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
         setModalVisible(true);
       } else {
         console.error('Failed to fetch user info:', response.statusText);
-        setModalMessage('An error occurred. Please try again.');
+        setModalMessage('User ID and password combination not found.');
         setModalVisible(true);
       }
     } catch (error) {
