@@ -8,7 +8,6 @@ import { CiSquareQuestion, CiCirclePlus } from "react-icons/ci";
 import { TfiAnnouncement } from "react-icons/tfi";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import commonStyles from './styles/commonStyles';
-import { useSpring, animated } from 'react-spring';
 import { useDrag } from '@use-gesture/react';
 import CalendarComponent from './calendarComponent';
 import { PushNotifications } from '@capacitor/push-notifications';
@@ -55,7 +54,8 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
     });
     const completedSurveys = JSON.parse(localStorage.getItem('completedSurveys') || '[]');
     const [isPulledDown, setIsPulledDown] = useState(false);
-    const [style, api] = useSpring(() => ({ y: 0 }));
+    const [dragY, setDragY] = useState(0);
+    const [isDragging, setIsDragging] = useState(false);
     const [schedulerData, setSchedulerData] = useState([]);
     const [pushNotification, setPushNotification] = useState(null);
     const [pendingMessageId, setPendingMessageId] = useState(null);
@@ -88,10 +88,12 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
     }, [notificationData]);
 
     const bind = useDrag(({ down, movement: [mx, my] }) => {
+        setIsDragging(down);
+
         if (down) {
-            api.start({ y: my });
+            setDragY(Math.min(my, 150));
         } else {
-            api.start({ y: 0 });
+            setDragY(0);
             if (my > 100) {
                 setIsPulledDown(true);
             }
@@ -387,7 +389,14 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                             />
                         )
                     ) : (
-                        <animated.div {...bind()} style={{ y: style.y.to(y => Math.min(y, 150)) }}>
+                        <div
+                            {...bind()}
+                            style={{
+                                transform: `translate3d(0, ${dragY}px, 0)`,
+                                transition: isDragging ? 'none' : 'transform 180ms ease-out',
+                                touchAction: 'none',
+                            }}
+                        >
                             {currentTab === 'calendar' ? (
                                 <View style={styles.messagesContainer}>
                                     <CalendarComponent windowDimensions={windowDimensions} data={schedulerData} />
@@ -417,7 +426,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                                     ))}
                                 </ScrollView>
                             )}
-                        </animated.div>
+                        </div>
                     )}
                     {!detailViewMode && (
                         <View style={styles.tabButtonContainer}>
