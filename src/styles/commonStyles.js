@@ -26,120 +26,167 @@ export default StyleSheet.create({
             alignItems: 'center',
             width: '100%',
             height: '100%',
-            backgroundColor: baseColor,
+            backgroundColor: '#f1f5f9',
         },
         iconButtonContainer: {
             position: 'absolute',
-            top: 50,
-            left: 0,  // Reset left to 0
-            right: 0, // Ensure it stretches across the full width
+            top: 14,
+            left: 0,
+            right: 0,
             flexDirection: 'row',
-            justifyContent: 'space-between', // Distributes space evenly
-            alignItems: 'center', // Centers items vertically
-            paddingHorizontal: 10, // Add padding if needed
-            zIndex: 1,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+            zIndex: 3,
+        },
+        iconButton: {
+            width: 42,
+            height: 42,
+            borderRadius: 12,
+            backgroundColor: '#ffffff',
+            borderWidth: 1,
+            borderColor: '#e2e8f0',
+            alignItems: 'center',
+            justifyContent: 'center',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.12,
+            shadowRadius: 8,
+            elevation: 3,
         },
         menu: {
             position: 'absolute',
             top: 0,
             left: 0,
-            width: '75%',
+            width: '86%',
+            maxWidth: 340,
             height: '100%',
-            backgroundColor: menuColor,
-            padding: 10,
-            zIndex: 2,
-            alignItems: 'center', // Center content in the menu
+            backgroundColor: '#0f2747',
+            paddingHorizontal: 14,
+            paddingTop: 10,
+            zIndex: 4,
+            alignItems: 'center',
             justifyContent: 'flex-start',
+            shadowColor: '#000',
+            shadowOffset: { width: 3, height: 0 },
+            shadowOpacity: 0.25,
+            shadowRadius: 10,
+            elevation: 10,
         },
         backIcon: {
-            fontSize: 32,
-            alignSelf: 'center', // Center the back icon
-            marginTop: 50,
-            marginBottom: 20, // Space below the back icon
-            padding: 20,
-            color: toggleColor,
+            fontSize: 30,
+            alignSelf: 'flex-end',
+            marginTop: 6,
+            marginBottom: 8,
+            padding: 8,
+            color: '#dbeafe',
         },
         settingIcon: {
-            fontSize: 32,
-            color: settingColor,
+            fontSize: 22,
+            color: '#0f2747',
         },
         refreshIcon: {
-            fontSize: 32,
-            color: settingColor,
+            fontSize: 22,
+            color: '#0f2747',
         },
         content: {
             flex: 1,
+            width: '100%',
             paddingTop: bannerHeight,
+            alignItems: 'center',
         },
         banner: {
-            backgroundColor: bannerColor, // Change this to any color you prefer for the banner background
-            width: '100%', // Match the width of the screen
-            height: bannerHeight, // Fixed height for the banner section
-            justifyContent: 'flex-end', // Center content vertically within the banner
-            alignItems: 'center', // Center content horizontally within the banner
-            position: 'absolute', // Position absolute to ensure it does not affect layout flow
-            top: 0, // Align to the top of the screen
-            zIndex: 0, // Ensure it's behind the menu and other content
+            backgroundColor: bannerColor,
+            width: '100%',
+            height: bannerHeight,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            position: 'absolute',
+            top: 0,
+            zIndex: 1,
+            paddingBottom: 14,
+            borderBottomLeftRadius: 18,
+            borderBottomRightRadius: 18,
         },
         bannerText: {
-            marginBottom: 15,
-            color: bannerTextColor, // Text color for the banner
-            fontSize: 16, // Adjust the font size as needed
+            color: '#e2e8f0',
+            fontSize: 18,
+            fontWeight: '600',
             fontFamily: 'Open Sans',
         },
-        logoutButton: {
-            padding: 10,
-            backgroundColor: '#ff4d4d', // A red background to make it stand out
+        menuRow: {
+            width: '100%',
+            flexDirection: 'column',
             alignItems: 'center',
-            borderRadius: 5,
+            gap: 8,
+        },
+        logoutButton: {
+            paddingVertical: 10,
+            paddingHorizontal: 18,
+            backgroundColor: '#dc2626',
+            alignItems: 'center',
+            borderRadius: 8,
             marginTop: 20,
         },
+        logoutButtonText: {
+            color: '#ffffff',
+            fontWeight: '600',
+        },
         bottomContainer: {
-            marginTop: 'auto', // Push the bottom container to the bottom
-            alignItems: 'center', // Center the version and logout
-            paddingBottom: 20, // Add padding for space at the bottom
+            marginTop: 'auto',
+            alignItems: 'center',
+            paddingBottom: 22,
         },
         centeredModalContainer: {
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Make the background darker
+            backgroundColor: 'rgba(15, 23, 42, 0.45)',
         },
         enlargedModalContent: {
-            width: '90%', // Wider modal for emphasis
-            maxWidth: 400,
-            backgroundColor: baseColor,
-            padding: 30,
-            borderRadius: 15,
-            alignItems: 'center', // Center the text and buttons
+            width: '90%',
+            maxWidth: 380,
+            backgroundColor: '#ffffff',
+            padding: 24,
+            borderRadius: 14,
+            alignItems: 'center',
+            borderWidth: 1,
+            borderColor: '#e2e8f0',
         },
         confirmationText: {
-            fontSize: 24, // Larger font size for the confirmation text
-            fontWeight: 'bold',
-            marginBottom: 20, // Add space between text and buttons
+            fontSize: 20,
+            fontWeight: '600',
+            marginBottom: 18,
             textAlign: 'center',
+            color: '#0f172a',
         },
         confirmButton: {
-            marginTop: 10,
-            paddingVertical: 15, // Larger button for touch-friendly design
-            paddingHorizontal: 40,
-            backgroundColor: '#4CAF50',
-            borderRadius: 5,
+            marginTop: 8,
+            paddingVertical: 11,
+            paddingHorizontal: 30,
+            backgroundColor: '#003462',
+            borderRadius: 8,
+            minWidth: 130,
+            alignItems: 'center',
         },
         confirmButtonText: {
-            fontSize: 18,
+            fontSize: 15,
             color: '#fff',
+            fontWeight: '600',
         },
         cancelButton: {
             marginTop: 10,
-            paddingVertical: 15,
-            paddingHorizontal: 40,
-            backgroundColor: '#d9534f',
-            borderRadius: 5,
+            paddingVertical: 11,
+            paddingHorizontal: 30,
+            backgroundColor: '#e2e8f0',
+            borderRadius: 8,
+            minWidth: 130,
+            alignItems: 'center',
         },
         cancelButtonText: {
-            fontSize: 18,
-            color: '#fff',
+            fontSize: 15,
+            color: '#1f2937',
+            fontWeight: '600',
         },
     },
     messageView: {
@@ -456,7 +503,7 @@ export default StyleSheet.create({
             flexDirection: 'row',
             alignItems: 'end',
             justifyContent: 'center',
-            width: '100vw',
+            width: '100%',
             backgroundColor: tabColor,
         },
         tabButton: {
@@ -475,12 +522,14 @@ export default StyleSheet.create({
         },
         messagesContainer: {
             marginTop: 10,
-            width: '90vw',
-            maxWidth: '100%',
+            width: '100%',
+            maxWidth: 960,
+            alignSelf: 'center',
         },
         notificationContainer: {
-            width: '90vw',
-            maxWidth: '100%',
+            width: '100%',
+            maxWidth: 960,
+            alignSelf: 'center',
         },
         tabButtonText: {
             fontSize: 16,
@@ -511,14 +560,15 @@ export default StyleSheet.create({
     },
     SurveyRenderer: {
         container: {
-            width: '100vw',
+            width: '100%',
             backgroundColor: baseColor,
         },
         questionContainer: {
             marginBottom: 20,
             paddingHorizontal: 30,
-            width: '90vw',
-            maxWidth: '100%',
+            width: '100%',
+            maxWidth: 960,
+            alignSelf: 'center',
         },
         text:
         {
@@ -537,8 +587,9 @@ export default StyleSheet.create({
             flexDirection: 'row',
             alignItems: 'center',
             marginBottom: 10,
-            width: '90vw',
-            maxWidth: '100%',
+            width: '100%',
+            maxWidth: 960,
+            alignSelf: 'center',
         },
         radioCircle: {
             width: 20,
@@ -580,13 +631,14 @@ export default StyleSheet.create({
             fontFamily: 'Open Sans',
         },
         sliderContainer: {
-            width: '90vw',
-            maxWidth: '100%',
+            width: '100%',
+            maxWidth: 960,
+            alignSelf: 'center',
         },
         buttonContainer: {
             flexDirection: 'row',
             justifyContent: 'center',
-            width: '100vw',
+            width: '100%',
             marginBottom: 20,
         },
     },
