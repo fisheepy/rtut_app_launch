@@ -26,12 +26,12 @@ const LoginForm = ({ navigation, windowDimensions }) => {
     const loadCredentials = async () => {
       try {
         const savedUserName = await AsyncStorage.getItem('userName');
-        const savedPassword = await AsyncStorage.getItem('password');
-        if (savedUserName && savedPassword) {
+        if (savedUserName) {
           setUserName(savedUserName);
-          setPassword(savedPassword);
           setRememberMe(true);
         }
+        // Remove legacy plaintext password cache if it exists.
+        await AsyncStorage.removeItem('password');
       } catch (error) {
         console.error('Failed to load saved credentials:', error);
       }
@@ -77,7 +77,6 @@ const LoginForm = ({ navigation, windowDimensions }) => {
       await AsyncStorage.removeItem('userName');
       await AsyncStorage.removeItem('password');
       console.log('Fetching User Info from server');
-      console.log(JSON.stringify({ userName, password }));
       const response = await fetch('https://rtut-app-admin-server-c2d4ae9d37ae.herokuapp.com/api/authentication', {
         method: 'POST',
         headers: {
@@ -113,11 +112,11 @@ const LoginForm = ({ navigation, windowDimensions }) => {
         }
         if (rememberMe) {
           await AsyncStorage.setItem('userName', userName);
-          await AsyncStorage.setItem('password', password);
         } else {
           await AsyncStorage.removeItem('userName');
-          await AsyncStorage.removeItem('password');
         }
+        // Always avoid persisting plaintext passwords locally.
+        await AsyncStorage.removeItem('password');
       } else if (response.status === 403 || response.status === 404) {
         setModalMessage('User ID and password combination not found.');
         setModalVisible(true);
