@@ -120,6 +120,12 @@ export default StyleSheet.create({
             alignItems: 'center',
             gap: 8,
         },
+        menuRow: {
+            width: '100%',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 8,
+        },
         logoutButton: {
             paddingVertical: 10,
             paddingHorizontal: 18,
