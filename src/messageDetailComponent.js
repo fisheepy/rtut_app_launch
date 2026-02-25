@@ -20,15 +20,22 @@ const MessageDetailComponent = ({ notification, onBack, windowDimensions }) => {
     const [dragX, setDragX] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
 
-    const bind = useDrag(({ down, movement: [mx], direction: [xDir] }) => {
-        const dir = xDir < 0 ? -1 : 1; // Detect direction (-1 for left, 1 for right)
+    const bind = useDrag(({ down, movement: [mx], direction: [xDir], velocity }) => {
+        const swipeDistanceThreshold = 60;
+        const swipeVelocityThreshold = 0.25;
+        const isRightSwipe = xDir > 0;
+
         setIsDragging(down);
 
-        if (!down && dir === 1) { // Trigger onBack when swipe left
+        if (!down) {
+            const shouldNavigateBack = isRightSwipe && (mx > swipeDistanceThreshold || velocity > swipeVelocityThreshold);
+
             setDragX(0);
-            onBack();
+            if (shouldNavigateBack) {
+                onBack();
+            }
         } else {
-            setDragX(down ? mx : 0); // Reset position when drag ends
+            setDragX(Math.max(0, mx));
         }
     }, { axis: 'x' });
 
