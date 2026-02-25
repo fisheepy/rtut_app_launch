@@ -35,9 +35,9 @@ const MessageDetailComponent = ({ notification, onBack, windowDimensions }) => {
                 onBack();
             }
         } else {
-            setDragX(Math.max(0, mx));
+            setDragX(Math.max(0, Math.min(mx, 240)));
         }
-    }, { axis: 'x' });
+    }, { axis: 'x', threshold: 8 });
 
     return (
         <View style={styles.container}>
@@ -46,7 +46,7 @@ const MessageDetailComponent = ({ notification, onBack, windowDimensions }) => {
                 style={{
                     transform: `translate3d(${dragX}px, 0, 0)`,
                     transition: isDragging ? 'none' : 'transform 180ms ease-out',
-                    touchAction: 'none',
+                    touchAction: 'pan-y',
                     width: '100%',
                 }}
             >

@@ -87,14 +87,15 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
         }
     }, [notificationData]);
 
-    const bind = useDrag(({ down, movement: [mx, my] }) => {
+    const bind = useDrag(({ down, movement: [, my] }) => {
         setIsDragging(down);
+        const pullDownDistance = Math.max(0, my);
 
         if (down) {
-            setDragY(Math.min(my, 150));
+            setDragY(Math.min(pullDownDistance, 150));
         } else {
             setDragY(0);
-            if (my > 100) {
+            if (pullDownDistance > 100) {
                 setIsPulledDown(true);
             }
         }
@@ -394,7 +395,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                             style={{
                                 transform: `translate3d(0, ${dragY}px, 0)`,
                                 transition: isDragging ? 'none' : 'transform 180ms ease-out',
-                                touchAction: 'none',
+                                touchAction: 'pan-x',
                             }}
                         >
                             {currentTab === 'calendar' ? (
