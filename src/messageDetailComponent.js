@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Pressable, ScrollView } from 'react-native';
 import { formatTimeString } from './utils';
 import { GiConfirmed } from "react-icons/gi";
 import commonStyles from './styles/commonStyles';
-import { useSpring, animated } from 'react-spring';
 import { useDrag } from '@use-gesture/react';
 
 const MessageDetailComponent = ({ notification, onBack, windowDimensions }) => {
@@ -18,22 +17,39 @@ const MessageDetailComponent = ({ notification, onBack, windowDimensions }) => {
         time: commonStyles.messageDetail.time,
     };
 
-    const [style, api] = useSpring(() => ({ x: 0 }));
+    const [dragX, setDragX] = useState(0);
+    const [isDragging, setIsDragging] = useState(false);
 
     const bind = useDrag(({ down, movement: [mx], direction: [xDir], velocity }) => {
-        const trigger = velocity > 0.2; // Adjust velocity threshold as needed
-        const dir = xDir < 0 ? -1 : 1; // Detect direction (-1 for left, 1 for right)
-        console.log(down, velocity);
-        if (!down && dir === 1) { // Trigger onBack when swipe left
-            onBack();
+        const swipeDistanceThreshold = 60;
+        const swipeVelocityThreshold = 0.25;
+        const isRightSwipe = xDir > 0;
+
+        setIsDragging(down);
+
+        if (!down) {
+            const shouldNavigateBack = isRightSwipe && (mx > swipeDistanceThreshold || velocity > swipeVelocityThreshold);
+
+            setDragX(0);
+            if (shouldNavigateBack) {
+                onBack();
+            }
         } else {
-            api.start({ x: down ? mx : 0 }); // Reset position when drag ends
+            setDragX(Math.max(0, Math.min(mx, 240)));
         }
-    }, { axis: 'x' });
+    }, { axis: 'x', threshold: 8 });
 
     return (
         <View style={styles.container}>
-            <animated.div {...bind()} style={{ x: style.x, touchAction: 'none', width: '100%' }}>
+            <div
+                {...bind()}
+                style={{
+                    transform: `translate3d(${dragX}px, 0, 0)`,
+                    transition: isDragging ? 'none' : 'transform 180ms ease-out',
+                    touchAction: 'pan-y',
+                    width: '100%',
+                }}
+            >
                 <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer} nestedScrollEnabled={true}>
                     <Text style={styles.subject}>{notification.payload.messageType}</Text>
                     <View style={styles.infoContainer}>
@@ -42,7 +58,7 @@ const MessageDetailComponent = ({ notification, onBack, windowDimensions }) => {
                     </View>
                     <Text style={styles.body}>{notification.payload.messageContent}</Text>
                 </ScrollView>
-            </animated.div>
+            </div>
             <View style={styles.buttonContainer}>
                 <Pressable onPress={onBack}>
                     <GiConfirmed
