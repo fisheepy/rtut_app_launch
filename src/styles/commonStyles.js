@@ -191,7 +191,7 @@ export default StyleSheet.create({
     },
     messageView: {
         container: {
-            height: 80,
+            minHeight: 64,
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
@@ -200,29 +200,33 @@ export default StyleSheet.create({
             marginLeft: 0,
         },
         headLine: {
-            height: 20,
+            minHeight: 18,
             flexDirection: 'row',
+            alignItems: 'center',
         },
         subjectLine: {
-            height: 20,
+            minHeight: 18,
             alignItems: 'flex-start',
-            marginLeft: 25,
+            marginLeft: 20,
+            marginTop: 2,
         },
         subject: {
-            fontSize: 18,
-            fontWeight: 'bold',
+            fontSize: 15,
+            fontWeight: '600',
             textAlign: 'center',
             fontFamily: 'Open Sans',
         },
         sender: {
-            fontSize: 12,
-            marginLeft: '10px',
+            fontSize: 13,
+            color: '#334155',
+            marginLeft: '8px',
             fontFamily: 'Open Sans',
         },
         time: {
-            fontSize: 12,
+            fontSize: 11,
+            color: '#64748b',
             marginLeft: 'auto',
-            marginRight: '0px',
+            marginRight: '4px',
             fontFamily: 'Open Sans',
         },
         indicator: {
@@ -252,8 +256,8 @@ export default StyleSheet.create({
             maxWidth: '100%',
         },
         subject: {
-            fontSize: 18,
-            fontWeight: 'bold',
+            fontSize: 15,
+            fontWeight: '600',
             textAlign: 'center',
             marginBottom: 5,
             justifyContent: 'flex-start',
@@ -264,7 +268,7 @@ export default StyleSheet.create({
             fontSize: 16,
             color: 'gray',
             textAlign: 'left',
-            paddingHorizontal: 32,
+            paddingHorizontal: 20,
             fontFamily: 'Open Sans',
         },
         contentContainer: {
@@ -274,21 +278,22 @@ export default StyleSheet.create({
             maxWidth: '100%',
         },
         body: {
-            fontSize: 16,
-            color: 'black',
+            fontSize: 14,
+            lineHeight: 22,
+            color: '#0f172a',
             textAlign: 'justify',
             justifyContent: 'center',
             alignItems: 'center',
-            paddingHorizontal: 32,
+            paddingHorizontal: 20,
             fontFamily: 'Open Sans',
             backgroundColor: baseColor,
-            paddingBottom: 30,
+            paddingBottom: 18,
         },
         buttonContainer: {
             flexDirection: 'row',
             justifyContent: 'center',
             backgroundColor: baseColor,
-            paddingBottom: 30,
+            paddingBottom: 18,
         },
         buttonText: {
             fontWeight: 'bold',
@@ -297,7 +302,7 @@ export default StyleSheet.create({
             fontFamily: 'Open Sans',
         },
         infoContainer: {
-            paddingHorizontal: 32,
+            paddingHorizontal: 20,
             fontSize: 14,
             color: 'gray',
             flexDirection: 'row',
@@ -492,7 +497,9 @@ export default StyleSheet.create({
     notificationModal: {
         container: {
             flex: 1,
-            padding: 10,
+            paddingHorizontal: 12,
+            paddingTop: 6,
+            paddingBottom: 8,
             backgroundColor: baseColor,
             position: 'static',
             alignItems: 'center',
@@ -512,7 +519,7 @@ export default StyleSheet.create({
             justifyContent: 'center',
             fontSize: 36,
             fontWeight: 'bold',
-            marginBottom: 15,
+            marginBottom: 8,
         },
         activeTab: {
             color: activeColor,
@@ -521,7 +528,7 @@ export default StyleSheet.create({
             color: baseColor,
         },
         messagesContainer: {
-            marginTop: 10,
+            marginTop: 6,
             width: '100%',
             maxWidth: 960,
             alignSelf: 'center',
@@ -532,8 +539,8 @@ export default StyleSheet.create({
             alignSelf: 'center',
         },
         tabButtonText: {
-            fontSize: 16,
-            fontWeight: 'bold',
+            fontSize: 14,
+            fontWeight: '600',
         },
         refreshButtonContainer: {
             marginTop: 20,
@@ -541,19 +548,21 @@ export default StyleSheet.create({
         },
         refreshButton: {
             backgroundColor: '#007bff',
-            padding: 10,
+            paddingHorizontal: 12,
+            paddingTop: 6,
+            paddingBottom: 8,
             borderRadius: 5,
         },
         completedSurvey: {
             opacity: 0.5,
         },
         loadingContainer: {
-            marginTop: 80,
+            marginTop: 56,
             alignItems: 'center',
             justifyContent: 'center',
         },
         loadingText: {
-            marginTop: 10,
+            marginTop: 6,
             fontSize: 16,
             color: '#555',
         },
@@ -565,7 +574,7 @@ export default StyleSheet.create({
         },
         questionContainer: {
             marginBottom: 20,
-            paddingHorizontal: 30,
+            paddingHorizontal: 20,
             width: '100%',
             maxWidth: 960,
             alignSelf: 'center',
@@ -574,14 +583,14 @@ export default StyleSheet.create({
         {
             textAlign: 'justify',
             fontFamily: 'Open Sans',
-            fontSize: 12,
+            fontSize: 13,
         },
         title: {
             textAlign: 'center',
             marginBottom: 10,
             fontFamily: 'Open Sans',
             fontWeight: 'bold',
-            fontSize: 12,
+            fontSize: 13,
         },
         choiceContainer: {
             flexDirection: 'row',
@@ -610,10 +619,12 @@ export default StyleSheet.create({
         input: {
             borderWidth: 1,
             borderColor: '#ccc',
-            padding: 10,
+            paddingHorizontal: 12,
+            paddingTop: 6,
+            paddingBottom: 8,
             borderRadius: 5,
             fontFamily: 'Open Sans',
-            fontSize: 12,
+            fontSize: 13,
         },
         checkbox: {
             width: 20,
