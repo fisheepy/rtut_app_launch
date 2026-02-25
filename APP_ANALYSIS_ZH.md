@@ -76,3 +76,49 @@
 - 以 React 为核心，借 Capacitor 完成 iOS/Android 双端覆盖；
 - 通过通知 + 日历 + 调查 + 链接 + AI 问答实现“内部沟通中台”的核心价值；
 - 当前最大短板不在“能不能用”，而在“安全和可持续演进”。
+
+## 9) 依赖冲突治理与 react-spring 替代实施计划（可直接执行）
+
+### 9.1 先修复 lock 文件一致性（第一优先级）
+- 目标：让 `npm ci` 回归可重复安装，避免每次依赖安装都要 `--force`。
+- 执行步骤：
+  1. 在一台可访问 npm registry 且策略允许的机器，执行 `npm install --legacy-peer-deps`；
+  2. 仅提交 `package-lock.json`（必要时连同 `package.json`）；
+  3. CI 改为 `npm ci` 验证一致性；
+  4. 记录 Node/npm 基线版本（建议锁定在团队统一版本，避免本地和 CI 解析差异）。
+- 完成标准：`npm ci` 在开发机和 CI 均成功，且不再出现 lock mismatch。
+
+### 9.2 react-spring 在本项目的实际用途（确认替代范围）
+- 仅用于两个轻交互场景：
+  - 通知页下拉位移与回弹；
+  - 消息详情页横向拖拽与返回触发。
+- 这类场景并不依赖复杂弹簧生态，可用更轻实现替代。
+
+### 9.3 推荐替代路线（分两阶段）
+
+#### 阶段 A（低风险）：保留手势库，替换动画库
+- 维持 `@use-gesture/react`；
+- 将 `react-spring` 的 `useSpring/animated.div` 改为：
+  - Web 侧 CSS transform + transition，或
+  - `requestAnimationFrame` 简单过渡。
+- 收益：先去掉 `react-spring` 聚合依赖链，减少 `konva/three/zdog` 相关包牵引。
+
+#### 阶段 B（长期稳态）：统一到 RN Animated/PanResponder
+- 将手势与动画都迁移到 `react-native` 官方能力（`Animated` + `PanResponder`）；
+- 减少“Web 动画库 + RN 组件”混搭。
+- 收益：跨 iOS/Android/Web 语义更统一，维护成本更低。
+
+### 9.4 建议时间表（1人开发可落地）
+- Day 1：修 lock + 固定 Node/npm 版本 + 恢复 `npm ci`。
+- Day 2：完成通知页下拉替代（阶段 A）。
+- Day 3：完成消息详情页拖拽替代（阶段 A）+ 回归测试。
+- Day 4~5：若稳定，再评估阶段 B（Animated/PanResponder）是否立即推进。
+
+### 9.5 验收清单（每一步都可量化）
+1. 安装稳定性：`npm ci` 连续 3 次成功。
+2. 功能稳定性：
+   - 下拉刷新可触发，阈值行为一致；
+   - 详情页右滑返回可触发；
+   - iOS/Android/Web 三端无明显手势退化。
+3. 依赖收敛：移除 `react-spring` 后，`npm ls react-konva react-reconciler` 不再因其子包链新增冲突。
+4. 发版可控：打包流程（Android/iOS）在无 `--force` 的情况下通过。
