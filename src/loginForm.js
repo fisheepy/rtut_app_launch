@@ -41,11 +41,11 @@ const LoginForm = ({ navigation, windowDimensions }) => {
   }, []);
 
   const styles = {
-    container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height },
-    form: { ...commonStyles.login.form, width: windowDimensions.width * 0.75 },
+    container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height, backgroundColor: '#f1f5f9' },
+    form: { ...commonStyles.login.form, width: Math.min(windowDimensions.width * 0.86, 420) },
     input: commonStyles.login.input,
-    buttonContainer: { ...commonStyles.login.buttonContainer, width: windowDimensions.width * 0.75 },
-    tabButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.25 },
+    buttonContainer: { ...commonStyles.login.buttonContainer, width: '100%' },
+    tabButton: { ...commonStyles.login.tabButton, width: '100%' },
     tabButtonText: commonStyles.login.tabButtonText,
     backgroundImage: commonStyles.login.backgroundImage,
     errorText: { color: 'red', textAlign: 'center', marginTop: 10 },
@@ -170,6 +170,8 @@ const LoginForm = ({ navigation, windowDimensions }) => {
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.form}>
+          <Text style={commonStyles.login.header}>Welcome Back</Text>
+          <Text style={commonStyles.login.helperText}>Use your RTUT username and password to continue.</Text>
           <TextInput
             placeholder="User Name"
             value={userName}
