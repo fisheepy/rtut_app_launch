@@ -11,6 +11,13 @@ const bannerTextColor = '#f9f1db';
 const tabColor = '#003462';
 const activeColor = '#fa0014';
 
+const authCardColor = '#ffffff';
+const authInputBg = '#f8fafc';
+const authInputBorder = '#cbd5e1';
+const authPrimary = '#003462';
+const authPrimaryText = '#ffffff';
+const authBodyText = '#1f2937';
+
 export default StyleSheet.create({
     app: {
         container: {
@@ -267,58 +274,76 @@ export default StyleSheet.create({
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: 'transparent',
+            paddingHorizontal: 16,
         },
         form: {
             padding: 20,
-            borderRadius: 10,
-            backgroundColor: '#ffffff',
+            borderRadius: 14,
+            backgroundColor: authCardColor,
             shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.8,
-            shadowRadius: 2,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.2,
+            shadowRadius: 12,
             elevation: 5,
+            borderWidth: 1,
+            borderColor: '#e2e8f0',
         },
         header: {
             fontSize: 24,
             fontWeight: 'bold',
             marginBottom: 20,
             textAlign: 'center',
+            color: authBodyText,
         },
         text: {
             fontSize: 16,
             marginBottom: 20,
             textAlign: 'center',
+            color: authBodyText,
+        },
+        helperText: {
+            fontSize: 12,
+            color: '#475569',
+            marginBottom: 10,
+            lineHeight: 18,
         },
         checkboxContainer: {
             flexDirection: 'row',
             alignItems: 'center',
-            marginBottom: 20,
+            marginBottom: 8,
         },
         checkbox: {
             marginRight: 10,
         },
         input: {
             marginBottom: 10,
-            padding: 10,
+            paddingHorizontal: 12,
+            paddingVertical: 10,
             borderWidth: 1,
-            borderColor: '#ccc',
-            borderRadius: 5,
-            textAlign: 'center',
+            borderColor: authInputBorder,
+            borderRadius: 8,
+            textAlign: 'left',
             width: '100%',
-            backgroundColor: 'gray',
+            backgroundColor: authInputBg,
+            color: authBodyText,
         },
         buttonContainer: {
             flexDirection: 'row',
-            justifyContent: 'space-around',
+            justifyContent: 'center',
             marginTop: 20,
         },
         tabButton: {
             alignItems: 'center',
             justifyContent: 'center',
-            height: 40,
-            backgroundColor: '#839c83'
+            height: 42,
+            borderRadius: 8,
+            backgroundColor: authPrimary,
+            paddingHorizontal: 14,
         },
         tabButtonText: {
+            color: authPrimaryText,
+            fontWeight: '600',
+            fontSize: 14,
         },
         backgroundImage: {
             flex: 1,
