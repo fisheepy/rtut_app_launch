@@ -41,7 +41,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
   }, []);
 
   const styles = {
-    container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height, backgroundColor: '#f1f5f9' },
+    container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height, backgroundColor: 'transparent' },
     form: { ...commonStyles.login.form, width: Math.min(windowDimensions.width * 0.86, 420) },
     input: commonStyles.login.input,
     buttonContainer: { ...commonStyles.login.buttonContainer, width: '100%' },
@@ -58,7 +58,7 @@ const LoginForm = ({ navigation, windowDimensions }) => {
       marginRight: 10,
     },
     linkText: {
-      color: '#2196F3',
+      color: '#0f4c81',
       textAlign: 'center',
       textDecorationLine: 'underline',
       marginVertical: 10,
@@ -228,10 +228,10 @@ const LoginForm = ({ navigation, windowDimensions }) => {
                 <View style={modalStyles.modalView}>
                   <Text style={modalStyles.modalText}>{modalMessage}</Text>
                   <Pressable
-                    style={[modalStyles.button, modalStyles.buttonClose]}
+                    style={[modalStyles.button, modalStyles.primaryButton]}
                     onPress={() => setModalVisible(false)}
                   >
-                    <Text style={modalStyles.textStyle}>Close</Text>
+                    <Text style={modalStyles.primaryText}>Close</Text>
                   </Pressable>
                 </View>
               </TouchableWithoutFeedback>
@@ -250,7 +250,8 @@ const LoginForm = ({ navigation, windowDimensions }) => {
             <View style={modalStyles.centeredView}>
               <TouchableWithoutFeedback>
                 <View style={modalStyles.modalView}>
-                  <Text style={modalStyles.modalText}>Enter your associated phone number to reset your password:</Text>
+                  <Text style={modalStyles.modalTitle}>Forgot Password</Text>
+                  <Text style={modalStyles.modalText}>Enter your associated phone number to receive a reset link.</Text>
                   <TextInputMask
                     type={'custom'}
                     options={{
@@ -262,16 +263,16 @@ const LoginForm = ({ navigation, windowDimensions }) => {
                     style={styles.input}
                   />
                   <Pressable
-                    style={[modalStyles.button, modalStyles.buttonClose]}
+                    style={[modalStyles.button, modalStyles.primaryButton]}
                     onPress={handleSendResetLink}
                   >
-                    <Text style={modalStyles.textStyle}>Send Reset Link</Text>
+                    <Text style={modalStyles.primaryText}>Send Reset Link</Text>
                   </Pressable>
                   <Pressable
-                    style={modalStyles.button}
+                    style={[modalStyles.button, modalStyles.secondaryButton]}
                     onPress={() => setResetModalVisible(false)}
                   >
-                    <Text style={modalStyles.textStyle}>Cancel</Text>
+                    <Text style={modalStyles.secondaryText}>Cancel</Text>
                   </Pressable>
                 </View>
               </TouchableWithoutFeedback>
@@ -288,41 +289,62 @@ const modalStyles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 22,
+    paddingHorizontal: 16,
+    backgroundColor: 'rgba(15, 23, 42, 0.45)',
   },
   modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    backgroundColor: "#f9f1db",
+    width: '100%',
+    maxWidth: 420,
+    borderRadius: 14,
+    padding: 20,
+    backgroundColor: '#ffffff',
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 6
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
     elevation: 5
   },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1f2937',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
   button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    marginVertical: 5, // Space between buttons
+    borderRadius: 8,
+    paddingVertical: 11,
+    paddingHorizontal: 12,
+    marginTop: 10,
+    width: '100%',
+    alignItems: 'center',
   },
-  buttonClose: {
-    backgroundColor: "#2196F3",
+  primaryButton: {
+    backgroundColor: '#003462',
   },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
+  secondaryButton: {
+    backgroundColor: '#e2e8f0',
+  },
+  primaryText: {
+    color: '#ffffff',
+    fontWeight: '600',
+    textAlign: "center"
+  },
+  secondaryText: {
+    color: '#1f2937',
+    fontWeight: '600',
     textAlign: "center"
   },
   modalText: {
-    marginBottom: 15,
-    textAlign: "center"
+    marginBottom: 10,
+    textAlign: "center",
+    color: '#475569',
+    lineHeight: 20,
   }
 });
 
