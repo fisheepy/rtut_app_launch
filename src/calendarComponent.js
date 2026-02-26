@@ -111,7 +111,7 @@ const CalendarComponent = ({ data }) => {
         date={currentDate}
         startAccessor="start"
         endAccessor="end"
-        style={{ height: '95%', width: '95%' }}
+        style={{ height: '100%', width: '100%' }}
         tooltipAccessor={null}
         components={{
           event: (props) => (

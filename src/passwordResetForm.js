@@ -10,14 +10,14 @@ const PasswordResetForm = ({ route, navigation }) => {
     const [modalMessage, setModalMessage] = useState('');
 
     const styles = {
-        container: { ...commonStyles.login.container, width: '100%', height: '100%', backgroundColor: '#eeeee4' },
-        form: { ...commonStyles.login.form, width: '80%' },
+        container: { ...commonStyles.login.container, width: '100%', height: '100%', backgroundColor: '#f1f5f9' },
+        form: { ...commonStyles.login.form, width: '90%', maxWidth: 520 },
         input: commonStyles.login.input,
-        buttonContainer: { ...commonStyles.login.buttonContainer, width: '80%' },
+        buttonContainer: { ...commonStyles.login.buttonContainer, width: '100%' },
         tabButton: { ...commonStyles.login.tabButton, width: '100%' },
         tabButtonText: commonStyles.login.tabButtonText,
-        overview: { color: '#000', marginBottom: 10, fontSize: 20, textAlign: 'center' },
-        rules: { color: '#000', fontSize: 18, marginBottom: 10, textAlign: 'center' },
+        overview: { color: '#0f172a', marginBottom: 10, fontSize: 20, textAlign: 'center', fontWeight: '600' },
+        rules: { color: '#334155', fontSize: 15, marginBottom: 10, textAlign: 'left', lineHeight: 22 },
     };
 
     const handlePasswordReset = async () => {

@@ -8,11 +8,12 @@ const CustomEvent = ({ event, onClick }) => {
       style={{
         cursor: 'pointer',
         borderRadius: '4px',
-        height: '100%', // Ensure the height covers the entire event slot
+        height: '100%',
         display: 'flex',
+        alignItems: 'center',
+        padding: '0 4px',
       }}
       onClick={() => {
-        console.log('Event clicked:', event);
         onClick(event);
       }}
     >

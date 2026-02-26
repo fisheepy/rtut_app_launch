@@ -142,23 +142,23 @@ function App({ windowDimensions, navigation }) {
     <View style={commonStyles.app.container}>
       <View style={commonStyles.app.banner}>
         {isDataLoaded ? (
-          <Text style={commonStyles.app.bannerText}>Welcome Back, {subscriberName.userFirstName} </Text>
+          <Text style={commonStyles.app.bannerText}>Welcome back, {subscriberName.userFirstName}</Text>
         ) : (
-          <Text style={commonStyles.app.bannerText}>Welcome Back </Text>
+          <Text style={commonStyles.app.bannerText}>Welcome back</Text>
         )}
       </View>
       <View style={commonStyles.app.iconButtonContainer}>
-        <Pressable onPress={toggleMenu} style={commonStyles.app.settingIcon}>
-          <GrUserSettings />
+        <Pressable onPress={toggleMenu} style={commonStyles.app.iconButton}>
+          <GrUserSettings style={commonStyles.app.settingIcon} />
         </Pressable>
         <Pressable
           onPress={onRefresh}
           style={[
-            commonStyles.app.refreshIcon,
-            isRefreshing ? { backgroundColor: 'gray' } : { backgroundColor: 'transparent' } // Change color based on refreshing state
+            commonStyles.app.iconButton,
+            isRefreshing ? { opacity: 0.6 } : null
           ]}
         >
-          <BiRefresh size={32} style={commonStyles.app.refreshIcon} />
+          <BiRefresh size={22} style={commonStyles.app.refreshIcon} />
         </Pressable>
       </View>
       {isMenuVisible && (
@@ -184,17 +184,15 @@ function App({ windowDimensions, navigation }) {
         </View>
       )}
       <View style={commonStyles.app.content}>
-        <div>
-          <NotificationProvider applicationIdentifier="o-7dmY_XxQs5" subscriberId={subscriberId}>
-            {/* Pass isRefreshing and onRefresh as props to NotificationModal */}
-            <NotificationModal
-              windowDimensions={windowDimensions}
-              notificationData={notificationData}
-              isRefreshing={isRefreshing}
-              onRefresh={onRefresh}
-            />
-          </NotificationProvider>
-        </div>
+        <NotificationProvider applicationIdentifier="o-7dmY_XxQs5" subscriberId={subscriberId}>
+          {/* Pass isRefreshing and onRefresh as props to NotificationModal */}
+          <NotificationModal
+            windowDimensions={windowDimensions}
+            notificationData={notificationData}
+            isRefreshing={isRefreshing}
+            onRefresh={onRefresh}
+          />
+        </NotificationProvider>
       </View>
       <Modal
         transparent={true}
