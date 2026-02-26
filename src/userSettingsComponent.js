@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Pressable, Modal, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { VscFeedback } from "react-icons/vsc";
 import { GrUpdate } from "react-icons/gr";
+import { FiChevronRight } from "react-icons/fi";
 import commonStyles from './styles/commonStyles';
 import { Capacitor } from '@capacitor/core';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -96,21 +97,31 @@ const UserSettingsComponent = () => {
 
   return (
     <View style={commonStyles.useSetting.container}>
-      {/* Update App Button */}
-      <View style={commonStyles.useSetting.iconLink}>
-        <Pressable onPress={onOpenUpdateLink}>
-          <GrUpdate style={{ fontSize: 36, color: '#FF5733' }} />
-        </Pressable>
-        <Text style={commonStyles.useSetting.linkText}>UPDATE APP</Text>
-      </View>
+      <Text style={commonStyles.useSetting.sectionTitle}>Quick Actions</Text>
 
-      {/* Questions to HR Button */}
+      <Pressable style={commonStyles.useSetting.actionCard} onPress={onOpenUpdateLink}>
+        <View style={commonStyles.useSetting.actionIconWrap}>
+          <GrUpdate style={{ fontSize: 22, color: '#ff6b3d' }} />
+        </View>
+        <View style={commonStyles.useSetting.actionTextWrap}>
+          <Text style={commonStyles.useSetting.actionTitle}>Update App</Text>
+          <Text style={commonStyles.useSetting.actionSubtitle}>Open latest app download page</Text>
+        </View>
+        <FiChevronRight style={commonStyles.useSetting.linkTrailingIcon} />
+      </Pressable>
+
       <Pressable
-        style={commonStyles.useSetting.feedbackButton}
+        style={commonStyles.useSetting.actionCard}
         onPress={() => { setStep(1); setModalVisible(true); }}
       >
-        <VscFeedback />
-        <Text style={commonStyles.useSetting.linkText}>QUESTIONS TO HR</Text>
+        <View style={commonStyles.useSetting.actionIconWrap}>
+          <VscFeedback style={{ fontSize: 20, color: '#3273f6' }} />
+        </View>
+        <View style={commonStyles.useSetting.actionTextWrap}>
+          <Text style={commonStyles.useSetting.actionTitle}>Questions to HR</Text>
+          <Text style={commonStyles.useSetting.actionSubtitle}>Send a question and preferred contact</Text>
+        </View>
+        <FiChevronRight style={commonStyles.useSetting.linkTrailingIcon} />
       </Pressable>
 
       {/* Submission Modal (Two-step) */}
