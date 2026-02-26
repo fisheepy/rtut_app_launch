@@ -382,7 +382,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
             {isRefreshing ? (
                 <View style={styles.loadingContainer}>
                     <ActivityIndicator size="large" color="#0000ff" />
-                    <Text style={styles.loadingText}>Updating notifications...</Text>
+                    <Text style={styles.loadingText}>Refreshing messages...</Text>
                 </View>
             ) : (
                 <View style={styles.container}>

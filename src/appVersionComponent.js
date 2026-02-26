@@ -9,11 +9,18 @@ const AppVersionComponent = () => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      marginTop: 8,
     },
     versionText: {
       fontSize: '12px',
-      color: '#000000',
-      textAlign: 'center'
+      color: '#e2e8f0',
+      textAlign: 'center',
+      fontWeight: '600',
+      letterSpacing: '0.2px',
+      backgroundColor: 'rgba(15, 23, 42, 0.35)',
+      border: '1px solid rgba(148, 163, 184, 0.35)',
+      borderRadius: '999px',
+      padding: '4px 10px'
     }
   };
 
