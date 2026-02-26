@@ -1,39 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, Pressable, Linking } from 'react-native';
 import { SiAdp } from "react-icons/si";
 import { TbTargetArrow } from "react-icons/tb";
 import { FaHandsHelping } from "react-icons/fa";
 import { MdSupportAgent } from "react-icons/md";
-import { FiChevronDown, FiChevronUp, FiExternalLink } from "react-icons/fi";
+import { FiExternalLink } from "react-icons/fi";
 import commonStyles from './styles/commonStyles';
 
 const UsefulLinksComponent = () => {
-    const [expanded, setExpanded] = useState(false);
-
     const handleLinkPress = (url) => {
         Linking.openURL(url);
-    };
-
-    const toggleExpanded = () => {
-        setExpanded(!expanded);
     };
 
     return (
         <View style={commonStyles.useSetting.container}>
             <Text style={commonStyles.useSetting.sectionTitle}>Useful Links</Text>
-            <Pressable style={commonStyles.useSetting.toggleButton} onPress={toggleExpanded}>
-                <Text style={commonStyles.useSetting.toggleText}>
-                    {expanded ? 'Hide useful links' : 'Show useful links'}
-                </Text>
-                {expanded ? (
-                    <FiChevronUp style={commonStyles.useSetting.toggleIcon} />
-                ) : (
-                    <FiChevronDown style={commonStyles.useSetting.toggleIcon} />
-                )}
-            </Pressable>
-
-            {expanded && (
-                <View style={commonStyles.useSetting.linkList}>
+            <View style={commonStyles.useSetting.linkList}>
                     <Pressable style={commonStyles.useSetting.linkItem} onPress={() => handleLinkPress('https://workforcenow.adp.com/')}>
                         <SiAdp style={{ fontSize: 24, color: '#FF5733' }} />
                         <View style={commonStyles.useSetting.linkInfoWrap}>
@@ -70,7 +52,6 @@ const UsefulLinksComponent = () => {
                         <FiExternalLink style={commonStyles.useSetting.linkTrailingIcon} />
                     </Pressable>
                 </View>
-            )}
         </View>
     );
 };

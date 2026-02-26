@@ -30,12 +30,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
         inactiveTab: commonStyles.notificationModal.inactiveTab,
         tabIcon: commonStyles.notificationModal.tabIcon,
         messagesContainer: { ...commonStyles.notificationModal.messagesContainer, height: windowDimensions.height - 186, },
-        notificationContainer: {
-            ...commonStyles.notificationModal.notificationContainer,
-            borderBottomWidth: 1,
-            borderBottomColor: '#ccc',
-            marginBottom: 6,
-        },
+        notificationContainer: commonStyles.notificationModal.notificationContainer,
         tabButtonText: commonStyles.notificationModal.tabButtonText,
         tabBadge: commonStyles.notificationModal.tabBadge,
         tabBadgeText: commonStyles.notificationModal.tabBadgeText,
