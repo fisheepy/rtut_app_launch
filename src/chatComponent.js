@@ -12,6 +12,12 @@ const ChatComponent = () => {
     const [tokensUsed, setTokensUsed] = useState(() => parseInt(localStorage.getItem("tokensUsed")) || 0);
     const MAX_QUESTIONS_PER_MONTH = 50;  // Set your quota (e.g., 50 questions per user per month)
     const MAX_TOKENS_PER_MONTH = 10000;  // Limit total token usage (e.g., 10,000 tokens)
+    const HR_PROMPTS = [
+        'How many PTO days do I have and how do I request time off?',
+        'How can I update my direct deposit and tax withholding?',
+        'Where can I view my benefits enrollment and coverage details?',
+        'What is the process to report a workplace safety incident?',
+    ];
 
     // Chat button position state (default bottom-right)
     const [position, setPosition] = useState({ x: window.innerWidth - 100, y: window.innerHeight - 200 });
@@ -135,6 +141,10 @@ const ChatComponent = () => {
         setMessages([]);
     };
 
+    const handlePromptClick = (prompt) => {
+        setQuestion(prompt);
+    };
+
     // Drag Handling Functions (Supports Both Mouse & Touch)
     const handleDragStart = (event) => {
         isDragging.current = true;
@@ -198,6 +208,22 @@ const ChatComponent = () => {
                             </div>
                         ))}
                         <div ref={chatEndRef}></div>
+                    </div>
+
+                    <div className="chat-prompts">
+                        <div className="chat-prompts-title">HR quick prompts</div>
+                        <div className="chat-prompts-list">
+                            {HR_PROMPTS.map((prompt, index) => (
+                                <button
+                                    key={index}
+                                    type="button"
+                                    className="prompt-chip"
+                                    onClick={() => handlePromptClick(prompt)}
+                                >
+                                    {prompt}
+                                </button>
+                            ))}
+                        </div>
                     </div>
 
                     <div className="chat-footer">
@@ -310,6 +336,41 @@ const ChatComponent = () => {
                 .chat-message.bot {
                     align-self: flex-start;
                     background: #e0e0e0;
+                }
+
+                .chat-prompts {
+                    padding: 10px 12px 0;
+                    border-top: 1px solid #e2e8f0;
+                    background: #ffffff;
+                }
+
+                .chat-prompts-title {
+                    font-size: 12px;
+                    color: #475569;
+                    margin-bottom: 6px;
+                    font-weight: 600;
+                }
+
+                .chat-prompts-list {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 6px;
+                    margin-bottom: 10px;
+                }
+
+                .prompt-chip {
+                    border: 1px solid #dbe3ef;
+                    background: #f8fafc;
+                    color: #0f2747;
+                    border-radius: 14px;
+                    padding: 6px 10px;
+                    font-size: 11px;
+                    cursor: pointer;
+                }
+
+                .prompt-chip:hover {
+                    background: #eff6ff;
+                    border-color: #93c5fd;
                 }
 
                 /* ✅ Chat Footer */
