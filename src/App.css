@@ -458,15 +458,23 @@
 
 .calendar-container .rbc-month-view .rbc-event-content {
   display: block;
-  min-height: 10px;
+  min-height: 18px;
 }
 
 .calendar-container .rbc-month-view .rbc-event {
-  min-height: 12px;
+  min-height: 20px;
   padding: 0 !important;
-  border-radius: 6px;
-  margin-top: 1px;
-  margin-bottom: 1px;
+  border-radius: 8px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.calendar-container .rbc-month-view .custom-event {
+  height: 100%;
+  min-height: 18px;
+  align-items: stretch;
 }
 
 /* Keep day/agenda text readable */

@@ -5,7 +5,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './App.css';
 import CustomEvent from './customEvent';
 import CustomAgendaEvent from './customAgendaEvent';
-import { Modal, StyleSheet, Text, View, ScrollView, TouchableWithoutFeedback } from 'react-native';
+import { Modal, StyleSheet, Text, View, ScrollView, TouchableWithoutFeedback, Pressable } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const localizer = momentLocalizer(moment);
@@ -15,6 +15,8 @@ const CalendarComponent = ({ data }) => {
   const [view, setView] = useState(Views.MONTH);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [previewEvent, setPreviewEvent] = useState(null);
+  const [previewVisible, setPreviewVisible] = useState(false);
   const [userFirstName, setUserFirstName] = useState(null);  // Store the user ID here
   const [userLastName, setUserLastName] = useState(null);  // Store the user ID here
 
@@ -60,7 +62,6 @@ const CalendarComponent = ({ data }) => {
   }, [data, view, currentDate, userFirstName]);  // Ensure userId is included in dependencies
 
   const formattedData = useMemo(() => {
-    console.log(filteredData);
     return filteredData.map(event => ({
       ...event,
       start: new Date(event.startDate),
@@ -74,9 +75,12 @@ const CalendarComponent = ({ data }) => {
   }, [filteredData]);
 
   const handleEventClick = (event) => {
-    console.log(event);
-    setSelectedEvent(event);
-    setModalVisible(true);
+    if (view === Views.MONTH) {
+      setPreviewEvent(event);
+      setPreviewVisible(true);
+      return;
+    }
+    openEventDetails(event);
   };
 
   const handleNavigate = (date) => {
@@ -96,8 +100,31 @@ const CalendarComponent = ({ data }) => {
 
   const handleViewChange = (newView) => {
     setView(newView);
+    setPreviewVisible(false);
     if (newView === Views.AGENDA) {
       setCurrentDate(moment(currentDate).startOf('month').toDate());
+    }
+  };
+
+  const openEventDetails = (event) => {
+    setSelectedEvent(event);
+    setModalVisible(true);
+    setPreviewVisible(false);
+  };
+
+  const formatEventRange = (event) => {
+    if (!event?.start || !event?.end) return '';
+    const start = moment(event.start);
+    const end = moment(event.end);
+    if (event.allDay) {
+      return `All day · ${start.format('MMM D')}`;
+    }
+    return `${start.format('MMM D, HH:mm')} - ${end.format('HH:mm')}`;
+  };
+
+  const handlePreviewOpenDetails = () => {
+    if (previewEvent) {
+      openEventDetails(previewEvent);
     }
   };
 
@@ -123,11 +150,36 @@ const CalendarComponent = ({ data }) => {
         }}
         onNavigate={handleNavigate}
         onView={handleViewChange}
+        onSelectEvent={handleEventClick}
         min={new Date(2024, 1, 1, 8, 0)}
         max={new Date(2024, 1, 1, 18, 0)}
         step={30}
         timeslots={2}
       />
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={previewVisible}
+        onRequestClose={() => setPreviewVisible(false)}
+      >
+        <TouchableWithoutFeedback onPress={() => setPreviewVisible(false)}>
+          <View style={modalStyles.previewOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={modalStyles.previewCard}>
+                <Text style={modalStyles.previewTitle}>{previewEvent?.title || 'Untitled event'}</Text>
+                <Text style={modalStyles.previewMeta}>{formatEventRange(previewEvent)}</Text>
+                {!!previewEvent?.location && (
+                  <Text style={modalStyles.previewMeta}>Location: {previewEvent.location}</Text>
+                )}
+                <Pressable style={modalStyles.previewButton} onPress={handlePreviewOpenDetails}>
+                  <Text style={modalStyles.previewButtonText}>Open details</Text>
+                </Pressable>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -154,6 +206,46 @@ const CalendarComponent = ({ data }) => {
 };
 
 const modalStyles = StyleSheet.create({
+  previewOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+  },
+  previewCard: {
+    width: '86%',
+    maxWidth: 360,
+    borderRadius: 16,
+    backgroundColor: '#ffffff',
+    paddingVertical: 16,
+    paddingHorizontal: 14,
+    borderWidth: 1,
+    borderColor: '#dbe3ef',
+  },
+  previewTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#0f172a',
+    marginBottom: 6,
+  },
+  previewMeta: {
+    fontSize: 13,
+    color: '#475569',
+    marginBottom: 4,
+  },
+  previewButton: {
+    marginTop: 10,
+    alignSelf: 'flex-end',
+    backgroundColor: '#003462',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  previewButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 13,
+  },
   overlay: {
     flex: 1,
     justifyContent: "center",

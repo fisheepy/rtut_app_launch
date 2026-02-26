@@ -5,6 +5,7 @@ const CustomEvent = ({ event, onClick }) => {
   return (
     <div
       className="custom-event"
+      title={event?.title || 'Event'}
       style={{
         cursor: 'pointer',
         borderRadius: '4px',
