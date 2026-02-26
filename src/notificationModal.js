@@ -357,6 +357,12 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
         setCurrentTab(tab);
     }, []);
 
+    const getTabIconStyle = (isActive) => ({
+        fontSize: 16,
+        marginBottom: 4,
+        color: isActive ? '#1f2937' : '#94a3b8',
+    });
+
     let surveyJson;
 
     try {
@@ -441,7 +447,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                                 ]}
                                 onPress={() => handleTabChange('notifications')}
                             >
-                                <TfiAnnouncement style={[styles.tabIcon, currentTab === 'notifications' ? styles.activeTab : styles.inactiveTab]} />
+                                <TfiAnnouncement style={getTabIconStyle(currentTab === 'notifications')} />
                                 <Text style={[
                                     styles.tabButtonText,
                                     currentTab === 'notifications' ? styles.activeTab : styles.inactiveTab
@@ -456,7 +462,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                                 ]}
                                 onPress={() => handleTabChange('surveys')}
                             >
-                                <CiSquareQuestion style={[styles.tabIcon, currentTab === 'surveys' ? styles.activeTab : styles.inactiveTab]} />
+                                <CiSquareQuestion style={getTabIconStyle(currentTab === 'surveys')} />
                                 <Text style={[
                                     styles.tabButtonText,
                                     currentTab === 'surveys' ? styles.activeTab : styles.inactiveTab
@@ -471,7 +477,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                                 ]}
                                 onPress={() => handleTabChange('calendar')}
                             >
-                                <CiCirclePlus style={[styles.tabIcon, currentTab === 'calendar' ? styles.activeTab : styles.inactiveTab]} />
+                                <CiCirclePlus style={getTabIconStyle(currentTab === 'calendar')} />
                                 <Text style={[
                                     styles.tabButtonText,
                                     currentTab === 'calendar' ? styles.activeTab : styles.inactiveTab
