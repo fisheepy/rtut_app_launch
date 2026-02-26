@@ -434,3 +434,43 @@
     font-size: 0.68rem;
   }
 }
+
+
+/* ===== Calendar mobile width + month no-text event mode ===== */
+.calendar-container,
+.calendar-container .rbc-calendar,
+.calendar-container .rbc-month-view,
+.calendar-container .rbc-time-view,
+.calendar-container .rbc-agenda-view {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.calendar-container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Month view: show color blocks only (no event title text) */
+.calendar-container .rbc-month-view .custom-event .event-title {
+  display: none !important;
+}
+
+.calendar-container .rbc-month-view .rbc-event-content {
+  display: block;
+  min-height: 10px;
+}
+
+.calendar-container .rbc-month-view .rbc-event {
+  min-height: 12px;
+  padding: 0 !important;
+  border-radius: 6px;
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+/* Keep day/agenda text readable */
+.calendar-container .rbc-day-view .custom-event .event-title,
+.calendar-container .rbc-agenda-view .custom-event .event-title {
+  display: block !important;
+}
