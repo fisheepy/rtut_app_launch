@@ -408,7 +408,7 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                             }}
                         >
                             {currentTab === 'calendar' ? (
-                                <View style={styles.messagesContainer}>
+                                <View style={[styles.messagesContainer, styles.calendarMessagesContainer]}>
                                     <CalendarComponent windowDimensions={windowDimensions} data={schedulerData} />
                                 </View>
                             ) : (

@@ -689,6 +689,12 @@ export default StyleSheet.create({
             width: '100%',
             maxWidth: 960,
             alignSelf: 'center',
+            flex: 1,
+            minHeight: 0,
+        },
+        calendarMessagesContainer: {
+            paddingHorizontal: 0,
+            marginTop: 2,
         },
         notificationContainer: {
             width: '100%',
