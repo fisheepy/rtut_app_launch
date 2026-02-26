@@ -22,16 +22,19 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
             width: windowDimensions.width,
             height: windowDimensions.height - 100,
         },
-        tabButtonContainer: { ...commonStyles.notificationModal.tabButtonContainer, height: 110, },
+        tabButtonContainer: { ...commonStyles.notificationModal.tabButtonContainer, height: 84, },
         tabButton: commonStyles.notificationModal.tabButton,
+        activeTabButton: commonStyles.notificationModal.activeTabButton,
+        inactiveTabButton: commonStyles.notificationModal.inactiveTabButton,
         activeTab: commonStyles.notificationModal.activeTab,
         inactiveTab: commonStyles.notificationModal.inactiveTab,
-        messagesContainer: { ...commonStyles.notificationModal.messagesContainer, height: windowDimensions.height - 220, },
+        tabIcon: commonStyles.notificationModal.tabIcon,
+        messagesContainer: { ...commonStyles.notificationModal.messagesContainer, height: windowDimensions.height - 186, },
         notificationContainer: {
             ...commonStyles.notificationModal.notificationContainer,
             borderBottomWidth: 1,
             borderBottomColor: '#ccc',
-            marginBottom: 10,
+            marginBottom: 6,
         },
         tabButtonText: commonStyles.notificationModal.tabButtonText,
         refreshButtonContainer: commonStyles.notificationModal.refreshButtonContainer,
@@ -354,6 +357,12 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
         setCurrentTab(tab);
     }, []);
 
+    const getTabIconStyle = (isActive) => ({
+        fontSize: 16,
+        marginBottom: 4,
+        color: isActive ? '#1f2937' : '#94a3b8',
+    });
+
     let surveyJson;
 
     try {
@@ -434,16 +443,14 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                             <Pressable
                                 style={[
                                     styles.tabButton,
-                                    currentTab === 'notifications' && styles.activeTab,
-                                    currentTab !== 'notifications' && styles.inactiveTab,
+                                    currentTab === 'notifications' ? styles.activeTabButton : styles.inactiveTabButton,
                                 ]}
                                 onPress={() => handleTabChange('notifications')}
                             >
-                                <TfiAnnouncement style={styles.tabButton} />
+                                <TfiAnnouncement style={getTabIconStyle(currentTab === 'notifications')} />
                                 <Text style={[
                                     styles.tabButtonText,
-                                    currentTab === 'notifications' && styles.activeTab,
-                                    currentTab !== 'notifications' && styles.inactiveTab
+                                    currentTab === 'notifications' ? styles.activeTab : styles.inactiveTab
                                 ]}>
                                     Notification
                                 </Text>
@@ -451,16 +458,14 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                             <Pressable
                                 style={[
                                     styles.tabButton,
-                                    currentTab === 'surveys' && styles.activeTab,
-                                    currentTab !== 'surveys' && styles.inactiveTab,
+                                    currentTab === 'surveys' ? styles.activeTabButton : styles.inactiveTabButton,
                                 ]}
                                 onPress={() => handleTabChange('surveys')}
                             >
-                                <CiSquareQuestion style={styles.tabButton} />
+                                <CiSquareQuestion style={getTabIconStyle(currentTab === 'surveys')} />
                                 <Text style={[
                                     styles.tabButtonText,
-                                    currentTab === 'surveys' && styles.activeTab,
-                                    currentTab !== 'surveys' && styles.inactiveTab
+                                    currentTab === 'surveys' ? styles.activeTab : styles.inactiveTab
                                 ]}>
                                     Survey
                                 </Text>
@@ -468,16 +473,14 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                             <Pressable
                                 style={[
                                     styles.tabButton,
-                                    currentTab === 'calendar' && styles.activeTab,
-                                    currentTab !== 'calendar' && styles.inactiveTab,
+                                    currentTab === 'calendar' ? styles.activeTabButton : styles.inactiveTabButton,
                                 ]}
                                 onPress={() => handleTabChange('calendar')}
                             >
-                                <CiCirclePlus style={styles.tabButton} />
+                                <CiCirclePlus style={getTabIconStyle(currentTab === 'calendar')} />
                                 <Text style={[
                                     styles.tabButtonText,
-                                    currentTab === 'calendar' && styles.activeTab,
-                                    currentTab !== 'calendar' && styles.inactiveTab
+                                    currentTab === 'calendar' ? styles.activeTab : styles.inactiveTab
                                 ]}>
                                     Calendar
                                 </Text>

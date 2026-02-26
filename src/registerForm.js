@@ -15,11 +15,11 @@ const RegisterForm = ({ navigation, windowDimensions }) => {
   const [modalMessage, setModalMessage] = useState('');
 
   const styles = {
-    container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height, backgroundColor: '#eeeee4' },
-    form: { ...commonStyles.login.form, width: windowDimensions.width * 0.75 },
+    container: { ...commonStyles.login.container, width: windowDimensions.width, height: windowDimensions.height, backgroundColor: '#f1f5f9' },
+    form: { ...commonStyles.login.form, width: Math.min(windowDimensions.width * 0.9, 560) },
     input: { ...commonStyles.login.input, flex: 1 },
-    buttonContainer: { ...commonStyles.login.buttonContainer, width: windowDimensions.width * 0.75 },
-    tabButton: { ...commonStyles.login.tabButton, width: windowDimensions.width * 0.25 },
+    buttonContainer: { ...commonStyles.login.buttonContainer, width: '100%' },
+    tabButton: { ...commonStyles.login.tabButton, width: '100%' },
     tabButtonText: commonStyles.login.tabButtonText,
     backgroundImage: commonStyles.login.backgroundImage,
     errorText: { color: 'red', textAlign: 'center', marginTop: 10 },
@@ -67,6 +67,8 @@ const RegisterForm = ({ navigation, windowDimensions }) => {
     <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.form}>
+          <Text style={commonStyles.login.header}>Create Account</Text>
+          <Text style={commonStyles.login.helperText}>Please complete the form below to request access.</Text>
           <View style={styles.row}>
             <TextInput
               placeholder="First Name"
@@ -81,7 +83,7 @@ const RegisterForm = ({ navigation, windowDimensions }) => {
               style={styles.input}
             />
           </View>
-          <Text>Password must be at least 8 characters long and include at least one letter, one number, and one special character.</Text>
+          <Text style={commonStyles.login.helperText}>Password must be at least 8 characters and include one letter, one number, and one special character.</Text>
           <View style={styles.row}>
             <TextInput
               placeholder="Password"
