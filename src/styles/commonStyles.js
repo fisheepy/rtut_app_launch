@@ -46,7 +46,7 @@ export default StyleSheet.create({
             backgroundColor: '#ffffff',
             borderWidth: 1,
             borderColor: '#e2e8f0',
-            alignItems: 'stretch',
+            alignItems: 'center',
             justifyContent: 'center',
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 4 },
