@@ -24,8 +24,11 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
         },
         tabButtonContainer: { ...commonStyles.notificationModal.tabButtonContainer, height: 84, },
         tabButton: commonStyles.notificationModal.tabButton,
+        activeTabButton: commonStyles.notificationModal.activeTabButton,
+        inactiveTabButton: commonStyles.notificationModal.inactiveTabButton,
         activeTab: commonStyles.notificationModal.activeTab,
         inactiveTab: commonStyles.notificationModal.inactiveTab,
+        tabIcon: commonStyles.notificationModal.tabIcon,
         messagesContainer: { ...commonStyles.notificationModal.messagesContainer, height: windowDimensions.height - 186, },
         notificationContainer: {
             ...commonStyles.notificationModal.notificationContainer,
@@ -434,16 +437,14 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                             <Pressable
                                 style={[
                                     styles.tabButton,
-                                    currentTab === 'notifications' && styles.activeTab,
-                                    currentTab !== 'notifications' && styles.inactiveTab,
+                                    currentTab === 'notifications' ? styles.activeTabButton : styles.inactiveTabButton,
                                 ]}
                                 onPress={() => handleTabChange('notifications')}
                             >
-                                <TfiAnnouncement style={styles.tabButton} />
+                                <TfiAnnouncement style={[styles.tabIcon, currentTab === 'notifications' ? styles.activeTab : styles.inactiveTab]} />
                                 <Text style={[
                                     styles.tabButtonText,
-                                    currentTab === 'notifications' && styles.activeTab,
-                                    currentTab !== 'notifications' && styles.inactiveTab
+                                    currentTab === 'notifications' ? styles.activeTab : styles.inactiveTab
                                 ]}>
                                     Notification
                                 </Text>
@@ -451,16 +452,14 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                             <Pressable
                                 style={[
                                     styles.tabButton,
-                                    currentTab === 'surveys' && styles.activeTab,
-                                    currentTab !== 'surveys' && styles.inactiveTab,
+                                    currentTab === 'surveys' ? styles.activeTabButton : styles.inactiveTabButton,
                                 ]}
                                 onPress={() => handleTabChange('surveys')}
                             >
-                                <CiSquareQuestion style={styles.tabButton} />
+                                <CiSquareQuestion style={[styles.tabIcon, currentTab === 'surveys' ? styles.activeTab : styles.inactiveTab]} />
                                 <Text style={[
                                     styles.tabButtonText,
-                                    currentTab === 'surveys' && styles.activeTab,
-                                    currentTab !== 'surveys' && styles.inactiveTab
+                                    currentTab === 'surveys' ? styles.activeTab : styles.inactiveTab
                                 ]}>
                                     Survey
                                 </Text>
@@ -468,16 +467,14 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                             <Pressable
                                 style={[
                                     styles.tabButton,
-                                    currentTab === 'calendar' && styles.activeTab,
-                                    currentTab !== 'calendar' && styles.inactiveTab,
+                                    currentTab === 'calendar' ? styles.activeTabButton : styles.inactiveTabButton,
                                 ]}
                                 onPress={() => handleTabChange('calendar')}
                             >
-                                <CiCirclePlus style={styles.tabButton} />
+                                <CiCirclePlus style={[styles.tabIcon, currentTab === 'calendar' ? styles.activeTab : styles.inactiveTab]} />
                                 <Text style={[
                                     styles.tabButtonText,
-                                    currentTab === 'calendar' && styles.activeTab,
-                                    currentTab !== 'calendar' && styles.inactiveTab
+                                    currentTab === 'calendar' ? styles.activeTab : styles.inactiveTab
                                 ]}>
                                     Calendar
                                 </Text>
