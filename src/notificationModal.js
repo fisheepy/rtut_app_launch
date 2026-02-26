@@ -37,6 +37,8 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
             marginBottom: 6,
         },
         tabButtonText: commonStyles.notificationModal.tabButtonText,
+        tabBadge: commonStyles.notificationModal.tabBadge,
+        tabBadgeText: commonStyles.notificationModal.tabBadgeText,
         refreshButtonContainer: commonStyles.notificationModal.refreshButtonContainer,
         refreshButton: commonStyles.notificationModal.refreshButton,
         completedSurvey: commonStyles.notificationModal.completedSurvey,
@@ -363,6 +365,12 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
         color: isActive ? '#1f2937' : '#94a3b8',
     });
 
+    const unreadNotificationCount = qualifiedNotifications.filter((notification) => {
+        const messageType = notification.payload?.messageType;
+        const isNotificationType = messageType === 'NOTIFICATION' || !['NOTIFICATION', 'SURVEY'].includes(messageType);
+        return isNotificationType && !notification.read;
+    }).length;
+
     let surveyJson;
 
     try {
@@ -454,6 +462,11 @@ const NotificationModal = ({ windowDimensions, notificationData, onRefresh, isRe
                                 ]}>
                                     Notification
                                 </Text>
+                                {unreadNotificationCount > 0 && (
+                                    <View style={styles.tabBadge}>
+                                        <Text style={styles.tabBadgeText}>{unreadNotificationCount > 99 ? '99+' : unreadNotificationCount}</Text>
+                                    </View>
+                                )}
                             </Pressable>
                             <Pressable
                                 style={[
